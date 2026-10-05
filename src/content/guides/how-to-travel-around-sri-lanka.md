@@ -18,6 +18,8 @@ seo:
   title: 'How to Get Around Sri Lanka: Car, Train & More'
   description: 'Getting around Sri Lanka: car with driver, the scenic train, buses and transfers. Practical advice on distances, roads and combining car and train.'
   keyword: how to travel around sri lanka
+heroImage: ../../assets/images/photos/train-view.jpg
+heroAlt: View along the railway tracks from a train in the hill country at dusk
 ---
 
 ## Car with driver — the most popular option

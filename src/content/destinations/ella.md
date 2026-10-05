@@ -33,6 +33,8 @@ seo:
   description: 'Ella, Sri Lanka: Nine Arch Bridge, Little Adam’s Peak, Ella Rock and the Kandy to Ella train. Best time to visit, how to get there and tours.'
   keyword: things to do in ella
 reviewed: false
+heroImage: ../../assets/images/photos/ella.jpg
+heroAlt: The Nine Arch Bridge curving through the forest near Ella
 ---
 
 Ella is a small village in a gap in the hills, with views down to the southern plains. It is the end point of the most famous section of Sri Lanka’s hill-country railway and a favourite for easy hikes, tea estates and cafés.

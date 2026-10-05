@@ -1,0 +1,226 @@
+{
+  "colombo": {
+    "file": "colombo.jpg",
+    "alt": "Galle Face promenade and beach with the Colombo skyline",
+    "title": "Colombo galle face beach.JPG",
+    "author": "Saqib Qayyum",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Colombo_galle_face_beach.JPG"
+  },
+  "negombo": {
+    "file": "negombo.jpg",
+    "alt": "Palm trees on the beach at Negombo",
+    "title": "Negombo Beach, Sri Lanka.jpg",
+    "author": "S B from Sydney, Australia",
+    "license": "CC BY 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Negombo_Beach,_Sri_Lanka.jpg"
+  },
+  "kandy": {
+    "file": "kandy.jpg",
+    "alt": "Kandy Lake with the Temple of the Sacred Tooth Relic on the shore",
+    "title": "Sacred Tooth Relic Temple 1.jpg",
+    "author": "Philip Nalangan",
+    "license": "CC BY 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Sacred_Tooth_Relic_Temple_1.jpg"
+  },
+  "sigiriya": {
+    "file": "sigiriya.jpg",
+    "alt": "The rock fortress of Sigiriya rising above the forest",
+    "title": "Sigirîya Lion Rock (36231936082).jpg",
+    "author": "V. Epiney",
+    "license": "CC BY-SA 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Sigir%C3%AEya_Lion_Rock_(36231936082).jpg"
+  },
+  "sigiriya-view": {
+    "file": "sigiriya-view.jpg",
+    "alt": "Sigiriya rock seen from above the surrounding plains and hills",
+    "title": "Sigiriya Rock Fortress View from Pidurangala Rock.jpg",
+    "author": "Gayomiw",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Sigiriya_Rock_Fortress_View_from_Pidurangala_Rock.jpg"
+  },
+  "sigiriya-gardens": {
+    "file": "sigiriya-gardens.jpg",
+    "alt": "The water gardens leading to Sigiriya rock",
+    "title": "Sigiriya.jpg",
+    "author": "Bernard Gagnon",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Sigiriya.jpg"
+  },
+  "dambulla": {
+    "file": "dambulla.jpg",
+    "alt": "Painted ceiling and Buddha statues inside the Dambulla cave temple",
+    "title": "Buddha Dambulla 4.jpg",
+    "author": "Philip Nalangan",
+    "license": "CC BY 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Buddha_Dambulla_4.jpg"
+  },
+  "anuradhapura": {
+    "file": "anuradhapura.jpg",
+    "alt": "The white dome of Ruwanwelisaya stupa in Anuradhapura",
+    "title": "Ruwanwelisaya Stupa view2.JPG",
+    "author": "Saqib Qayyum",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Ruwanwelisaya_Stupa_view2.JPG"
+  },
+  "polonnaruwa": {
+    "file": "polonnaruwa.jpg",
+    "alt": "Seated Buddha carved into the rock at Gal Vihara, Polonnaruwa",
+    "title": "LK-polonnaruwa-gal-vihara-01.jpg",
+    "author": "Balou46",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:LK-polonnaruwa-gal-vihara-01.jpg"
+  },
+  "nuwara-eliya": {
+    "file": "nuwara-eliya.jpg",
+    "alt": "Rolling tea plantations in the hills near Nuwara Eliya",
+    "title": "Tea-plantation Nuwara Eliya-2567.jpg",
+    "author": "Bergentroll",
+    "license": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Tea-plantation_Nuwara_Eliya-2567.jpg"
+  },
+  "ella": {
+    "file": "ella.jpg",
+    "alt": "The Nine Arch Bridge curving through the forest near Ella",
+    "title": "Nine Arch Bridge, Demodara Ella.jpg",
+    "author": "Dr.S.Rajivraja",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Nine_Arch_Bridge,_Demodara_Ella.jpg"
+  },
+  "ella-train": {
+    "file": "ella-train.jpg",
+    "alt": "A blue train crossing the Nine Arch Bridge near Ella",
+    "title": "Nine Arch Bridge in Ella.jpg",
+    "author": "Dilshan255",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Nine_Arch_Bridge_in_Ella.jpg"
+  },
+  "yala": {
+    "file": "yala.jpg",
+    "alt": "A leopard walking through the undergrowth in Yala National Park",
+    "title": "Srilankan leopard in Yala National Park.jpg",
+    "author": "AdrianRanasinghe",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Srilankan_leopard_in_Yala_National_Park.jpg"
+  },
+  "udawalawe": {
+    "file": "udawalawe.jpg",
+    "alt": "An elephant and her calf grazing in Udawalawe National Park",
+    "title": "Udawalawe national park.jpg",
+    "author": "Ganiarachchi",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Udawalawe_national_park.jpg"
+  },
+  "minneriya": {
+    "file": "minneriya.jpg",
+    "alt": "A herd of elephants on the grasslands of Minneriya",
+    "title": "Minneriya National Park, elephants gathering.jpg",
+    "author": "Walter Gehr",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Minneriya_National_Park,_elephants_gathering.jpg"
+  },
+  "galle": {
+    "file": "galle.jpg",
+    "alt": "Galle Fort ramparts and lighthouse beside the sea",
+    "title": "Galle Fort lighthouse Leuchtturm (35113214702).jpg",
+    "author": "FLASHPACKER TRAVELGUIDE",
+    "license": "CC BY-SA 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Galle_Fort_lighthouse_Leuchtturm_(35113214702).jpg"
+  },
+  "mirissa": {
+    "file": "mirissa.jpg",
+    "alt": "Turquoise water and rocks along the bay at Mirissa",
+    "title": "Mirissa beach, Srilanka.jpg",
+    "author": "Abishek Palraj",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Mirissa_beach,_Srilanka.jpg"
+  },
+  "trincomalee": {
+    "file": "trincomalee.jpg",
+    "alt": "White sand and clear water at Pigeon Island near Trincomalee",
+    "title": "SriLanka PigeonIsland CGM 2019.jpg",
+    "author": "Chiranmayu Medis",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:SriLanka_PigeonIsland_CGM_2019.jpg"
+  },
+  "arugam-bay": {
+    "file": "arugam-bay.jpg",
+    "alt": "Aerial view of the beach and fishing boats at Arugam Bay",
+    "title": "Beach of Arugam Bay.jpg",
+    "author": "Dennis Sylvester Hurd",
+    "license": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Beach_of_Arugam_Bay.jpg"
+  },
+  "tea-hills": {
+    "file": "tea-hills.jpg",
+    "alt": "A path winding through green tea estates in the Sri Lankan hills",
+    "title": "Tea plantation Haputale.jpg",
+    "author": "Adbar",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Tea_plantation_Haputale.jpg"
+  },
+  "misty-hills": {
+    "file": "misty-hills.jpg",
+    "alt": "Mist drifting over forested mountains in the hill country",
+    "title": "Ella, Sri Lanka, Mountains in clouds 2.jpg",
+    "author": "Vyacheslav Argenberg",
+    "license": "CC BY 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Ella,_Sri_Lanka,_Mountains_in_clouds_2.jpg"
+  },
+  "whale": {
+    "file": "whale.jpg",
+    "alt": "The tail of a blue whale diving off the south coast of Sri Lanka",
+    "title": "Mirissa, whale watching, blue whale (6917912897).jpg",
+    "author": "Arian Zwegers",
+    "license": "CC BY 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Mirissa,_whale_watching,_blue_whale_(6917912897).jpg"
+  },
+  "airport": {
+    "file": "airport.jpg",
+    "alt": "Departure corridor at Bandaranaike International Airport",
+    "title": "Bandaranaike International Airport Floor.JPG",
+    "author": "Cherubino",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Bandaranaike_International_Airport_Floor.JPG"
+  },
+  "temple": {
+    "file": "temple.jpg",
+    "alt": "A golden Buddha statue in the shrine room of Gangaramaya Temple, Colombo",
+    "title": "Buddha statue at Gangaramaya Temple, Colombo.jpg",
+    "author": "TheSriLankaLK",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Buddha_statue_at_Gangaramaya_Temple,_Colombo.jpg"
+  },
+  "beach": {
+    "file": "beach.jpg",
+    "alt": "Palm-lined beach and calm bay at Unawatuna",
+    "title": "Unawatuna.jpg",
+    "author": "Bernard Gagnon",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Unawatuna.jpg"
+  },
+  "beach-sunset": {
+    "file": "beach-sunset.jpg",
+    "alt": "Palm trees silhouetted against a pink sunset",
+    "title": "Negombo Beach resort pool (Unsplash).jpg",
+    "author": "Recal Media recalmedia",
+    "license": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Negombo_Beach_resort_pool_(Unsplash).jpg"
+  },
+  "train-view": {
+    "file": "train-view.jpg",
+    "alt": "View along the railway tracks from a train in the hill country at dusk",
+    "title": "Ella travel the hill country 01.jpg",
+    "author": "Nisal Senanayaka",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Ella_travel_the_hill_country_01.jpg"
+  },
+  "colombo-fort": {
+    "file": "colombo-fort.jpg",
+    "alt": "Colonial-era buildings in the Fort district of Colombo",
+    "title": "Colombo Galle Face Roundabout.JPG",
+    "author": "Adbar",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Colombo_Galle_Face_Roundabout.JPG"
+  }
+}

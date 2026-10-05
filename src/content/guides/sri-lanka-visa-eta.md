@@ -28,6 +28,8 @@ seo:
   title: 'Sri Lanka ETA 2026: Free for 40 Countries — Guide'
   description: Sri Lanka’s tourist ETA is free for 40 countries from 25 May 2026 but still mandatory. Eligibility, validity, how to apply officially and scams to avoid.
   keyword: sri lanka eta 2026
+heroImage: ../../assets/images/photos/airport.jpg
+heroAlt: Departure corridor at Bandaranaike International Airport
 ---
 
 **The short answer:** from **25 May 2026**, nationals of **40 countries** can get a Sri Lanka tourist ETA **free of charge**. But an ETA is still **mandatory** for every foreign visitor — free does not mean "no ETA needed".

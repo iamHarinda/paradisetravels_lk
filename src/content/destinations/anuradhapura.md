@@ -34,6 +34,8 @@ seo:
   description: 'Anuradhapura, Sri Lanka’s ancient capital and UNESCO site: Sri Maha Bodhi, great stupas and reservoirs. How to visit and Cultural Triangle tours that include it.'
   keyword: anuradhapura
 reviewed: false
+heroImage: ../../assets/images/photos/anuradhapura.jpg
+heroAlt: The white dome of Ruwanwelisaya stupa in Anuradhapura
 ---
 
 For more than a thousand years Anuradhapura was the capital of Sri Lanka. Today its sacred city — a UNESCO World Heritage Site — is still an active place of pilgrimage, with enormous stupas, monastery ruins and the Sri Maha Bodhi, a fig tree grown from a cutting of the tree under which the Buddha is said to have attained enlightenment.

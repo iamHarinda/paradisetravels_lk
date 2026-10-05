@@ -1,0 +1,58 @@
+---
+import LegalLayout from '../layouts/LegalLayout.astro';
+import { PHOTO_CREDITS } from '../lib/photos';
+
+// Attribution required by the CC BY / CC BY-SA licences of the photos we use (docs: src/data/photo-credits.json).
+const LICENSE_URL: Record<string, string> = {
+  CC0: 'https://creativecommons.org/publicdomain/zero/1.0/',
+  'CC BY 2.0': 'https://creativecommons.org/licenses/by/2.0/',
+  'CC BY 4.0': 'https://creativecommons.org/licenses/by/4.0/',
+  'CC BY-SA 2.0': 'https://creativecommons.org/licenses/by-sa/2.0/',
+  'CC BY-SA 3.0': 'https://creativecommons.org/licenses/by-sa/3.0/',
+  'CC BY-SA 4.0': 'https://creativecommons.org/licenses/by-sa/4.0/',
+};
+const credits = Object.values(PHOTO_CREDITS).sort((a, b) => a.alt.localeCompare(b.alt));
+---
+
+<LegalLayout
+  title="Photo credits"
+  seoTitle="Photo Credits | Paradise Travels"
+  description="Credits and licences for the photographs used on the Paradise Travels website, sourced from Wikimedia Commons under Creative Commons and public-domain licences."
+  path="/photo-credits"
+  updated={new Date('2026-10-05')}
+>
+  <p>
+    Many photographs on this site come from Wikimedia Commons and are used under the licences below. Images have been
+    resized and cropped for the web. We are grateful to the photographers.
+  </p>
+  <table>
+    <thead>
+      <tr>
+        <th>Photo</th>
+        <th>Photographer</th>
+        <th>Licence</th>
+      </tr>
+    </thead>
+    <tbody>
+      {credits.map((c) => (
+        <tr>
+          <td>
+            <a href={c.source} rel="noopener">
+              {c.alt}
+            </a>
+          </td>
+          <td>{c.author}</td>
+          <td>
+            {LICENSE_URL[c.license] ? (
+              <a href={LICENSE_URL[c.license]} rel="noopener license">
+                {c.license}
+              </a>
+            ) : (
+              c.license
+            )}
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</LegalLayout>

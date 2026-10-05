@@ -36,6 +36,8 @@ seo:
   description: 'Things to do in Colombo, Sri Lanka’s capital: markets, temples, museums and Galle Face Green. Best time to visit, getting there and tours that include it.'
   keyword: things to do in colombo
 reviewed: false
+heroImage: ../../assets/images/photos/colombo.jpg
+heroAlt: Galle Face promenade and beach with the Colombo skyline
 ---
 
 Colombo is where most journeys in Sri Lanka begin and end. It is a working city rather than a resort, but it rewards a day of exploring: the crowded lanes of Pettah, Buddhist and Hindu temples, colonial-era buildings in Fort, and a sunset among families and food stalls on Galle Face Green.

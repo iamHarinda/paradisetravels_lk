@@ -31,6 +31,8 @@ seo:
   description: 'Nuwara Eliya, Sri Lanka’s cool tea-country town: tea factories, Horton Plains and colonial bungalows. Best time to visit, getting there and tours.'
   keyword: nuwara eliya
 reviewed: false
+heroImage: ../../assets/images/photos/nuwara-eliya.jpg
+heroAlt: Rolling tea plantations in the hills near Nuwara Eliya
 ---
 
 Nuwara Eliya sits high in the central hills, surrounded by tea estates. The climate is cool, the gardens and bungalows recall the colonial era, and early mornings bring mist over the plantations. It is the base for Horton Plains National Park and the walk to World’s End.

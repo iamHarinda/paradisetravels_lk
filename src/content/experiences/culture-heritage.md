@@ -33,6 +33,8 @@ seo:
   description: 'Explore Sri Lanka’s UNESCO heritage: Sigiriya, Dambulla, Anuradhapura, Polonnaruwa, Kandy and Galle. Itinerary ideas and cultural tours from local experts.'
   keyword: sri lanka cultural triangle tour
 reviewed: false
+heroImage: ../../assets/images/photos/sigiriya-gardens.jpg
+heroAlt: The water gardens leading to Sigiriya rock
 ---
 
 Sri Lanka has a written history going back more than two thousand years, and much of it is still standing. The Cultural Triangle between Anuradhapura, Polonnaruwa and Kandy holds several UNESCO World Heritage Sites within a few hours’ drive of each other, and Galle Fort adds a colonial chapter on the coast.

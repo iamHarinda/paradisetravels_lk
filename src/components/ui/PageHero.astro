@@ -24,7 +24,13 @@ const { eyebrow, title, intro, image, imageAlt, tone = 'ocean', media = true } =
   </div>
   {media && (
     <div class="mt-10 aspect-[16/9] overflow-hidden rounded-media sm:aspect-[21/9]">
-      <Media image={image} alt={imageAlt} tone={tone} priority sizes="(min-width: 1440px) 1360px, 100vw" />
+      <Media
+        image={image}
+        alt={imageAlt}
+        tone={tone}
+        priority
+        sizes="(min-width: 1440px) 1360px, (min-width: 640px) calc(100vw - 5rem), calc(100vw - 2rem)"
+      />
     </div>
   )}
 </section>

@@ -29,6 +29,8 @@ seo:
   description: 'Ayurveda in Sri Lanka: what to expect at a retreat, how long to stay and how to choose. Packages from 7 to 21 days with transfers and touring included.'
   keyword: ayurveda sri lanka
 reviewed: false
+heroImage: ../../assets/images/photos/misty-hills.jpg
+heroAlt: Mist drifting over forested mountains in the hill country
 ---
 
 Ayurveda is a traditional system of medicine that remains part of everyday life in Sri Lanka. A genuine retreat is not a spa menu: it begins with a doctor’s consultation and builds a programme of treatments, food and rest around you. See our [Ayurveda packages](/services/ayurveda-packages).

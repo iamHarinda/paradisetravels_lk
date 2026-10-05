@@ -80,6 +80,8 @@ exclusions:
   - '{{TODO: confirm with owner whether entrance fees, safaris and meals are included}}'
 priceNote: Price depends on hotel class, season and group size — ask for a quote.
 reviewed: false
+heroImage: ../../assets/images/photos/beach-sunset.jpg
+heroAlt: Palm trees silhouetted against a pink sunset
 ---
 
 Every tour is private and can be changed: add days, swap hotels, include flights or a visa, or combine it with an Ayurveda stay. Tell us what you like and we will send a tailored plan.

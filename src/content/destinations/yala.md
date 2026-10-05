@@ -33,6 +33,8 @@ seo:
   description: 'Yala National Park, Sri Lanka: leopard and elephant safaris, best time to visit, where to stay and wildlife tours. Plan your Yala safari with local experts.'
   keyword: yala safari
 reviewed: false
+heroImage: ../../assets/images/photos/yala.jpg
+heroAlt: A leopard walking through the undergrowth in Yala National Park
 ---
 
 Yala, in the south-east, is Sri Lanka’s most visited national park. Its mix of scrub, lagoons and rocky outcrops supports elephants, sloth bears, crocodiles and a large number of birds — and it is known worldwide for leopards.

@@ -19,6 +19,8 @@ seo:
   title: 'Sri Lanka Travel Tips: What to Know Before You Go'
   description: 'Sri Lanka travel tips: currency and cards, temple dress code, Poya full-moon holidays, driving on the left and emergency numbers. Know before you go.'
   keyword: sri lanka travel tips
+heroImage: ../../assets/images/photos/temple.jpg
+heroAlt: A golden Buddha statue in the shrine room of Gangaramaya Temple, Colombo
 ---
 
 ## Money

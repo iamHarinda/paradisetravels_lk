@@ -32,6 +32,8 @@ seo:
   description: 'Polonnaruwa, Sri Lanka’s medieval capital and UNESCO site: Gal Vihara, palaces and temples by bicycle. Tips, best time to visit and tours that include it.'
   keyword: polonnaruwa
 reviewed: false
+heroImage: ../../assets/images/photos/polonnaruwa.jpg
+heroAlt: Seated Buddha carved into the rock at Gal Vihara, Polonnaruwa
 ---
 
 Polonnaruwa became the capital after Anuradhapura and is better preserved and more compact. A bicycle is the best way to move between the royal palace, the quadrangle of temples and the Gal Vihara — Buddha figures carved directly into a granite rock face. It is a UNESCO World Heritage Site.

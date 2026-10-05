@@ -1,0 +1,31 @@
+---
+import { OUTLINE, project } from '../../lib/geo';
+
+// Shared island rendering: real coastline (Natural Earth) with a land gradient and a soft
+// central-highlands tint so the map reads as terrain, not a flat shape.
+interface Props {
+  id: string;
+}
+const { id } = Astro.props;
+const [hx, hy] = project([7.05, 80.75]);
+---
+
+<defs>
+  <linearGradient id={`${id}-land`} x1="0" y1="0" x2="0.4" y2="1">
+    <stop offset="0" stop-color="#127A8C"></stop>
+    <stop offset="1" stop-color="#0B4A5C"></stop>
+  </linearGradient>
+  <radialGradient id={`${id}-hills`}>
+    <stop offset="0" stop-color="#2F6B3F" stop-opacity="0.9"></stop>
+    <stop offset="0.6" stop-color="#2F6B3F" stop-opacity="0.45"></stop>
+    <stop offset="1" stop-color="#2F6B3F" stop-opacity="0"></stop>
+  </radialGradient>
+  <clipPath id={`${id}-clip`}>
+    <path d={OUTLINE}></path>
+  </clipPath>
+</defs>
+<path d={OUTLINE} fill={`url(#${id}-land)`}></path>
+<g clip-path={`url(#${id}-clip)`}>
+  <ellipse cx={hx} cy={hy} rx="62" ry="78" fill={`url(#${id}-hills)`}></ellipse>
+</g>
+<path d={OUTLINE} fill="none" stroke="#7FD1C7" stroke-width="1" stroke-linejoin="round" stroke-opacity="0.9"></path>

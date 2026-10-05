@@ -30,6 +30,8 @@ seo:
   description: 'Mirissa, Sri Lanka: whale watching season, beaches, Coconut Tree Hill and where to stay on the south coast. Plan your Mirissa trip with local experts.'
   keyword: mirissa whale watching
 reviewed: false
+heroImage: ../../assets/images/photos/mirissa.jpg
+heroAlt: Turquoise water and rocks along the bay at Mirissa
 ---
 
 Mirissa is a small beach town on Sri Lanka’s southern tip. Between roughly November and April, boats head out to look for blue whales and other cetaceans offshore; the rest of the time it is a relaxed place for swimming and sunsets.

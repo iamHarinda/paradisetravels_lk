@@ -37,6 +37,8 @@ seo:
   description: 'Visiting Sigiriya, Sri Lanka’s 5th-century rock fortress and UNESCO site: when to climb, Pidurangala, where to stay and tours of the Cultural Triangle.'
   keyword: sigiriya rock
 reviewed: false
+heroImage: ../../assets/images/photos/sigiriya.jpg
+heroAlt: The rock fortress of Sigiriya rising above the forest
 ---
 
 Sigiriya is a rock fortress and palace built in the 5th century by King Kashyapa, rising sharply from the surrounding forest. The climb passes ancient frescoes, a mirror wall and the giant lion’s paws before reaching the palace ruins on the summit. It is a UNESCO World Heritage Site and the centrepiece of the Cultural Triangle.

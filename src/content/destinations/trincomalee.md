@@ -31,6 +31,8 @@ seo:
   description: 'Trincomalee and Nilaveli, Sri Lanka: calm east-coast beaches, Pigeon Island snorkelling and whale watching. Best time to visit is roughly May to September.'
   keyword: trincomalee
 reviewed: false
+heroImage: ../../assets/images/photos/trincomalee.jpg
+heroAlt: White sand and clear water at Pigeon Island near Trincomalee
 ---
 
 Trincomalee sits on one of the finest natural harbours in the world. North of town, the beaches of Uppuveli and Nilaveli are calm and clear during the east-coast season, roughly May to September — exactly when the west and south are wet.

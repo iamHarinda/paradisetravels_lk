@@ -1,21 +1,39 @@
 ---
 import { REGIONS, type RegionId } from '../../lib/seasons';
-
-import { OUTLINE as outline, MAP_VIEWBOX, project } from '../../lib/geo';
+import MapLand from '../ui/MapLand.astro';
+import { MAP_VIEWBOX, project } from '../../lib/geo';
 
 interface Props {
   places: { id: string; title: string; region: RegionId; coords: [number, number] }[];
   class?: string;
 }
 const { places, class: className } = Astro.props;
+
+// Label placement for places whose dots sit close together; default: right of the dot (left near the east coast).
+type Side = 'left' | 'right' | 'above' | 'below';
+const LABEL: Record<string, Side> = {
+  sigiriya: 'above',
+  dambulla: 'left',
+  polonnaruwa: 'right',
+  'arugam-bay': 'left',
+  ella: 'below',
+  yala: 'below',
+  mirissa: 'below',
+};
+const labelPos = (id: string, x: number, y: number) => {
+  const side: Side = LABEL[id] ?? (x < 190 ? 'right' : 'left');
+  if (side === 'above') return { x, y: y - 9, anchor: 'middle' };
+  if (side === 'below') return { x, y: y + 16, anchor: 'middle' };
+  return side === 'right' ? { x: x + 8, y: y + 3.5, anchor: 'start' } : { x: x - 8, y: y + 3.5, anchor: 'end' };
+};
 ---
 
 <svg viewBox={MAP_VIEWBOX} class={className} role="img" aria-labelledby="map-title">
   <title id="map-title">Map of Sri Lanka showing our destinations</title>
-  <path d={outline} fill="var(--map-land, #0B4A5C)" stroke="#7FD1C7" stroke-width="1.2" stroke-linejoin="round"></path>
+  <MapLand id="island" />
   {places.map((p) => {
     const [x, y] = project(p.coords);
-    const right = x < 190;
+    const label = labelPos(p.id, x, y);
     return (
       <a
         href={`/destinations/${p.id}`}
@@ -25,13 +43,7 @@ const { places, class: className } = Astro.props;
       >
         <circle cx={x} cy={y} r="4.5" />
         <circle cx={x} cy={y} r="11" fill="transparent" />
-        <text
-          x={right ? x + 8 : x - 8}
-          y={y + 3.5}
-          font-size="10"
-          text-anchor={right ? 'start' : 'end'}
-          fill="currentColor"
-        >
+        <text x={label.x} y={label.y} font-size="10" text-anchor={label.anchor} fill="currentColor">
           {p.title.replace(' National Park', '')}
         </text>
       </a>

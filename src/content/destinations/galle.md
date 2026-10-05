@@ -31,6 +31,8 @@ seo:
   description: 'Galle Fort, Sri Lanka: UNESCO-listed ramparts, cobbled lanes, cafés and nearby beaches. Best time to visit, getting there and south coast tours.'
   keyword: galle fort
 reviewed: false
+heroImage: ../../assets/images/photos/galle.jpg
+heroAlt: Galle Fort ramparts and lighthouse beside the sea
 ---
 
 Galle Fort was built by the Portuguese and greatly expanded by the Dutch in the 17th century. Inside its sea walls is a living town of churches, mosques, merchants’ houses, cafés and boutique hotels. The Old Town of Galle and its Fortifications is a UNESCO World Heritage Site.

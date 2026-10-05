@@ -5,6 +5,9 @@ import CtaBlock from '../components/ui/CtaBlock.astro';
 import Icon from '../components/ui/Icon.astro';
 import { getEntries, byOrder } from '../lib/content';
 import { SITE } from '../lib/site';
+import { photo } from '../lib/photos';
+
+const hero = photo('colombo-fort');
 
 const team = (await getEntries('team')).sort(byOrder);
 const values = [
@@ -27,6 +30,8 @@ const values = [
     title={`Arranging travel from Colombo since ${SITE.foundingYear}.`}
     intro="Paradise Travels started as an air-ticketing agency and grew into an all-in-one travel partner: tours, partner hotels, drivers, guides, interpreters, events and Ayurveda — still run personally from our office in Nugegoda."
     tone="heritage"
+    image={hero.image}
+    imageAlt={hero.alt}
   />
 
   <section class="container-site grid gap-12 pb-16 lg:grid-cols-[2fr_1fr]">

@@ -23,10 +23,14 @@ A local expert / the owner must check every entry before launch (docs/05 §7), e
 - [ ] Default social share image (1200×630). `public/og-default.png` is a text-only placeholder.
 - [ ] Tagline choice (docs/05 §2) — the site currently uses the hero line "Sri Lanka, planned end-to-end."
 
-## 3. Photos & video — [launch]
-- [ ] Hero video (8–12 s, see docs/09 §3) + poster image.
-- [ ] A hero photo for every destination, experience, tour, guide and hotel (≥ 2400 px wide). Every card currently shows a labelled colour placeholder.
+## 3. Photos & video
+Interim photos: 28 Creative Commons / public-domain photos from Wikimedia Commons are in `src/assets/images/photos/`,
+credited on `/photo-credits` (required by their CC BY / CC BY-SA licences — keep that page while they are used).
+- [ ] Replace with the owner's own photography over time (docs/04 §8) — own photos build more trust than stock. Keep `/photo-credits` in sync (`src/data/photo-credits.json`).
+- [ ] Hero video (8–12 s, see docs/09 §3) — the home hero currently uses a still photo of Sigiriya.
+- [ ] Hotel photos (from each partner hotel, with permission).
 - [ ] Office, team and Chairman/MD photos.
+- [ ] Ayurveda: no suitable free photo found — the Ayurveda pages use a hill-country landscape for now.
 
 ## 4. Business details
 - [ ] **[launch]** Office opening hours and WhatsApp reply hours → contact page, `TravelAgency` schema, and the "we reply within X" promise on the thank-you page.

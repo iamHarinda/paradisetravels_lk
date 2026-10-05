@@ -36,6 +36,8 @@ seo:
   description: 'Kandy, Sri Lanka: the Temple of the Sacred Tooth Relic, Kandy Lake, Peradeniya gardens and the Esala Perahera. Best time to visit and tours that include it.'
   keyword: things to do in kandy
 reviewed: false
+heroImage: ../../assets/images/photos/kandy.jpg
+heroAlt: Kandy Lake with the Temple of the Sacred Tooth Relic on the shore
 ---
 
 Kandy was the last capital of the Sri Lankan kings and remains the island’s spiritual centre. The Temple of the Sacred Tooth Relic, beside a lake in the middle of town, is one of the most important places of worship in the Buddhist world, and the city is a UNESCO World Heritage Site.

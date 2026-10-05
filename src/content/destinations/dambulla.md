@@ -30,6 +30,8 @@ seo:
   description: 'Dambulla Cave Temple in Sri Lanka’s Cultural Triangle: painted caves and Buddha statues, a UNESCO site easily combined with Sigiriya. Tips and tours.'
   keyword: dambulla cave temple
 reviewed: false
+heroImage: ../../assets/images/photos/dambulla.jpg
+heroAlt: Painted ceiling and Buddha statues inside the Dambulla cave temple
 ---
 
 The Dambulla cave temple complex is a UNESCO World Heritage Site: a series of caves under a huge rock, filled with Buddha statues and painted ceilings. It sits on the road between Kandy and Sigiriya, so it fits easily into a Cultural Triangle day.

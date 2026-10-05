@@ -29,6 +29,8 @@ seo:
   description: 'Arugam Bay, Sri Lanka’s surf capital: surf season roughly May to October, beaches, lagoons and where to stay. Plan an east-coast trip with local experts.'
   keyword: arugam bay surf
 reviewed: false
+heroImage: ../../assets/images/photos/arugam-bay.jpg
+heroAlt: Aerial view of the beach and fishing boats at Arugam Bay
 ---
 
 Arugam Bay is a small village on the south-east coast with a right-hand point break that draws surfers from around the world. The season runs roughly May to October; beginners have gentler breaks nearby.

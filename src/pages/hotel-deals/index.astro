@@ -7,6 +7,9 @@ import RateRequestForm from '../../components/hotels/RateRequestForm.astro';
 import { getEntries } from '../../lib/content';
 import { REGIONS } from '../../lib/seasons';
 import { itemListSchema } from '../../lib/schema-org';
+import { photo } from '../../lib/photos';
+
+const hero = photo('beach');
 
 const hotels = await getEntries('hotels');
 const regions = [...new Set(hotels.map((h) => h.data.region))];
@@ -31,6 +34,8 @@ const steps = [
     title="Partner rates at handpicked hotels"
     intro="We hold contracted rates with hotels around Sri Lanka — often better value than the big booking sites, especially combined with transfers or touring. Book just the hotel, or the whole trip."
     tone="ocean"
+    image={hero.image}
+    imageAlt={hero.alt}
   />
 
   <section class="container-site pb-16" aria-labelledby="how-heading">

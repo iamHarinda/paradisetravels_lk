@@ -6,6 +6,9 @@ import CtaBlock from '../../components/ui/CtaBlock.astro';
 import { getEntries, byOrder } from '../../lib/content';
 import { itemListSchema } from '../../lib/schema-org';
 import { STYLE_LABELS, tourPrice } from '../../lib/labels';
+import { photo } from '../../lib/photos';
+
+const dayTours = photo('minneriya');
 
 const tours = (await getEntries('tours')).sort((a, b) => a.data.durationDays - b.data.durationDays || byOrder(a, b));
 const styles = [...new Set(tours.flatMap((t) => t.data.styles))];
@@ -82,6 +85,8 @@ const durationOf = (n: number) => durations.find((d) => d.test(n))!.id;
           text="One-day escapes from Colombo — wildlife, rafting, beaches or culture."
           badge="1 day"
           tone="wild"
+          image={dayTours.image}
+          imageAlt={dayTours.alt}
           class="h-full"
         />
       </li>

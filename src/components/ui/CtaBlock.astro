@@ -3,24 +3,35 @@ import Button from './Button.astro';
 import Icon from './Icon.astro';
 import Media from './Media.astro';
 import { whatsappLink } from '../../lib/site';
+import { photo, type PhotoName } from '../../lib/photos';
 
 interface Props {
   title?: string;
   text?: string;
   tone?: 'ocean' | 'tea' | 'heritage' | 'wild';
+  photoName?: PhotoName;
 }
 const {
   title = 'Tell us your dream trip.',
   text = 'We reply with a plan — not a sales pitch.',
   tone = 'heritage',
+  photoName,
 } = Astro.props;
+// Background photo follows the page's tone unless one is given.
+const TONE_PHOTO: Record<string, PhotoName> = {
+  ocean: 'mirissa',
+  tea: 'misty-hills',
+  heritage: 'sigiriya-gardens',
+  wild: 'minneriya',
+};
+const bg = photo(photoName ?? TONE_PHOTO[tone] ?? 'misty-hills');
 const page = new URL(Astro.url.pathname.replace(/\.html$/, ''), Astro.site);
 ---
 
 <section class="relative isolate overflow-hidden py-24 text-center text-white sm:py-32">
   <div class="absolute inset-0 -z-10">
-    <Media tone={tone} />
-    <div class="absolute inset-0 bg-ocean-900/50"></div>
+    <Media image={bg.image} alt="" tone={tone} sizes="100vw" />
+    <div class="absolute inset-0 bg-ocean-900/60"></div>
   </div>
   <div class="container-site max-w-2xl">
     <h2 class="reveal text-h2">{title}</h2>

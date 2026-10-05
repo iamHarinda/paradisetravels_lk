@@ -4,6 +4,9 @@ import PageHero from '../../components/ui/PageHero.astro';
 import Icon from '../../components/ui/Icon.astro';
 import CtaBlock from '../../components/ui/CtaBlock.astro';
 import Button from '../../components/ui/Button.astro';
+import { photo } from '../../lib/photos';
+
+const hero = photo('minneriya');
 
 // Day tours / Day Outing Packages hub (docs/03). Individual day-tour pages come in phase 2.
 const ideas = [
@@ -45,6 +48,8 @@ const ideas = [
     title="Day tours & outings from Colombo"
     intro="One day is enough for a real Sri Lankan adventure. We plan day trips for visitors with a free day, and outings for companies, schools and families."
     tone="wild"
+    image={hero.image}
+    imageAlt={hero.alt}
   />
   <section class="container-site pb-16">
     <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

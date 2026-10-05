@@ -1,35 +1,47 @@
 ---
 import Media from '../ui/Media.astro';
+import { photo } from '../../lib/photos';
 
 // "A journey across the island" (docs/04 §6 pinned storytelling).
 // Default (no JS, mobile, reduced motion): each chapter shows its own image, side by side with the text.
 // Enhanced (desktop + motion allowed): GSAP ScrollTrigger pins one media frame and crossfades it as the text scrolls.
-const chapters = [
+type Chapter = {
+  title: string;
+  text: string;
+  tone: 'ocean' | 'tea' | 'heritage' | 'wild';
+  photo: ReturnType<typeof photo>;
+  href: string;
+};
+const chapters: Chapter[] = [
   {
     title: 'The coast',
     text: 'Fort walls in Galle, whales off Mirissa, surf at Arugam Bay — and a beach in season all year.',
     tone: 'ocean',
+    photo: photo('mirissa'),
     href: '/experiences/beaches',
   },
   {
     title: 'The tea hills',
     text: 'Misty estates, planters’ bungalows and the slow, beautiful train from Kandy to Ella.',
     tone: 'tea',
+    photo: photo('tea-hills'),
     href: '/experiences/tea-country',
   },
   {
     title: 'The ancient cities',
     text: 'Sigiriya at sunrise, painted caves and two-thousand-year-old stupas.',
     tone: 'heritage',
+    photo: photo('sigiriya'),
     href: '/experiences/culture-heritage',
   },
   {
     title: 'The wild',
     text: 'Leopards in Yala and herds of elephants in Udawalawe.',
     tone: 'wild',
+    photo: photo('yala'),
     href: '/experiences/wildlife-safaris',
   },
-] as const;
+];
 ---
 
 <section class="story container-site py-24" aria-labelledby="story-heading" data-story>
@@ -42,7 +54,7 @@ const chapters = [
       <div class="sticky top-28 aspect-[4/5] overflow-hidden rounded-media" data-story-media>
         {chapters.map((c, i) => (
           <div class:list={['absolute inset-0', i > 0 && 'opacity-0']} data-story-layer>
-            <Media tone={c.tone} sizes="50vw" />
+            <Media image={c.photo.image} alt="" tone={c.tone} sizes="50vw" />
           </div>
         ))}
       </div>
@@ -54,7 +66,7 @@ const chapters = [
             <div
               class:list={['story-inline aspect-[4/3] overflow-hidden rounded-media', i % 2 === 1 && 'md:order-last']}
             >
-              <Media tone={c.tone} sizes="(min-width: 768px) 50vw, 100vw" />
+              <Media image={c.photo.image} alt={c.photo.alt} tone={c.tone} sizes="(min-width: 768px) 50vw, 100vw" />
             </div>
             <div>
               <h3 class="text-4xl font-semibold">{c.title}</h3>

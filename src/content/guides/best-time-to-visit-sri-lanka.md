@@ -22,6 +22,8 @@ seo:
   title: Best Time to Visit Sri Lanka (Month by Month)
   description: 'When to visit Sri Lanka: west and south coasts roughly December to April, east coast roughly May to September, and the Cultural Triangle much of the year.'
   keyword: best time to visit sri lanka
+heroImage: ../../assets/images/photos/mirissa.jpg
+heroAlt: Turquoise water and rocks along the bay at Mirissa
 ---
 
 **The short answer:** Sri Lanka is always in season somewhere. Two monsoons hit the island at different times of year, so when one coast is wet, the other is usually dry.

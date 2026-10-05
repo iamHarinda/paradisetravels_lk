@@ -33,6 +33,8 @@ seo:
   description: 'Negombo, Sri Lanka: lagoon boat trips, the fish market and beach sunsets just minutes from the airport. The easy first or last night of your trip.'
   keyword: negombo sri lanka
 reviewed: false
+heroImage: ../../assets/images/photos/negombo.jpg
+heroAlt: Palm trees on the beach at Negombo
 ---
 
 Negombo sits a short drive from the international airport, which makes it the most practical place to sleep after a late arrival or before an early flight. It has a long beach, a busy fishing community and a lagoon lined with mangroves.

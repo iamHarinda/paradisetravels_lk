@@ -25,6 +25,8 @@ seo:
   description: 'The Kandy to Ella train and other scenic Sri Lanka rail journeys: what to expect, booking reserved seats and combining the train with a private driver.'
   keyword: kandy to ella train
 reviewed: false
+heroImage: ../../assets/images/photos/ella-train.jpg
+heroAlt: A blue train crossing the Nine Arch Bridge near Ella
 ---
 
 The hill-country railway climbs from Kandy through tea estates, forests and tunnels before dropping into Ella. It is slow, but that is the point. Many travellers combine the train for this section with a private car for the rest of the trip — your driver can meet you at the other end with your luggage.

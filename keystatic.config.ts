@@ -52,11 +52,12 @@ const workflow = {
   }),
 };
 
-const hero = (dir: string) => ({
+// All hero photos live in one shared folder so they can be reused across collections.
+const hero = () => ({
   heroImage: fields.image({
     label: 'Hero image (≥ 2400px wide)',
-    directory: `src/assets/images/${dir}`,
-    publicPath: `../../assets/images/${dir}/`,
+    directory: 'src/assets/images/photos',
+    publicPath: '../../assets/images/photos/',
   }),
   heroAlt: fields.text({ label: 'Hero image alt text' }),
   tone: fields.select({
@@ -98,7 +99,7 @@ export default config({
         ),
         tips: fields.array(fields.text({ label: 'Tip' }), { label: 'Practical tips', itemLabel: (p) => p.value }),
         faqs,
-        ...hero('destinations'),
+        ...hero(),
         featured: fields.checkbox({ label: 'Show in menu', defaultValue: false }),
         order: fields.integer({ label: 'Order', defaultValue: 100 }),
         seo,
@@ -125,7 +126,7 @@ export default config({
           itemLabel: (p) => p.value,
         }),
         faqs,
-        ...hero('experiences'),
+        ...hero(),
         order: fields.integer({ label: 'Order', defaultValue: 100 }),
         seo,
         ...workflow,
@@ -181,7 +182,7 @@ export default config({
           itemLabel: (p) => p.value ?? '',
         }),
         faqs,
-        ...hero('tours'),
+        ...hero(),
         featured: fields.checkbox({ label: 'Featured on home page', defaultValue: false }),
         order: fields.integer({ label: 'Order', defaultValue: 100 }),
         seo,
@@ -259,7 +260,7 @@ export default config({
           label: 'Highlights',
           itemLabel: (p) => p.value,
         }),
-        ...hero('hotels'),
+        ...hero(),
         seo,
         ...workflow,
       },
@@ -305,7 +306,7 @@ export default config({
           label: 'Related services',
           itemLabel: (p) => p.value ?? '',
         }),
-        ...hero('guides'),
+        ...hero(),
         seo,
         ...workflow,
         body,

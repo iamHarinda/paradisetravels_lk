@@ -1,5 +1,6 @@
 ---
-import { OUTLINE as outline, AIRPORT, MAP_VIEWBOX, project } from '../../lib/geo';
+import MapLand from '../ui/MapLand.astro';
+import { AIRPORT, MAP_VIEWBOX, project } from '../../lib/geo';
 
 // Static SVG route map (docs/03 tour template). The route line draws itself as it scrolls into view.
 
@@ -15,7 +16,7 @@ const route = points.map(([x, y], i) => `${i ? 'L' : 'M'}${x.toFixed(1)} ${y.toF
 <figure class={className}>
   <svg viewBox={MAP_VIEWBOX} class="w-full" role="img" aria-labelledby="route-title">
     <title id="route-title">Route map: {stops.map((s) => s.title).join(' → ')}</title>
-    <path d={outline} fill="var(--c-ocean-900)" stroke="#7FD1C7" stroke-width="1"></path>
+    <MapLand id="route" />
     <path
       d={route}
       fill="none"

@@ -35,6 +35,8 @@ seo:
   description: 'Udawalawe National Park, Sri Lanka: open grassland and reliable wild elephant sightings, plus the Elephant Transit Home. How to visit and safari tours.'
   keyword: udawalawe safari
 reviewed: false
+heroImage: ../../assets/images/photos/udawalawe.jpg
+heroAlt: An elephant and her calf grazing in Udawalawe National Park
 ---
 
 Udawalawe’s open landscape around a large reservoir makes wildlife easy to spot, and herds of wild elephants are seen here throughout the year. It fits neatly between Ella and the south coast.

@@ -28,6 +28,8 @@ seo:
   description: 'Whale watching in Sri Lanka: Mirissa roughly November to April and Trincomalee roughly May to October. When to go, what to expect and responsible operators.'
   keyword: whale watching sri lanka
 reviewed: false
+heroImage: ../../assets/images/photos/whale.jpg
+heroAlt: The tail of a blue whale diving off the south coast of Sri Lanka
 ---
 
 Whales pass close to Sri Lanka’s coast, and boat trips go out from Mirissa in the south (roughly November–April) and Trincomalee in the east (roughly May–October). Sightings are not guaranteed; choose an operator that follows responsible-viewing guidelines.

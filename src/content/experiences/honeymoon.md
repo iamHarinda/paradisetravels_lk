@@ -24,6 +24,8 @@ seo:
   description: 'Plan a Sri Lanka honeymoon: hill-country hideaways, safaris, train rides and beach villas, with a private driver and a route designed around the two of you.'
   keyword: sri lanka honeymoon package
 reviewed: false
+heroImage: ../../assets/images/photos/beach-sunset.jpg
+heroAlt: Palm trees silhouetted against a pink sunset
 ---
 
 Sri Lanka packs a lot of variety into a short distance, which makes it ideal for a honeymoon: ancient cities, cool tea hills, wildlife and a beach to finish. We plan the route, pace and hotels around what you both enjoy.
