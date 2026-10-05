@@ -3,7 +3,6 @@ import Media from '../ui/Media.astro';
 import Button from '../ui/Button.astro';
 import { SITE } from '../../lib/site';
 import { photo } from '../../lib/photos';
-import { OUTLINE, MAP_VIEWBOX } from '../../lib/geo';
 import { REGIONS, MONTHS_LONG, type RegionId } from '../../lib/seasons';
 
 // Editorial hero (docs/04 §5.1, "Editorial + tickets" direction): giant headline with an italic accent,
@@ -20,14 +19,6 @@ const buildRegions = inSeason(buildMonth);
 ---
 
 <section class="grain relative overflow-hidden pt-10 pb-16 sm:pt-14 lg:pb-24">
-  <svg
-    viewBox={MAP_VIEWBOX}
-    class="pointer-events-none absolute top-0 -right-24 -z-10 h-[120%] text-primary opacity-[0.06] max-lg:hidden"
-    aria-hidden="true"
-  >
-    <path d={OUTLINE} fill="currentColor"></path>
-  </svg>
-
   <div class="container-site grid items-center gap-12 lg:grid-cols-[1.05fr_1fr]">
     <div>
       <p class="detail flex flex-wrap gap-x-4 gap-y-1 text-muted">

@@ -1,0 +1,106 @@
+---
+import { arc, CMB, DESTINATIONS, FLIGHT_MAP, projectWorld } from '../../lib/flights';
+
+// Site-wide faded "flight map" backdrop: dotted world map (cached file, ~5 KB gz) with animated routes from
+// Colombo to the hubs of the airlines we ticket. Decorative only; static with prefers-reduced-motion.
+const [cx, cy] = projectWorld(CMB);
+---
+
+<div class="flight-backdrop" aria-hidden="true">
+  <svg viewBox={`0 0 ${FLIGHT_MAP.width} ${FLIGHT_MAP.height}`} preserveAspectRatio="xMidYMid slice">
+    <image href="/maps/world-dots.svg" width={FLIGHT_MAP.width} height={FLIGHT_MAP.height} />
+    <g class="routes">
+      {DESTINATIONS.map((d, i) => (
+        <path d={arc(d.coords)} style={`--i:${i}`} />
+      ))}
+    </g>
+    <g class="airports">
+      {DESTINATIONS.map((d, i) => {
+        const [x, y] = projectWorld(d.coords);
+        return (
+          <g style={`--i:${i}`}>
+            <circle class="pulse" cx={x} cy={y} r="5" />
+            <circle cx={x} cy={y} r="3.5" />
+          </g>
+        );
+      })}
+    </g>
+    <g class="hub">
+      <circle class="pulse" cx={cx} cy={cy} r="9"></circle>
+      <circle cx={cx} cy={cy} r="6"></circle>
+    </g>
+  </svg>
+</div>
+
+<style>
+  .flight-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.3;
+    /* Strongest around the Colombo hub, dissolving towards the edges where most text sits. */
+    mask-image: radial-gradient(ellipse 70% 75% at 56% 52%, #000 0%, rgb(0 0 0 / 0.55) 45%, transparent 85%);
+    /* Own compositor layer: scrolling never repaints it. */
+    will-change: transform;
+    contain: strict;
+  }
+  .flight-backdrop svg {
+    width: 100%;
+    height: 100%;
+  }
+  .flight-backdrop image {
+    opacity: 0.45;
+  }
+  .routes path {
+    fill: none;
+    stroke: var(--c-ocean-500);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-dasharray: 3 9;
+    animation: route-flow 2.4s linear infinite;
+    animation-delay: calc(var(--i) * -0.37s);
+  }
+  .airports circle {
+    fill: var(--c-ocean-700);
+  }
+  .hub circle {
+    fill: var(--c-gold-500);
+  }
+  .pulse {
+    transform-box: fill-box;
+    transform-origin: center;
+    opacity: 0;
+    animation: airport-pulse 3.6s var(--ease-travel) infinite;
+    animation-delay: calc(var(--i, 0) * 0.45s);
+  }
+  @keyframes route-flow {
+    to {
+      stroke-dashoffset: -24;
+    }
+  }
+  @keyframes airport-pulse {
+    0% {
+      opacity: 0.8;
+      transform: scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(3.2);
+    }
+  }
+  @media (prefers-color-scheme: dark) {
+    .flight-backdrop {
+      opacity: 0.16;
+    }
+    .routes path {
+      stroke: var(--c-lagoon-300);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .routes path,
+    .pulse {
+      animation: none;
+    }
+  }
+</style>

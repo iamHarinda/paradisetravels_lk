@@ -18,7 +18,7 @@ const page = new URL(Astro.url.pathname, Astro.site);
       <a
         href={whatsappLink(undefined, page)}
         rel="noopener"
-        class="flex items-center gap-3 rounded-lg px-3 py-3 hover:bg-sand-100 dark:hover:bg-white/5"
+        class="flex items-center gap-3 rounded-lg px-3 py-3 hover:bg-sky-100 dark:hover:bg-white/5"
         data-track="whatsapp"
       >
         <Icon name="whatsapp" class="size-5 text-tea-600 dark:text-lagoon-300" /> WhatsApp
@@ -27,7 +27,7 @@ const page = new URL(Astro.url.pathname, Astro.site);
     <li>
       <a
         href={`tel:${SITE.phoneE164}`}
-        class="flex items-center gap-3 rounded-lg px-3 py-3 hover:bg-sand-100 dark:hover:bg-white/5"
+        class="flex items-center gap-3 rounded-lg px-3 py-3 hover:bg-sky-100 dark:hover:bg-white/5"
         data-track="kakao"
       >
         <Icon name="chat" class="size-5 text-primary" /> KakaoTalk: {SITE.phone}
@@ -36,7 +36,7 @@ const page = new URL(Astro.url.pathname, Astro.site);
     <li>
       <a
         href={`mailto:${SITE.email}`}
-        class="flex items-center gap-3 rounded-lg px-3 py-3 hover:bg-sand-100 dark:hover:bg-white/5"
+        class="flex items-center gap-3 rounded-lg px-3 py-3 hover:bg-sky-100 dark:hover:bg-white/5"
         data-track="email"
       >
         <Icon name="mail" class="size-5 text-primary" /> Email us
@@ -45,7 +45,7 @@ const page = new URL(Astro.url.pathname, Astro.site);
     <li>
       <a
         href={`tel:${SITE.phoneE164}`}
-        class="flex items-center gap-3 rounded-lg px-3 py-3 hover:bg-sand-100 dark:hover:bg-white/5"
+        class="flex items-center gap-3 rounded-lg px-3 py-3 hover:bg-sky-100 dark:hover:bg-white/5"
         data-track="phone"
       >
         <Icon name="phone" class="size-5 text-primary" /> Call {SITE.phone}

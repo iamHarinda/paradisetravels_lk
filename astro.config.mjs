@@ -27,8 +27,15 @@ const variableFont = (pkg, file, { latinExt = true, italic = false } = {}) => {
   /** @type {[ReturnType<typeof variant>, ...ReturnType<typeof variant>[]]} */
   const variants = [variant('latin', LATIN)];
   if (latinExt) variants.push(variant('latin-ext', LATIN_EXT));
-  // Italic is only used for accent words in headlines — never preloaded.
-  if (italic) variants.push(variant('latin', LATIN, 'italic'));
+  // Italic is only used for accent words in headlines — never preloaded. It's a static weight-380, Latin-only
+  // instance cut from the variable font with fonttools (45 KB → 15 KB); see src/assets/fonts/README.md.
+  if (italic)
+    variants.push({
+      src: /** @type {[string]} */ (['./src/assets/fonts/fraunces-italic-380-latin.woff2']),
+      weight: '380',
+      style: /** @type {'italic'} */ ('italic'),
+      unicodeRange: /** @type {[string]} */ ([LATIN]),
+    });
   return { variants };
 };
 

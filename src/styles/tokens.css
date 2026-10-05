@@ -10,6 +10,11 @@
   --c-gold-300: #f0cf85;
   --c-laterite-500: #c2603c; /* earth/spice — sparing accent */
 
+  /* Sky — light airy blues for page backgrounds */
+  --c-sky-50: #f3f8fb;
+  --c-sky-100: #e4eff5;
+  --c-sky-200: #cfe3ec;
+
   /* Neutrals */
   --c-sand-50: #fbf8f2; /* page background (light) */
   --c-sand-100: #f3ede2;
@@ -17,7 +22,7 @@
   --c-ink-900: #14181b; /* body text */
 
   /* Semantic */
-  --c-bg: var(--c-sand-50);
+  --c-bg: var(--c-sky-50);
   --c-surface: #ffffff;
   --c-text: var(--c-ink-900);
   --c-text-muted: #5a5f63;

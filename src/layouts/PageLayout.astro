@@ -5,6 +5,7 @@ import Footer from '../components/layout/Footer.astro';
 import StickyBar from '../components/layout/StickyBar.astro';
 import FloatingContact from '../components/layout/FloatingContact.astro';
 import Breadcrumbs, { type Crumb } from '../components/layout/Breadcrumbs.astro';
+import FlightBackdrop from '../components/layout/FlightBackdrop.astro';
 import type { Props as SEOProps } from '../components/layout/SEO.astro';
 import { SITE } from '../lib/site';
 
@@ -30,7 +31,10 @@ const breadcrumbSchema = trail && {
 
 <BaseLayout {...seo} jsonLd={breadcrumbSchema ? [...jsonLd, breadcrumbSchema] : jsonLd}>
   <slot name="head" slot="head" />
-  <Header slot="header" overlay={overlayHeader} />
+  <Fragment slot="header">
+    <FlightBackdrop />
+    <Header overlay={overlayHeader} />
+  </Fragment>
   {trail && <Breadcrumbs items={trail} class="container-site pt-6" />}
   <slot />
   <Fragment slot="footer">
