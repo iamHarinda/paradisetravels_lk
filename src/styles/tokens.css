@@ -27,6 +27,8 @@
   --c-focus: #1e90ff;
   --c-line: rgb(20 24 27 / 0.12);
   --c-eyebrow: var(--c-ocean-500);
+  /* Editorial accent for italic headline words — laterite passes 3:1 on sand for large text. */
+  --c-accent: var(--c-laterite-500);
 
   /* Motion */
   --ease-travel: cubic-bezier(0.2, 0.7, 0.2, 1);
@@ -44,6 +46,7 @@
     --c-primary: var(--c-lagoon-300);
     --c-line: rgb(238 242 242 / 0.14);
     --c-eyebrow: var(--c-lagoon-300);
+    --c-accent: var(--c-gold-300);
   }
 }
 :root[data-theme='dark'] {
@@ -54,4 +57,5 @@
   --c-primary: var(--c-lagoon-300);
   --c-line: rgb(238 242 242 / 0.14);
   --c-eyebrow: var(--c-lagoon-300);
+  --c-accent: var(--c-gold-300);
 }

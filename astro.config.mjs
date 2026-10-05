@@ -15,18 +15,20 @@ const LATIN =
 const LATIN_EXT =
   'U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF';
 
-/** @param {string} pkg @param {string} file @param {{ latinExt?: boolean }} [opts] */
-const variableFont = (pkg, file, { latinExt = true } = {}) => {
-  /** @param {string} subset @param {string} range */
-  const variant = (subset, range) => ({
-    src: /** @type {[string]} */ ([`${pkg}/files/${file}-${subset}-wght-normal.woff2`]),
+/** @param {string} pkg @param {string} file @param {{ latinExt?: boolean, italic?: boolean }} [opts] */
+const variableFont = (pkg, file, { latinExt = true, italic = false } = {}) => {
+  /** @param {string} subset @param {string} range @param {'normal' | 'italic'} [style] */
+  const variant = (subset, range, style = 'normal') => ({
+    src: /** @type {[string]} */ ([`${pkg}/files/${file}-${subset}-wght-${style}.woff2`]),
     weight: '100 900',
-    style: /** @type {const} */ ('normal'),
+    style: /** @type {'normal' | 'italic'} */ (style),
     unicodeRange: /** @type {[string]} */ ([range]),
   });
   /** @type {[ReturnType<typeof variant>, ...ReturnType<typeof variant>[]]} */
   const variants = [variant('latin', LATIN)];
   if (latinExt) variants.push(variant('latin-ext', LATIN_EXT));
+  // Italic is only used for accent words in headlines — never preloaded.
+  if (italic) variants.push(variant('latin', LATIN, 'italic'));
   return { variants };
 };
 
@@ -78,7 +80,7 @@ export default defineConfig({
       cssVariable: '--font-fraunces',
       provider: fontProviders.local(),
       // Latin only: this is the one preloaded file (docs/04 §3); rare accented glyphs fall back to Georgia.
-      options: variableFont('@fontsource-variable/fraunces', 'fraunces', { latinExt: false }),
+      options: variableFont('@fontsource-variable/fraunces', 'fraunces', { latinExt: false, italic: true }),
       fallbacks: ['Georgia', 'serif'],
       display: 'swap',
     },

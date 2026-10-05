@@ -7,8 +7,9 @@ import { SITE } from '../../lib/site';
 // Real reviews only, with permission, source and date (docs/05 §7). Until they exist, link to the real profiles.
 interface Props {
   limit?: number;
+  index?: string;
 }
-const { limit = 9 } = Astro.props;
+const { limit = 9, index } = Astro.props;
 const reviews = (await getEntries('testimonials'))
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
   .slice(0, limit);
@@ -17,7 +18,7 @@ const fmt = new Intl.DateTimeFormat('en-GB', { month: 'long', year: 'numeric' })
 ---
 
 <section class="container-site py-24" aria-labelledby="reviews-heading">
-  <SectionHeading eyebrow="Reviews" title="In our travellers’ words." id="reviews-heading" />
+  <SectionHeading index={index} eyebrow="Reviews" title="In our travellers’ *own words.*" id="reviews-heading" />
   {reviews.length ? (
     <div class="mt-12 columns-1 gap-6 sm:columns-2 lg:columns-3">
       {reviews.map((r) => (

@@ -1,48 +1,71 @@
 ---
 import Icon from '../ui/Icon.astro';
-import type { IconName } from '../../lib/icons';
+import Media from '../ui/Media.astro';
 import SectionHeading from '../ui/SectionHeading.astro';
+import type { IconName } from '../../lib/icons';
 import { getEntries, byOrder } from '../../lib/content';
+import { photo, type PhotoName } from '../../lib/photos';
 
-// "All-in-one" bento (docs/04 §5.4): 12 services as tiles, hover lift + CSS icon micro-animation.
+// "All-in-one" bento (docs/04 §5.4): 12 services as numbered tiles; the two feature tiles carry a photo.
 const services = (await getEntries('services')).sort(byOrder);
-const big = new Set(['flight-tickets', 'ayurveda-packages']);
+const FEATURE: Record<string, { span: string; photo: PhotoName }> = {
+  'flight-tickets': { span: 'col-span-2 md:row-span-2', photo: 'airport' },
+  'ayurveda-packages': { span: 'col-span-2', photo: 'misty-hills' },
+};
 ---
 
 <section class="container-site py-24" aria-labelledby="bento-heading">
-  <SectionHeading eyebrow="Everything in one place" title="One team for your whole journey." id="bento-heading" />
-  <ul class="mt-12 grid grid-flow-dense auto-rows-[minmax(150px,auto)] grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4">
-    {services.map((s) => (
-      <li
-        class:list={[
-          'reveal',
-          big.has(s.id) && (s.id === 'flight-tickets' ? 'col-span-2 md:row-span-2' : 'col-span-2'),
-        ]}
-      >
-        <a
-          href={`/services/${s.id}`}
-          class:list={[
-            'lift group flex h-full flex-col justify-between gap-6 rounded-card p-5 ring-1 ring-line sm:p-6',
-            big.has(s.id) ? 'bg-ocean-900 text-white' : 'bg-surface',
-          ]}
-        >
-          <Icon
-            name={s.data.icon as IconName}
+  <SectionHeading
+    index="01"
+    eyebrow="Everything in one place"
+    title="One team for your *whole journey.*"
+    id="bento-heading"
+  />
+  <ul class="mt-12 grid grid-flow-dense auto-rows-[minmax(160px,auto)] grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4">
+    {services.map((s, i) => {
+      const feature = FEATURE[s.id];
+      const bg = feature && photo(feature.photo);
+      return (
+        <li class:list={['reveal', feature?.span]}>
+          <a
+            href={`/services/${s.id}`}
             class:list={[
-              'size-9 transition-transform duration-300 ease-travel group-hover:-rotate-6 group-hover:scale-110',
-              big.has(s.id) ? 'text-gold-500' : 'text-ocean-500 dark:text-lagoon-300',
+              'lift group relative isolate flex h-full flex-col justify-between gap-6 overflow-hidden rounded-card p-5 ring-1 ring-line sm:p-6',
+              feature ? 'bg-ocean-900 text-white' : 'bg-surface',
             ]}
-          />
-          <span>
-            <span class:list={['block font-display font-semibold', big.has(s.id) ? 'text-3xl' : 'text-lg']}>
-              {s.data.title}
+          >
+            {bg && (
+              <>
+                <Media
+                  image={bg.image}
+                  alt=""
+                  class="absolute inset-0 -z-20 transition-transform duration-700 ease-travel group-hover:scale-105"
+                  sizes="(min-width: 768px) 50vw, 100vw"
+                />
+                <span class="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgb(6_42_53/0.25),rgb(6_42_53/0.9))]" />
+              </>
+            )}
+            <span class="flex items-start justify-between">
+              <Icon
+                name={s.data.icon as IconName}
+                class:list={[
+                  'size-9 transition-transform duration-300 ease-travel group-hover:-rotate-6 group-hover:scale-110',
+                  feature ? 'text-gold-300' : 'text-ocean-500 dark:text-lagoon-300',
+                ]}
+              />
+              <span class:list={['font-display text-sm italic', feature ? 'text-white/70' : 'text-muted']}>
+                {String(i + 1).padStart(2, '0')}
+              </span>
             </span>
-            <span class:list={['mt-1 block text-sm', big.has(s.id) ? 'text-white/80' : 'text-muted']}>
-              {s.data.short}
+            <span>
+              <span class:list={['block font-display font-semibold', feature ? 'text-3xl sm:text-4xl' : 'text-lg']}>
+                {s.data.title}
+              </span>
+              <span class:list={['mt-1 block text-sm', feature ? 'text-white/85' : 'text-muted']}>{s.data.short}</span>
             </span>
-          </span>
-        </a>
-      </li>
-    ))}
+          </a>
+        </li>
+      );
+    })}
   </ul>
 </section>

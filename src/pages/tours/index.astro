@@ -2,10 +2,11 @@
 import PageLayout from '../../layouts/PageLayout.astro';
 import PageHero from '../../components/ui/PageHero.astro';
 import Card from '../../components/ui/Card.astro';
+import TicketCard from '../../components/tours/TicketCard.astro';
 import CtaBlock from '../../components/ui/CtaBlock.astro';
 import { getEntries, byOrder } from '../../lib/content';
 import { itemListSchema } from '../../lib/schema-org';
-import { STYLE_LABELS, tourPrice } from '../../lib/labels';
+import { STYLE_LABELS } from '../../lib/labels';
 import { photo } from '../../lib/photos';
 
 const dayTours = photo('minneriya');
@@ -28,7 +29,7 @@ const durationOf = (n: number) => durations.find((d) => d.test(n))!.id;
 >
   <PageHero
     eyebrow="Tours"
-    title="Sri Lanka tours, built around you"
+    title="Sri Lanka tours, *built around you*"
     intro="Every itinerary is private and a starting point — change the days, the hotels or the pace. Filter by length and style."
     media={false}
   />
@@ -62,20 +63,10 @@ const durationOf = (n: number) => durations.find((d) => d.test(n))!.id;
       {tours.length} tours
     </p>
 
-    <ul class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <ul class="mt-6 grid gap-6 xl:grid-cols-2">
       {tours.map((t) => (
         <li data-duration={durationOf(t.data.durationDays)} data-styles={t.data.styles.join(' ')}>
-          <Card
-            href={`/tours/${t.id}`}
-            title={t.data.title}
-            text={t.data.summary}
-            badge={`${t.data.durationDays} days`}
-            meta={tourPrice(t.data)}
-            tone={t.data.tone}
-            image={t.data.heroImage}
-            imageAlt={t.data.heroAlt}
-            class="h-full"
-          />
+          <TicketCard tour={t} class="h-full" />
         </li>
       ))}
       <li data-duration="short" data-styles="">

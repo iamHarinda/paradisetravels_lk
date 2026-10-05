@@ -1,0 +1,72 @@
+---
+import type { ImageMetadata } from 'astro';
+import Media from '../ui/Media.astro';
+import { coordLabel } from '../../lib/text';
+
+// Postcard-style card: full-bleed photo, caption on the image, coordinates as an editorial detail.
+interface Props {
+  href: string;
+  title: string;
+  text?: string | null;
+  label?: string;
+  coords?: [number, number];
+  image?: ImageMetadata | null;
+  imageAlt?: string | null;
+  tone?: 'ocean' | 'tea' | 'heritage' | 'wild' | 'sand';
+  aspect?: string;
+  class?: string;
+}
+const {
+  href,
+  title,
+  text,
+  label,
+  coords,
+  image,
+  imageAlt,
+  tone,
+  aspect = 'aspect-[4/5]',
+  class: className,
+} = Astro.props;
+---
+
+<article
+  class:list={['reveal group relative overflow-hidden rounded-media bg-ocean-900 text-white', aspect, className]}
+>
+  <Media
+    image={image}
+    alt={imageAlt}
+    tone={tone}
+    class="absolute inset-0 transition-transform duration-700 ease-travel group-hover:scale-105"
+    sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, calc(100vw - 2rem)"
+  />
+  <div class="absolute inset-0 bg-[linear-gradient(180deg,rgb(6_42_53/0.6)_0%,transparent_28%,transparent_45%,rgb(6_42_53/0.88)_100%)]"></div>
+  <div class="absolute inset-x-0 top-0 flex items-start justify-between gap-3 p-5">
+    {label && <span class="detail text-white/90">{label}</span>}
+    {coords && <span class="detail text-white/75">{coordLabel(coords)}</span>}
+  </div>
+  <div class="absolute inset-x-0 bottom-0 p-5 sm:p-6">
+    <h3 class="text-3xl leading-tight font-semibold">
+      <a
+        href={href}
+        class="after:absolute after:inset-0 focus-visible:outline-none after:focus-visible:rounded-media after:focus-visible:outline-3 after:focus-visible:outline-gold-300"
+      >
+        {title}
+      </a>
+    </h3>
+    {text && <p class="mt-2 line-clamp-2 text-sm text-white/85">{text}</p>}
+    <span class="detail mt-4 inline-flex items-center gap-2 text-gold-300">
+      Explore
+      <svg
+        viewBox="0 0 24 24"
+        class="size-3.5 transition-transform group-hover:translate-x-1"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        aria-hidden="true"
+      >
+        <path d="M5 12h14m-6-6l6 6-6 6"></path>
+      </svg>
+    </span>
+  </div>
+</article>

@@ -1,7 +1,7 @@
 ---
 import PageLayout from '../../layouts/PageLayout.astro';
 import PageHero from '../../components/ui/PageHero.astro';
-import Card from '../../components/ui/Card.astro';
+import PlaceCard from '../../components/cards/PlaceCard.astro';
 import IslandMap from '../../components/home/IslandMap.astro';
 import CtaBlock from '../../components/ui/CtaBlock.astro';
 import { getEntries, byOrder } from '../../lib/content';
@@ -20,7 +20,7 @@ const regions = REGION_IDS.filter((r) => destinations.some((d) => d.data.region 
 >
   <PageHero
     eyebrow="Destinations"
-    title="Where to go in Sri Lanka"
+    title="Where to go in *Sri Lanka*"
     intro="A small island with very different regions — and a different best season for each. Start with the map, or browse by region."
     media={false}
   />
@@ -50,11 +50,12 @@ const regions = REGION_IDS.filter((r) => destinations.some((d) => d.data.region 
             {destinations
               .filter((d) => d.data.region === r)
               .map((d) => (
-                <Card
+                <PlaceCard
                   href={`/destinations/${d.id}`}
                   title={d.data.title}
                   text={d.data.summary}
-                  meta={`Best: ${monthRange(d.data.bestMonths)}`}
+                  label={`Best ${monthRange(d.data.bestMonths)}`}
+                  coords={d.data.coords}
                   image={d.data.heroImage}
                   imageAlt={d.data.heroAlt}
                   tone={d.data.tone}

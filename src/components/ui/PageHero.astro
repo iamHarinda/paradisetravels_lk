@@ -1,36 +1,53 @@
 ---
 import type { ImageMetadata } from 'astro';
 import Media from './Media.astro';
+import { accent, coordLabel } from '../../lib/text';
 
-// Standard hero for hub and detail pages: heading block + large rounded media (LCP).
+// Editorial hero for hub and detail pages: chapter label, giant headline (supports *accent* words),
+// optional coordinates, and a wide photo (the LCP) with a caption.
 interface Props {
   eyebrow?: string;
   title: string;
-  intro?: string;
+  intro?: string | null;
   image?: ImageMetadata | null;
   imageAlt?: string | null;
   tone?: 'ocean' | 'tea' | 'heritage' | 'wild' | 'sand';
   media?: boolean;
+  coords?: [number, number];
 }
-const { eyebrow, title, intro, image, imageAlt, tone = 'ocean', media = true } = Astro.props;
+const { eyebrow, title, intro, image, imageAlt, tone = 'ocean', media = true, coords } = Astro.props;
 ---
 
 <section class="container-site pt-8 pb-12 sm:pt-12">
-  <div class="max-w-4xl">
-    {eyebrow && <p class="eyebrow">{eyebrow}</p>}
-    <h1 class="mt-3 text-h1">{title}</h1>
-    {intro && <p class="mt-6 max-w-[60ch] text-lg text-muted">{intro}</p>}
-    <slot />
-  </div>
-  {media && (
-    <div class="mt-10 aspect-[16/9] overflow-hidden rounded-media sm:aspect-[21/9]">
-      <Media
-        image={image}
-        alt={imageAlt}
-        tone={tone}
-        priority
-        sizes="(min-width: 1440px) 1360px, (min-width: 640px) calc(100vw - 5rem), calc(100vw - 2rem)"
+  <div class="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end">
+    <div class="max-w-5xl">
+      {eyebrow && (
+        <p class="chapter">
+          <span class="chapter-rule" aria-hidden="true" />
+          <span>{eyebrow}</span>
+        </p>
+      )}
+      <h1
+        class="mt-4 text-[clamp(2.75rem,6vw+1rem,6.5rem)] leading-[0.98] tracking-[-0.03em]"
+        set:html={accent(title)}
       />
     </div>
+    {coords && <p class="detail text-muted lg:pb-3">{coordLabel(coords)}</p>}
+  </div>
+  {intro && <p class="mt-6 max-w-[60ch] text-lg text-muted">{intro}</p>}
+  <slot />
+  {media && (
+    <figure class="relative mt-10">
+      <div class="aspect-[4/3] overflow-hidden rounded-media sm:aspect-[21/9]">
+        <Media
+          image={image}
+          alt={imageAlt}
+          tone={tone}
+          priority
+          sizes="(min-width: 1440px) 1360px, (min-width: 640px) calc(100vw - 5rem), calc(100vw - 2rem)"
+        />
+      </div>
+      {imageAlt && image && <figcaption class="mt-3 text-xs text-muted">{imageAlt}</figcaption>}
+    </figure>
   )}
 </section>

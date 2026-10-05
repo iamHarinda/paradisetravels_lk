@@ -1,7 +1,7 @@
 ---
 import PageLayout from '../../layouts/PageLayout.astro';
 import PageHero from '../../components/ui/PageHero.astro';
-import Card from '../../components/ui/Card.astro';
+import PlaceCard from '../../components/cards/PlaceCard.astro';
 import CtaBlock from '../../components/ui/CtaBlock.astro';
 import { getEntries, byOrder } from '../../lib/content';
 import { itemListSchema } from '../../lib/schema-org';
@@ -17,19 +17,20 @@ const experiences = (await getEntries('experiences')).sort(byOrder);
 >
   <PageHero
     eyebrow="Experiences"
-    title="What do you want to feel in Sri Lanka?"
+    title="What do you want to *feel* in Sri Lanka?"
     intro="Pick a theme to see where to go, when, and how we can build a trip around it."
     media={false}
   />
   <section class="container-site grid gap-6 pb-24 sm:grid-cols-2 lg:grid-cols-3">
     {experiences.map((e) => (
-      <Card
+      <PlaceCard
         href={`/experiences/${e.id}`}
         title={e.data.title}
         text={e.data.summary}
         tone={e.data.tone}
         image={e.data.heroImage}
         imageAlt={e.data.heroAlt}
+        label="Experience"
       />
     ))}
   </section>

@@ -3,6 +3,7 @@ import type { GetStaticPaths } from 'astro';
 import { render } from 'astro:content';
 import { getEntries, byOrder } from '../../lib/content';
 import PageLayout from '../../layouts/PageLayout.astro';
+import TicketCard from '../../components/tours/TicketCard.astro';
 import PageHero from '../../components/ui/PageHero.astro';
 import MonthBar from '../../components/ui/MonthBar.astro';
 import Card from '../../components/ui/Card.astro';
@@ -10,7 +11,6 @@ import FaqSection from '../../components/ui/FaqSection.astro';
 import CtaBlock from '../../components/ui/CtaBlock.astro';
 import { REGIONS } from '../../lib/seasons';
 import { faqSchema, touristDestinationSchema } from '../../lib/schema-org';
-import { tourPrice } from '../../lib/labels';
 
 export const getStaticPaths = (async () => {
   const destinations = await getEntries('destinations');
@@ -49,7 +49,8 @@ const path = `/destinations/${entry.id}`;
 >
   <PageHero
     eyebrow={REGIONS[d.region].name}
-    title={`${d.title}, Sri Lanka`}
+    title={`${d.title}, *Sri Lanka*`}
+    coords={d.coords}
     intro={d.summary}
     image={d.heroImage}
     imageAlt={d.heroAlt}
@@ -168,16 +169,7 @@ const path = `/destinations/${entry.id}`;
       </h2>
       <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {relatedTours.map((t) => (
-          <Card
-            href={`/tours/${t.id}`}
-            title={t.data.title}
-            text={t.data.summary}
-            badge={`${t.data.durationDays} days`}
-            meta={tourPrice(t.data)}
-            tone={t.data.tone}
-            image={t.data.heroImage}
-            imageAlt={t.data.heroAlt}
-          />
+          <TicketCard tour={t} />
         ))}
       </div>
     </section>

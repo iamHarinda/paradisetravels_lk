@@ -11,12 +11,16 @@ const regionIds = REGION_IDS.filter((r) => byRegion[r]!.length > 0);
 const seasons = Object.fromEntries(regionIds.map((r) => [r, REGIONS[r].bestMonths]));
 ---
 
-<section class="bg-ocean-900 py-24 text-white" aria-labelledby="explorer-heading">
+<section class="on-dark bg-ocean-900 py-24 text-white" aria-labelledby="explorer-heading">
   <div class="container-site grid items-center gap-12 lg:grid-cols-[1.1fr_1fr]">
     <div>
-      <p class="reveal eyebrow text-lagoon-300!">Island Explorer</p>
-      <h2 id="explorer-heading" class="reveal mt-3 text-h2">
-        Small island. Six worlds.
+      <p class="reveal chapter text-lagoon-300!">
+        <span class="chapter-no">02</span>
+        <span class="chapter-rule" aria-hidden="true"></span>
+        <span>Island Explorer</span>
+      </p>
+      <h2 id="explorer-heading" class="reveal mt-4 text-h2">
+        Small island. <em class="accent">Six worlds.</em>
       </h2>
       <ul class="mt-8 grid gap-2 sm:grid-cols-2" data-regions>
         {regionIds.map((r, i) => (

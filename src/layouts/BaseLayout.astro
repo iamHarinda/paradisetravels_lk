@@ -20,7 +20,7 @@ const props = Astro.props;
     </script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <!-- Preload only the display font used above the fold (docs/04 §3). -->
-    <Font cssVariable="--font-fraunces" preload />
+    <Font cssVariable="--font-fraunces" preload={[{ style: 'normal' }]} />
     <Font cssVariable="--font-inter" />
     <SEO {...props} />
     <slot name="head" />

@@ -3,12 +3,13 @@ import type { GetStaticPaths } from 'astro';
 import { render, getEntry, getEntries as getRefs } from 'astro:content';
 import { getEntries } from '../../lib/content';
 import PageLayout from '../../layouts/PageLayout.astro';
+import TicketCard from '../../components/tours/TicketCard.astro';
 import Media from '../../components/ui/Media.astro';
 import Card from '../../components/ui/Card.astro';
 import Icon from '../../components/ui/Icon.astro';
 import Button from '../../components/ui/Button.astro';
 import { articleSchema } from '../../lib/schema-org';
-import { GUIDE_CATEGORIES, dateFmt, tourPrice } from '../../lib/labels';
+import { GUIDE_CATEGORIES, dateFmt } from '../../lib/labels';
 import { whatsappLink, SITE } from '../../lib/site';
 
 export const getStaticPaths = (async () => {
@@ -167,16 +168,7 @@ const path = `/travel-guide/${entry.id}`;
       </h2>
       <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {tours.map((t) => (
-          <Card
-            href={`/tours/${t.id}`}
-            title={t.data.title}
-            text={t.data.summary}
-            badge={`${t.data.durationDays} days`}
-            meta={tourPrice(t.data)}
-            tone={t.data.tone}
-            image={t.data.heroImage}
-            imageAlt={t.data.heroAlt}
-          />
+          <TicketCard tour={t} />
         ))}
       </div>
     </section>

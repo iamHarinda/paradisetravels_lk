@@ -1,0 +1,82 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { getEntries as getRefs } from 'astro:content';
+import Media from '../ui/Media.astro';
+import { STYLE_LABELS, tourPrice } from '../../lib/labels';
+import { placeCode } from '../../lib/text';
+
+// Tour as a boarding pass: route codes, title, perforated tear line, big day count on the stub.
+interface Props {
+  tour: CollectionEntry<'tours'>;
+  class?: string;
+}
+const { tour, class: className } = Astro.props;
+const t = tour.data;
+const stops = t.destinations.length ? await getRefs(t.destinations) : [];
+const first = stops[0]?.data.title;
+const last = stops.at(-1)?.data.title;
+const via = stops.slice(1, -1).map((s) => s.data.title);
+---
+
+<article
+  class:list={[
+    'reveal ticket group relative grid overflow-hidden rounded-media shadow-[0_1px_0_var(--c-line),0_18px_40px_-28px_rgb(6_42_53/0.45)] ring-1 ring-line transition-transform duration-200 ease-travel hover:-translate-y-1 sm:grid-cols-[minmax(0,12rem)_1fr_auto]',
+    className,
+  ]}
+>
+  <div class="relative aspect-[16/9] overflow-hidden sm:aspect-auto">
+    <Media
+      image={t.heroImage}
+      alt={t.heroAlt}
+      tone={t.tone}
+      class="lift-media transition-transform duration-500 group-hover:scale-105"
+      sizes="(min-width: 640px) 12rem, calc(100vw - 2rem)"
+    />
+  </div>
+
+  <div class="min-w-0 p-5 sm:p-6">
+    <div class="detail flex items-center gap-2 text-muted">
+      <span>CMB</span>
+      <svg viewBox="0 0 40 8" class="h-2 w-10 shrink-0 text-primary" aria-hidden="true">
+        <path d="M0 4h36M32 1l4 3-4 3" fill="none" stroke="currentColor" stroke-width="1.2"></path>
+      </svg>
+      <span>{first ? placeCode(first) : '—'}</span>
+      {last && last !== first && (
+        <>
+          <span aria-hidden="true">···</span>
+          <span>{placeCode(last)}</span>
+        </>
+      )}
+    </div>
+    <h3 class="mt-3 text-2xl leading-tight font-semibold">
+      <a
+        href={`/tours/${tour.id}`}
+        class="after:absolute after:inset-0 focus-visible:outline-none after:focus-visible:rounded-media after:focus-visible:outline-3 after:focus-visible:outline-focus"
+      >
+        {t.title}
+      </a>
+    </h3>
+    <p class="mt-2 line-clamp-2 text-sm text-muted">{t.summary}</p>
+    {via.length > 0 && (
+      <p class="mt-3 text-xs text-muted">
+        Via {via.slice(0, 4).join(' · ')}
+        {via.length > 4 && ' …'}
+      </p>
+    )}
+    <p class="mt-3 flex flex-wrap gap-1.5">
+      {t.styles.slice(0, 3).map((s) => (
+        <span class="rounded-pill bg-sand-100 px-2.5 py-0.5 text-xs text-ink-900">{STYLE_LABELS[s]}</span>
+      ))}
+    </p>
+  </div>
+
+  <div class="ticket-tear flex items-center justify-between gap-4 p-5 sm:w-36 sm:flex-col sm:items-start sm:justify-center sm:p-6">
+    <p>
+      <span class="block font-display text-5xl leading-none font-semibold text-primary">
+        {String(t.durationDays).padStart(2, '0')}
+      </span>
+      <span class="detail text-muted">days</span>
+    </p>
+    <p class="text-right text-xs font-semibold sm:text-left">{tourPrice(t)}</p>
+  </div>
+</article>

@@ -3,6 +3,7 @@ import type { GetStaticPaths } from 'astro';
 import { render, getEntries as getRefs } from 'astro:content';
 import { getEntries, byOrder } from '../../lib/content';
 import PageLayout from '../../layouts/PageLayout.astro';
+import TicketCard from '../../components/tours/TicketCard.astro';
 import PageHero from '../../components/ui/PageHero.astro';
 import Card from '../../components/ui/Card.astro';
 import Chip from '../../components/ui/Chip.astro';
@@ -175,16 +176,7 @@ const page = new URL(path, Astro.site);
     </h2>
     <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {others.map((o) => (
-        <Card
-          href={`/tours/${o.id}`}
-          title={o.data.title}
-          text={o.data.summary}
-          badge={`${o.data.durationDays} days`}
-          meta={tourPrice(o.data)}
-          tone={o.data.tone}
-          image={o.data.heroImage}
-          imageAlt={o.data.heroAlt}
-        />
+        <TicketCard tour={o} />
       ))}
     </div>
   </section>

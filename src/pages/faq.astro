@@ -23,7 +23,7 @@ const items = (cat: string) =>
   breadcrumbs={[{ name: 'FAQ', href: '/faq' }]}
   jsonLd={[faqSchema(faqs.map((f) => ({ q: f.data.question, a: f.data.answer })))].filter((x) => !!x)}
 >
-  <PageHero eyebrow="FAQ" title="Questions, answered" media={false} />
+  <PageHero eyebrow="FAQ" title="Questions, *answered*" media={false} />
   <section class="container-site max-w-4xl space-y-14 pb-24">
     {categories.map(([id, label]) =>
       items(id).length ? (

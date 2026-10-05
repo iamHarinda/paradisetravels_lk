@@ -1,0 +1,31 @@
+---
+import { getEntries, byOrder } from '../../lib/content';
+
+// Slow destination ticker (pauses on hover/focus; static wrapped list with reduced motion).
+const destinations = (await getEntries('destinations')).sort(byOrder);
+const items = destinations.map((d) => ({
+  href: `/destinations/${d.id}`,
+  title: d.data.title.replace(' National Park', ''),
+}));
+---
+
+<nav class="marquee border-y border-line py-5" aria-label="Destinations">
+  {[0, 1].map((copy) => (
+    <ul class="marquee-track" aria-hidden={copy === 1 ? 'true' : undefined}>
+      {items.map((d) => (
+        <li class="flex items-center gap-12">
+          <a
+            href={d.href}
+            tabindex={copy === 1 ? -1 : undefined}
+            class="font-display text-3xl whitespace-nowrap transition-colors hover:text-[var(--c-accent)] sm:text-4xl"
+          >
+            {d.title}
+          </a>
+          <span class="text-gold-500" aria-hidden="true">
+            ✦
+          </span>
+        </li>
+      ))}
+    </ul>
+  ))}
+</nav>

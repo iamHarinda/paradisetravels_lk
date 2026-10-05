@@ -341,3 +341,149 @@
     accent-color: var(--c-ocean-700);
   }
 }
+
+/* ---- Editorial layer ("Editorial + tickets" direction) ---------------------------------------- */
+@layer components {
+  /* Italic accent words in headlines: "Sri Lanka, *planned* end-to-end." */
+  .accent {
+    font-style: italic;
+    font-weight: 380;
+    color: var(--c-accent);
+  }
+  .on-dark .accent,
+  .bg-ocean-900 .accent {
+    color: var(--c-gold-300);
+  }
+
+  /* Chapter label: 01 ── EVERYTHING IN ONE PLACE */
+  .chapter {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--c-eyebrow);
+  }
+  .chapter-no {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: 0;
+  }
+  .chapter-rule {
+    height: 1px;
+    width: 2.5rem;
+    background: currentColor;
+    opacity: 0.6;
+  }
+
+  /* Small technical detail text (coordinates, ticket fields). */
+  .detail {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Boarding-pass ticket: perforated tear line with punched notches. */
+  .ticket {
+    --notch: 14px;
+    --ticket-bg: var(--c-surface);
+    position: relative;
+    background: var(--ticket-bg);
+  }
+  .ticket-tear {
+    position: relative;
+    border-left: 2px dashed var(--c-line);
+  }
+  .ticket-tear::before,
+  .ticket-tear::after {
+    content: '';
+    position: absolute;
+    left: calc(var(--notch) / -2 - 1px);
+    width: var(--notch);
+    height: var(--notch);
+    border-radius: 999px;
+    background: var(--c-bg);
+  }
+  .ticket-tear::before {
+    top: calc(var(--notch) / -2);
+  }
+  .ticket-tear::after {
+    bottom: calc(var(--notch) / -2);
+  }
+  @media (width < 40rem) {
+    .ticket-tear {
+      border-left: 0;
+      border-top: 2px dashed var(--c-line);
+    }
+    .ticket-tear::before,
+    .ticket-tear::after {
+      top: calc(var(--notch) / -2 - 1px);
+      bottom: auto;
+    }
+    .ticket-tear::before {
+      left: calc(var(--notch) / -2);
+    }
+    .ticket-tear::after {
+      left: auto;
+      right: calc(var(--notch) / -2);
+    }
+  }
+
+  /* Destination ticker. */
+  .marquee {
+    display: flex;
+    overflow: hidden;
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  }
+  .marquee-track {
+    display: flex;
+    flex: none;
+    gap: 3rem;
+    padding-right: 3rem;
+    animation: marquee 60s linear infinite;
+  }
+  .marquee:hover .marquee-track,
+  .marquee:focus-within .marquee-track {
+    animation-play-state: paused;
+  }
+  @keyframes marquee {
+    to {
+      transform: translateX(-100%);
+    }
+  }
+
+  /* Subtle paper grain (tiny inline SVG noise). */
+  .grain {
+    position: relative;
+    isolation: isolate;
+  }
+  .grain::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.35;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.08 0 0 0 0 0.1 0 0 0 0 0.1 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee {
+    mask-image: none;
+  }
+  .marquee-track {
+    animation: none;
+    flex-wrap: wrap;
+    row-gap: 0.75rem;
+  }
+  .marquee-track[aria-hidden='true'] {
+    display: none;
+  }
+}

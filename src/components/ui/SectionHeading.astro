@@ -1,6 +1,11 @@
 ---
+import { accent } from '../../lib/text';
+
+// Editorial section heading: "01 ── EYEBROW" chapter label + headline with *accent* words.
 interface Props {
   eyebrow?: string;
+  /** Chapter number, e.g. "01". */
+  index?: string;
   title: string;
   intro?: string;
   id?: string;
@@ -8,14 +13,18 @@ interface Props {
   as?: 'h1' | 'h2';
   class?: string;
 }
-const { eyebrow, title, intro, id, align = 'left', as: Tag = 'h2', class: className } = Astro.props;
+const { eyebrow, index, title, intro, id, align = 'left', as: Tag = 'h2', class: className } = Astro.props;
 ---
 
 <div class:list={['max-w-3xl', align === 'center' && 'mx-auto text-center', className]}>
-  {eyebrow && <p class="reveal eyebrow">{eyebrow}</p>}
-  <Tag id={id} class:list={['reveal mt-3', Tag === 'h1' ? 'text-h1' : 'text-h2']}>
-    {title}
-  </Tag>
+  {eyebrow && (
+    <p class:list={['reveal chapter', align === 'center' && 'justify-center']}>
+      {index && <span class="chapter-no">{index}</span>}
+      {index && <span class="chapter-rule" aria-hidden="true" />}
+      <span>{eyebrow}</span>
+    </p>
+  )}
+  <Tag id={id} class:list={['reveal mt-4', Tag === 'h1' ? 'text-h1' : 'text-h2']} set:html={accent(title)} />
   {intro && <p class="reveal mt-5 text-lg text-muted">{intro}</p>}
   <slot />
 </div>

@@ -1,6 +1,7 @@
 ---
 import PageLayout from '../layouts/PageLayout.astro';
 import Hero from '../components/home/Hero.astro';
+import Marquee from '../components/home/Marquee.astro';
 import Bento from '../components/home/Bento.astro';
 import IslandExplorer from '../components/home/IslandExplorer.astro';
 import ScrollStory from '../components/home/ScrollStory.astro';
@@ -9,11 +10,15 @@ import SectionHeading from '../components/ui/SectionHeading.astro';
 import Card from '../components/ui/Card.astro';
 import Button from '../components/ui/Button.astro';
 import Icon from '../components/ui/Icon.astro';
+import Media from '../components/ui/Media.astro';
 import CtaBlock from '../components/ui/CtaBlock.astro';
+import TicketCard from '../components/tours/TicketCard.astro';
 import { getEntries, byOrder } from '../lib/content';
 import { travelAgencySchema } from '../lib/schema-org';
-import { tourPrice, dateFmt } from '../lib/labels';
+import { dateFmt } from '../lib/labels';
 import { SITE } from '../lib/site';
+import { photo } from '../lib/photos';
+import { accent } from '../lib/text';
 
 const tours = (await getEntries('tours')).sort(byOrder);
 const featured = [
@@ -21,136 +26,151 @@ const featured = [
   ...tours.filter(
     (t) => !t.data.featured && (t.data.styles.includes('honeymoon') || t.data.styles.includes('ayurveda')),
   ),
-].slice(0, 5);
-const hotels = (await getEntries('hotels')).slice(0, 4);
-const guides = (await getEntries('guides'))
-  .sort((a, b) => b.data.published.getTime() - a.data.published.getTime())
-  .slice(0, 3);
+].slice(0, 4);
+const [hotels, guides, services, destinations] = await Promise.all([
+  getEntries('hotels'),
+  getEntries('guides'),
+  getEntries('services'),
+  getEntries('destinations'),
+]);
+const latestGuides = guides.sort((a, b) => b.data.published.getTime() - a.data.published.getTime()).slice(0, 3);
 const leader = (await getEntries('team')).find((t) => t.data.order === 1);
+const dealsPhoto = photo('beach');
 
-const why = [
-  {
-    icon: 'clock',
-    title: `Since ${SITE.foundingYear}`,
-    text: 'Nearly two decades of arranging travel from our office in Nugegoda, Colombo.',
-  },
-  {
-    icon: 'users',
-    title: 'One team, end to end',
-    text: 'Flights, visa, hotels, driver and guides — one point of contact for all of it.',
-  },
-  {
-    icon: 'compass',
-    title: 'Local knowledge',
-    text: 'Honest advice on seasons, distances and crowds, from people who live here.',
-  },
-  {
-    icon: 'whatsapp',
-    title: 'Real people on WhatsApp',
-    text: 'Message the same team before, during and after your trip.',
-  },
-  { icon: 'bed', title: 'Partner hotel rates', text: 'Contracted rates and packages with hotels around the island.' },
-] as const;
+// Only verifiable numbers (CLAUDE.md hard rule 1).
+const facts = [
+  { value: String(SITE.foundingYear), label: 'Arranging travel from Colombo since' },
+  { value: String(services.length), label: 'Services under one roof' },
+  { value: String(destinations.length), label: 'Destinations we know first-hand' },
+  { value: '1', label: 'Team for your whole journey' },
+];
 ---
 
 <PageLayout
   title="Sri Lanka Tours, Hotels & Travel Agency | Paradise Travels"
   description="Colombo travel agency since 2007: tailor-made Sri Lanka tours, partner hotel rates, flights, ETA and visa help, drivers, guides, events and Ayurveda."
   jsonLd={[travelAgencySchema()]}
-  overlayHeader
 >
   <Hero />
+  <Marquee />
   <Bento />
   <IslandExplorer />
 
   <section class="container-site py-24" aria-labelledby="tours-heading">
     <div class="flex flex-wrap items-end justify-between gap-6">
-      <SectionHeading eyebrow="Tours" title="Start with a route. Make it yours." id="tours-heading" />
+      <SectionHeading index="03" eyebrow="Tours" title="Start with a route. *Make it yours.*" id="tours-heading" />
       <Button href="/tours" variant="secondary">
         All tours <Icon name="arrow" class="size-4" />
       </Button>
     </div>
-    <div class="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+    <div class="mt-12 grid gap-6 xl:grid-cols-2">
       {featured.map((t) => (
-        <Card
-          href={`/tours/${t.id}`}
-          title={t.data.title}
-          text={t.data.summary}
-          badge={`${t.data.durationDays} days`}
-          meta={tourPrice(t.data)}
-          image={t.data.heroImage}
-          imageAlt={t.data.heroAlt}
-          tone={t.data.tone}
-        />
+        <TicketCard tour={t} />
       ))}
     </div>
   </section>
 
-  <section class="bg-sand-100 py-24 text-ink-900" aria-labelledby="deals-heading">
-    <div class="container-site">
-      <div class="flex flex-wrap items-end justify-between gap-6">
-        <div class="max-w-3xl">
-          <p class="reveal eyebrow text-ocean-700!">Hotel Deals</p>
-          <h2 id="deals-heading" class="reveal mt-3 text-h2">
-            Partner rates you won’t find on booking sites.
-          </h2>
-          <p class="reveal mt-5 text-lg text-[#4a4f53]">
-            We hold contracted rates with hotels around the island. Tell us where and when — we reply with options and a
-            quote.
-          </p>
-        </div>
-        <Button href="/hotel-deals">
+  <section class="grain bg-sand-100 py-24 text-ink-900" aria-labelledby="deals-heading">
+    <div class="container-site grid items-center gap-12 lg:grid-cols-[1fr_1fr]">
+      <div class="relative aspect-[4/3] overflow-hidden rounded-media">
+        <Media image={dealsPhoto.image} alt={dealsPhoto.alt} sizes="(min-width: 1024px) 45vw, calc(100vw - 2rem)" />
+        <span class="detail absolute top-4 left-4 rounded-pill bg-gold-500 px-3 py-1.5 text-ocean-900">
+          Paradise rate
+        </span>
+      </div>
+      <div>
+        <p class="reveal chapter text-ocean-700!">
+          <span class="chapter-no">04</span>
+          <span class="chapter-rule" aria-hidden="true"></span>
+          <span>Hotel Deals</span>
+        </p>
+        <h2
+          id="deals-heading"
+          class="reveal mt-4 text-h2"
+          set:html={accent('Partner rates you *won’t find* on booking sites.')}
+        />
+        <p class="reveal mt-5 text-lg text-[#4a4f53]">
+          We hold contracted rates with hotels around the island. Tell us where and when — we reply with options and a
+          quote. Book just the hotel, or the whole trip.
+        </p>
+        <Button href="/hotel-deals" class="mt-8">
           See hotel deals <Icon name="arrow" class="size-4" />
         </Button>
       </div>
-      {hotels.length > 0 && (
-        <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {hotels.map((h) => (
-            <Card
-              href={`/hotel-deals/${h.id}`}
-              title={h.data.name}
-              eyebrow={h.data.area}
-              badge="Paradise rate"
-              badgeTone="gold"
-              image={h.data.heroImage}
-              imageAlt={h.data.heroAlt}
-              tone={h.data.tone}
-              meta="Request this rate"
-            />
-          ))}
-        </div>
-      )}
     </div>
+    {hotels.length > 0 && (
+      <div class="container-site mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {hotels.slice(0, 4).map((h) => (
+          <Card
+            href={`/hotel-deals/${h.id}`}
+            title={h.data.name}
+            eyebrow={h.data.area}
+            badge="Paradise rate"
+            badgeTone="gold"
+            image={h.data.heroImage}
+            imageAlt={h.data.heroAlt}
+            tone={h.data.tone}
+            meta="Request this rate"
+          />
+        ))}
+      </div>
+    )}
   </section>
 
   <ScrollStory />
 
-  <section class="bg-surface py-24" aria-labelledby="why-heading">
+  <section class="on-dark bg-ocean-900 py-24 text-white" aria-labelledby="why-heading">
     <div class="container-site">
-      <SectionHeading eyebrow="Why Paradise Travels" title="A local partner, not a call centre." id="why-heading" />
-      <ul class="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-5">
-        {why.map((w) => (
-          <li class="reveal">
-            <Icon name={w.icon} class="size-8 text-ocean-500 dark:text-lagoon-300" />
-            <h3 class="mt-4 text-xl font-semibold">{w.title}</h3>
-            <p class="mt-2 text-sm text-muted">{w.text}</p>
-          </li>
+      <p class="reveal chapter text-lagoon-300!">
+        <span class="chapter-no">06</span>
+        <span class="chapter-rule" aria-hidden="true"></span>
+        <span>Why Paradise Travels</span>
+      </p>
+      <h2
+        id="why-heading"
+        class="reveal mt-4 max-w-3xl text-h2"
+        set:html={accent('A local partner, *not a call centre.*')}
+      />
+      <dl class="mt-16 grid gap-px overflow-hidden rounded-media bg-white/10 sm:grid-cols-2 lg:grid-cols-4">
+        {facts.map((f) => (
+          <div class="reveal flex flex-col-reverse gap-3 bg-ocean-900 p-8">
+            <dt class="text-sm text-white/75">{f.label}</dt>
+            <dd class="font-display text-7xl leading-none font-semibold text-gold-300">{f.value}</dd>
+          </div>
         ))}
+      </dl>
+      <ul class="mt-12 grid gap-8 text-sm text-white/80 sm:grid-cols-2 lg:grid-cols-4">
+        <li class="reveal">
+          <strong class="block text-base text-white">Honest local advice</strong>Seasons, distances and crowds — from
+          people who live here.
+        </li>
+        <li class="reveal">
+          <strong class="block text-base text-white">Real people on WhatsApp</strong>Message the same team before,
+          during and after your trip.
+        </li>
+        <li class="reveal">
+          <strong class="block text-base text-white">Partner hotel rates</strong>Contracted rates and packages with
+          hotels around the island.
+        </li>
+        <li class="reveal">
+          <strong class="block text-base text-white">Everything in one place</strong>Flights, visa, hotels, driver,
+          guides — one point of contact.
+        </li>
       </ul>
     </div>
   </section>
 
-  <ReviewWall limit={6} />
+  <ReviewWall limit={6} index="07" />
 
-  <section class="container-site py-24" aria-labelledby="guides-heading">
+  <section class="container-site pb-24" aria-labelledby="guides-heading">
     <div class="flex flex-wrap items-end justify-between gap-6">
-      <SectionHeading eyebrow="Travel Guide" title="Know before you go." id="guides-heading" />
+      <SectionHeading index="08" eyebrow="Travel Guide" title="Know *before* you go." id="guides-heading" />
       <Button href="/travel-guide" variant="secondary">
         All guides <Icon name="arrow" class="size-4" />
       </Button>
     </div>
     <div class="mt-12 grid gap-6 md:grid-cols-3">
-      {guides.map((g) => (
+      {latestGuides.map((g) => (
         <Card
           href={`/travel-guide/${g.id}`}
           title={g.data.title}
@@ -167,7 +187,7 @@ const why = [
 
   {leader && (
     <section class="container-site pb-24" aria-labelledby="leader-heading">
-      <div class="reveal grid gap-8 rounded-media bg-sand-100 p-8 text-ink-900 sm:p-12 md:grid-cols-[auto_1fr] md:items-center">
+      <div class="reveal grid gap-10 border-y border-line py-14 md:grid-cols-[auto_1fr] md:items-center">
         <div
           class="grid size-28 place-items-center rounded-full bg-ocean-900 font-display text-3xl text-gold-300"
           aria-hidden="true"
@@ -178,17 +198,19 @@ const why = [
             .join('')}
         </div>
         <div>
-          <h2 id="leader-heading" class="text-3xl font-semibold">
-            A family business, personally run.
-          </h2>
-          <p class="mt-3 max-w-[60ch] text-[#4a4f53]">
+          <h2
+            id="leader-heading"
+            class="max-w-3xl font-display text-[clamp(1.75rem,2.5vw+1rem,3rem)] leading-tight"
+            set:html={accent('A family business, *personally run.*')}
+          />
+          <p class="mt-4 max-w-[60ch] text-muted">
             Paradise Travels has been led from our Colombo office since {SITE.foundingYear}. When you plan with us, you
             plan with the people who answer the phone.
           </p>
-          <p class="mt-4 text-sm font-semibold">
-            {leader.data.name} · {leader.data.role}
+          <p class="detail mt-6 text-muted">
+            Led by {leader.data.name} · {leader.data.role}
           </p>
-          <a href="/about" class="mt-2 inline-block text-sm font-semibold text-ocean-700 underline underline-offset-4">
+          <a href="/about" class="mt-3 inline-block text-sm font-semibold text-primary underline underline-offset-4">
             Our story
           </a>
         </div>
