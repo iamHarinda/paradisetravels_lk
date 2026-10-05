@@ -1,0 +1,46 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../lib/site';
+import { travelAgencySchema } from '../lib/schema-org';
+
+// Phase 0 "coming soon" page — replaced by the real home page in Phase 2.
+const whatsappLink = `${SITE.whatsapp}?text=${encodeURIComponent('Hello Paradise Travels, I would like help planning a trip to Sri Lanka.')}`;
+---
+
+<BaseLayout
+  title="Paradise Travels — Sri Lanka Travel Agency Since 2007"
+  description="Paradise Travels, Colombo travel agency since 2007: Sri Lanka tours, partner hotel rates, flights, visas, transport, guides, events and Ayurveda. New site coming soon."
+  jsonLd={[travelAgencySchema()]}
+>
+  <section class="mx-auto flex min-h-dvh max-w-(--container-site) flex-col justify-center gap-8 px-4 py-16 sm:px-10">
+    <p class="text-sm font-semibold tracking-[0.2em] text-primary uppercase">
+      {SITE.legalName} · Since {SITE.foundingYear}
+    </p>
+    <h1 class="max-w-[14ch] text-h1">Sri Lanka, planned end-to-end.</h1>
+    <p class="max-w-[60ch] text-muted">
+      Flights, visas, handpicked hotels at partner rates, private drivers, expert guides and Ayurveda retreats —
+      arranged by one Colombo team that has been doing this since {SITE.foundingYear}. Our new website is on its way.
+    </p>
+    <div class="flex flex-wrap gap-4">
+      <a
+        class="inline-flex min-h-12 items-center rounded-pill bg-cta px-6 font-semibold text-cta-text transition-transform duration-200 ease-travel hover:-translate-y-0.5"
+        href={whatsappLink}
+        rel="noopener"
+      >
+        Message us on WhatsApp
+      </a>
+      <a
+        class="inline-flex min-h-12 items-center rounded-pill border border-current px-6 font-semibold text-primary"
+        href={`mailto:${SITE.email}`}
+      >
+        {SITE.email}
+      </a>
+    </div>
+    <address class="text-sm text-muted not-italic">
+      {SITE.addressLine} ·
+      <a class="underline underline-offset-4" href={`tel:${SITE.phoneE164}`}>
+        {SITE.phone}
+      </a>
+    </address>
+  </section>
+</BaseLayout>

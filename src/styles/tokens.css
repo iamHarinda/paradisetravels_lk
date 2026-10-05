@@ -1,0 +1,51 @@
+/* Design tokens — "Paradise 2030" (docs/04-ui-ux-design-system.md §2). */
+:root {
+  /* Brand */
+  --c-ocean-900: #062a35; /* deep Indian Ocean — primary dark */
+  --c-ocean-700: #0b4a5c;
+  --c-ocean-500: #127a8c; /* primary accent */
+  --c-lagoon-300: #7fd1c7; /* fresh highlight */
+  --c-tea-600: #2f6b3f; /* tea-country green */
+  --c-gold-500: #d9a441; /* temple gold — CTAs, highlights */
+  --c-gold-300: #f0cf85;
+  --c-laterite-500: #c2603c; /* earth/spice — sparing accent */
+
+  /* Neutrals */
+  --c-sand-50: #fbf8f2; /* page background (light) */
+  --c-sand-100: #f3ede2;
+  --c-stone-400: #9a958c;
+  --c-ink-900: #14181b; /* body text */
+
+  /* Semantic */
+  --c-bg: var(--c-sand-50);
+  --c-surface: #ffffff;
+  --c-text: var(--c-ink-900);
+  --c-text-muted: #5a5f63;
+  --c-primary: var(--c-ocean-700);
+  --c-cta: var(--c-gold-500);
+  --c-cta-text: var(--c-ocean-900);
+  --c-focus: #1e90ff;
+
+  /* Motion */
+  --ease-travel: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  color-scheme: light dark;
+}
+
+/* Optional dark theme for night browsing. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --c-bg: #071c23;
+    --c-surface: #0c2a33;
+    --c-text: #eef2f2;
+    --c-text-muted: #a9b6b8;
+    --c-primary: var(--c-lagoon-300);
+  }
+}
+:root[data-theme='dark'] {
+  --c-bg: #071c23;
+  --c-surface: #0c2a33;
+  --c-text: #eef2f2;
+  --c-text-muted: #a9b6b8;
+  --c-primary: var(--c-lagoon-300);
+}

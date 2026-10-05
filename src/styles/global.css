@@ -1,0 +1,105 @@
+@import 'tailwindcss';
+@import './tokens.css';
+
+/* Expose design tokens as Tailwind utilities (bg-bg, text-muted, bg-cta, font-display …). */
+@theme inline {
+  --color-ocean-900: var(--c-ocean-900);
+  --color-ocean-700: var(--c-ocean-700);
+  --color-ocean-500: var(--c-ocean-500);
+  --color-lagoon-300: var(--c-lagoon-300);
+  --color-tea-600: var(--c-tea-600);
+  --color-gold-500: var(--c-gold-500);
+  --color-gold-300: var(--c-gold-300);
+  --color-laterite-500: var(--c-laterite-500);
+  --color-sand-50: var(--c-sand-50);
+  --color-sand-100: var(--c-sand-100);
+  --color-stone-400: var(--c-stone-400);
+  --color-ink-900: var(--c-ink-900);
+
+  --color-bg: var(--c-bg);
+  --color-surface: var(--c-surface);
+  --color-text: var(--c-text);
+  --color-muted: var(--c-text-muted);
+  --color-primary: var(--c-primary);
+  --color-cta: var(--c-cta);
+  --color-cta-text: var(--c-cta-text);
+  --color-focus: var(--c-focus);
+
+  --font-display: var(--font-fraunces);
+  --font-sans: var(--font-inter);
+
+  /* Fluid type scale (docs/04 §3). */
+  --text-h1: clamp(2.5rem, 6vw + 1rem, 6rem);
+  --text-h1--line-height: 1.02;
+  --text-h1--letter-spacing: -0.02em;
+  --text-h2: clamp(2rem, 3.5vw + 1rem, 3.75rem);
+  --text-h2--line-height: 1.1;
+  --text-body: clamp(1rem, 0.3vw + 0.95rem, 1.125rem);
+  --text-body--line-height: 1.6;
+
+  --radius-card: 12px;
+  --radius-media: 24px;
+  --radius-pill: 999px;
+
+  --container-site: 1440px;
+  --ease-travel: var(--ease-travel);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  body {
+    background: var(--c-bg);
+    color: var(--c-text);
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2 {
+    font-family: var(--font-display);
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--c-focus);
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  .skip-link {
+    position: absolute;
+    left: 1rem;
+    top: -100%;
+    z-index: 100;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-card);
+    background: var(--c-surface);
+    color: var(--c-text);
+  }
+  .skip-link:focus {
+    top: 1rem;
+  }
+}
+
+/* Every effect must have a reduced-motion fallback (CLAUDE.md hard rule 4). */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

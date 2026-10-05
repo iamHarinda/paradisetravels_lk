@@ -1,0 +1,64 @@
+---
+import { SITE_ENV } from 'astro:env/server';
+import { SITE } from '../../lib/site';
+import { siteSchema } from '../../lib/schema-org';
+
+export interface Props {
+  /** ≤ 60 characters, unique per page. */
+  title: string;
+  /** 140–160 characters, unique per page. */
+  description: string;
+  /** Absolute or root-relative 1200×630 image. */
+  image?: string;
+  imageAlt?: string;
+  type?: 'website' | 'article';
+  noindex?: boolean;
+  /** Page-specific JSON-LD, added after the site-wide Organization/WebSite. */
+  jsonLd?: Record<string, unknown>[];
+}
+
+const {
+  title,
+  description,
+  image = SITE.defaultOgImage,
+  imageAlt = `${SITE.name} — Sri Lanka travel since ${SITE.foundingYear}`,
+  type = 'website',
+  noindex = false,
+  jsonLd = [],
+} = Astro.props;
+
+// Clean URLs (docs/03): `build.format: 'file'` reports `/index.html` / `/about.html` while prerendering.
+const cleanPath =
+  Astro.url.pathname
+    .replace(/\.html$/, '')
+    .replace(/\/index$/, '')
+    .replace(/\/$/, '') || '/';
+const canonical = new URL(cleanPath, Astro.site);
+const imageUrl = new URL(image, Astro.site);
+const robots = noindex || SITE_ENV !== 'production' ? 'noindex, nofollow' : 'index, follow, max-image-preview:large';
+const schema = [...siteSchema(), ...jsonLd];
+---
+
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+<meta name="robots" content={robots} />
+
+<meta property="og:type" content={type} />
+<meta property="og:site_name" content={SITE.name} />
+<meta property="og:locale" content="en_GB" />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={imageUrl} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={imageAlt} />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={imageUrl} />
+
+<link rel="sitemap" href="/sitemap-index.xml" />
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />
