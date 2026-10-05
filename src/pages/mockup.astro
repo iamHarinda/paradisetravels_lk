@@ -1,0 +1,557 @@
+---
+// Visual mockup of the final home page (docs/04 + docs/05 §4) for owner review — NOT the real home page.
+// All imagery is placeholder gradients; prices, hotels and reviews are {{TODO}} until the owner supplies real data.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../lib/site';
+
+const nav = ['Destinations', 'Experiences', 'Tours', 'Hotel Deals', 'Services', 'Travel Guide', 'About'];
+
+const services = [
+  {
+    name: 'Flight Tickets',
+    line: 'Smart fares to and from Sri Lanka, with real people to call.',
+    size: 'lg',
+    icon: 'plane',
+  },
+  { name: 'Visa & ETA', line: 'Handled correctly first time.', icon: 'doc' },
+  { name: 'Hotels', line: 'Handpicked stays at partner rates.', icon: 'bed' },
+  { name: 'Transport', line: 'Cars, vans and coaches with drivers.', icon: 'car' },
+  { name: 'Tour Guides', line: 'Licensed local guides.', icon: 'flag' },
+  { name: 'Ayurveda', line: 'From 7-day resets to 21-day treatments.', size: 'lg', icon: 'leaf' },
+  { name: 'Interpreters', line: 'Meetings and delegations.', icon: 'chat' },
+  { name: 'Projects', line: 'On-the-ground coordination.', icon: 'grid' },
+  { name: 'Events', line: 'Planned to the minute.', icon: 'star' },
+  { name: 'Conferences', line: 'Your conference, fully handled.', icon: 'mic' },
+  { name: 'Workshops', line: 'Training retreats.', icon: 'pen' },
+  { name: 'Day Outings', line: 'One-day escapes from Colombo.', icon: 'sun' },
+];
+
+const icons: Record<string, string> = {
+  plane: 'M2 16l20-8-20-8 4 8-4 8zm4-8h16',
+  doc: 'M6 2h9l5 5v15H6zM14 2v6h6M9 13h8M9 17h6',
+  bed: 'M3 18V7m0 6h18v5M3 13h18M7 13v-2a2 2 0 012-2h3v4',
+  car: 'M4 16V11l2-5h12l2 5v5M4 16h16M7 16v2m10-2v2M4 11h16',
+  flag: 'M5 21V4m0 0h11l-2 4 2 4H5',
+  leaf: 'M5 19C5 9 11 4 20 4c0 9-5 15-15 15zm0 0l7-7',
+  chat: 'M4 5h16v10H9l-5 4z',
+  grid: 'M4 4h7v7H4zm9 0h7v7h-7zM4 13h7v7H4zm9 0h7v7h-7z',
+  star: 'M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.5 6.7 19.4l1.2-6-4.5-4.1 6-.7z',
+  mic: 'M12 3a3 3 0 013 3v5a3 3 0 01-6 0V6a3 3 0 013-3zM6 11a6 6 0 0012 0M12 17v4',
+  pen: 'M4 20l4-1 11-11-3-3L5 16zM14 6l3 3',
+  sun: 'M12 7a5 5 0 110 10 5 5 0 010-10zM12 1v3m0 16v3M1 12h3m16 0h3M4 4l2 2m12 12l2 2M4 20l2-2M18 6l2-2',
+};
+
+const places = [
+  { name: 'Jaffna', x: 88, y: 30, region: 'north' },
+  { name: 'Trincomalee', x: 132, y: 98, region: 'east' },
+  { name: 'Sigiriya', x: 108, y: 130, region: 'triangle' },
+  { name: 'Kandy', x: 104, y: 178, region: 'hills' },
+  { name: 'Colombo', x: 56, y: 212, region: 'west' },
+  { name: 'Ella', x: 132, y: 214, region: 'hills' },
+  { name: 'Arugam Bay', x: 166, y: 222, region: 'east' },
+  { name: 'Yala', x: 148, y: 254, region: 'south' },
+  { name: 'Galle', x: 76, y: 268, region: 'south' },
+];
+
+const regions = [
+  { id: 'triangle', name: 'Cultural Triangle', blurb: 'Sigiriya, Dambulla, Polonnaruwa, Anuradhapura' },
+  { id: 'hills', name: 'Hill Country', blurb: 'Kandy, Nuwara Eliya, Ella — tea and train journeys' },
+  { id: 'south', name: 'South Coast', blurb: 'Galle, Mirissa, Yala — forts, whales, leopards' },
+  { id: 'east', name: 'East Coast', blurb: 'Trincomalee, Arugam Bay — in season Apr/May–Sep' },
+  { id: 'north', name: 'North', blurb: 'Jaffna — a different Sri Lanka' },
+  { id: 'west', name: 'Colombo & West', blurb: 'City, Negombo, Bentota' },
+];
+
+// Seasons from docs/11 §3 (re-verify before publishing). W = west/south coast + hills, E = east coast.
+const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const westBest = [0, 1, 2, 3, 11];
+const eastBest = [4, 5, 6, 7, 8];
+
+const tours = [
+  { days: 7, title: 'Classic Sri Lanka', route: 'Colombo · Sigiriya · Kandy · Ella · Galle', tone: 'heritage' },
+  { days: 10, title: 'Culture, Tea & Coast', route: 'Cultural Triangle · Hill Country · South', tone: 'tea' },
+  { days: 14, title: 'The Whole Island', route: 'Ancient cities · Hills · Safari · Beaches', tone: 'ocean' },
+];
+
+const story = [
+  { title: 'The coast', text: 'Fort walls in Galle, whales off Mirissa, surf at Arugam Bay.', tone: 'ocean' },
+  { title: 'The tea hills', text: 'Misty estates, colonial bungalows and the Kandy–Ella train.', tone: 'tea' },
+  { title: 'The ancient cities', text: 'Sigiriya at sunrise, cave temples, 2,000-year-old stupas.', tone: 'heritage' },
+  { title: 'The wild', text: 'Leopards in Yala, elephant gatherings at Minneriya.', tone: 'wild' },
+];
+---
+
+<BaseLayout
+  title="Home page mockup — Paradise Travels (internal preview)"
+  description="Internal visual mockup of the new Paradise Travels home page for owner review. Placeholder images and data only; not for publishing or indexing by search engines."
+  noindex
+>
+  <!-- Header -->
+  <header slot="header" class="absolute inset-x-0 top-0 z-30 text-white">
+    <div class="mx-auto flex max-w-(--container-site) items-center gap-6 px-4 py-5 sm:px-10">
+      <a href="/mockup" class="flex items-center gap-3 font-display text-xl font-semibold">
+        <span class="grid size-10 place-items-center rounded-xl bg-white/15 text-gold-300 backdrop-blur">PT</span>
+        Paradise Travels
+      </a>
+      <nav class="ml-auto hidden gap-6 text-sm font-medium xl:flex" aria-label="Main">
+        {nav.map((item) => (
+          <a class="opacity-90 hover:opacity-100" href="#">
+            {item}
+          </a>
+        ))}
+      </nav>
+      <a
+        href="#"
+        class="ml-auto inline-flex min-h-12 items-center rounded-pill bg-cta px-5 text-sm whitespace-nowrap font-semibold text-cta-text xl:ml-0"
+      >
+        Plan My Trip
+      </a>
+    </div>
+  </header>
+
+  <!-- 1. Hero -->
+  <section class="ph ph-ocean relative isolate flex min-h-[100svh] items-end overflow-hidden pt-28 pb-28 text-white sm:pb-20">
+    <div class="hero-shade" aria-hidden="true"></div>
+    <span class="ph-label">Hero video placeholder · 10 s loop: Mirissa beach → tea hills</span>
+    <div class="mx-auto w-full max-w-(--container-site) px-4 sm:px-10">
+      <p class="reveal mb-5 text-sm font-semibold tracking-[0.2em] text-lagoon-300 uppercase">
+        Since {SITE.foundingYear} · Colombo
+      </p>
+      <h1 class="reveal max-w-[12ch] text-h1">Sri Lanka, planned end-to-end.</h1>
+      <p class="reveal mt-6 max-w-[56ch] text-lg text-white/85">
+        Flights, visas, handpicked hotels at partner rates, private drivers, expert guides and Ayurveda retreats —
+        arranged by one Colombo team.
+      </p>
+      <form class="reveal mt-8 flex max-w-xl items-center gap-2 rounded-pill bg-white p-2 shadow-2xl" action="#">
+        <label class="sr-only" for="where">
+          Where do you want to go?
+        </label>
+        <input
+          id="where"
+          class="min-h-12 min-w-0 flex-1 rounded-pill px-4 text-ink-900 outline-none placeholder:text-stone-400"
+          placeholder="Where do you want to go?"
+        />
+        <button class="min-h-12 rounded-pill bg-cta px-5 font-semibold whitespace-nowrap text-cta-text sm:px-6">
+          <span class="sm:hidden">Plan</span>
+          <span class="hidden sm:inline">Start planning</span>
+        </button>
+      </form>
+      <ul class="reveal mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-white/80">
+        <li>✦ Since {SITE.foundingYear}</li>
+        <li>✦ {'{{TODO: Google rating}}'}</li>
+        <li>✦ Replies on WhatsApp</li>
+        <li>✦ Based in Colombo</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 2. Bento services -->
+  <section class="mx-auto max-w-(--container-site) px-4 py-24 sm:px-10">
+    <p class="reveal eyebrow">Everything in one place</p>
+    <h2 class="reveal mt-3 max-w-[18ch] text-h2">One team for your whole journey.</h2>
+    <div class="mt-12 grid auto-rows-[minmax(150px,auto)] grid-cols-2 gap-4 md:grid-cols-4">
+      {services.map((s) => (
+        <a
+          href="#"
+          class:list={[
+            'reveal tile group flex flex-col justify-between rounded-card p-6 shadow-sm ring-1 ring-black/5',
+            s.size === 'lg' ? 'tile-lg col-span-2 bg-ocean-900 text-white md:row-span-2' : 'bg-surface',
+          ]}
+        >
+          <svg
+            class="tile-icon size-9 text-ocean-500"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d={icons[s.icon]} />
+          </svg>
+          <div>
+            <h3 class:list={['font-display font-semibold', s.size === 'lg' ? 'text-3xl' : 'text-lg']}>{s.name}</h3>
+            <p class:list={['mt-1 text-sm', s.size === 'lg' ? 'text-white/75' : 'text-muted']}>{s.line}</p>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- 3. Island Explorer + 4. Season picker -->
+  <section class="bg-ocean-900 py-24 text-white">
+    <div class="mx-auto grid max-w-(--container-site) items-center gap-12 px-4 sm:px-10 lg:grid-cols-2">
+      <div>
+        <p class="reveal eyebrow text-lagoon-300!">Island Explorer</p>
+        <h2 class="reveal mt-3 text-h2">Small island. Six worlds.</h2>
+        <ul class="mt-8 grid gap-2 sm:grid-cols-2" id="regions">
+          {regions.map((r, i) => (
+            <li>
+              <button
+                type="button"
+                data-region={r.id}
+                aria-pressed={i === 0 ? 'true' : 'false'}
+                class="region-btn w-full rounded-card border border-white/15 p-4 text-left transition hover:border-lagoon-300 aria-pressed:border-gold-500 aria-pressed:bg-white/5"
+              >
+                <span class="block font-semibold">{r.name}</span>
+                <span class="block text-sm text-white/65">{r.blurb}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <svg viewBox="0 0 220 300" class="reveal mx-auto w-full max-w-sm" role="img" aria-label="Map of Sri Lanka">
+        <path
+          d="M72 20 L94 8 L112 24 L102 42 L120 72 L142 110 L160 150 L172 192 L168 228 L152 258 L126 280 L94 288 L70 272 L56 242 L48 202 L46 160 L54 120 L62 86 L70 56 Z"
+          fill="#0B4A5C"
+          stroke="#7FD1C7"
+          stroke-width="1.2"
+        ></path>
+        {places.map((p) => (
+          <g class="place" data-region={p.region}>
+            <circle cx={p.x} cy={p.y} r="4.5" />
+            <text x={p.x + 8} y={p.y + 3.5} font-size="9" fill="currentColor">
+              {p.name}
+            </text>
+          </g>
+        ))}
+      </svg>
+    </div>
+
+    <div class="mx-auto mt-20 max-w-(--container-site) px-4 sm:px-10">
+      <h3 class="reveal font-display text-3xl">When are you travelling?</h3>
+      <div class="mt-6 flex flex-wrap gap-2" id="months">
+        {months.map((m, i) => (
+          <button
+            type="button"
+            data-month={i}
+            aria-pressed={i === 11 ? 'true' : 'false'}
+            class="min-h-12 min-w-14 rounded-pill border border-white/20 px-4 text-sm font-semibold aria-pressed:border-gold-500 aria-pressed:bg-gold-500 aria-pressed:text-ocean-900"
+          >
+            {m}
+          </button>
+        ))}
+      </div>
+      <p class="mt-6 text-lg text-white/85" id="season-result" aria-live="polite"></p>
+      <p class="mt-2 text-xs text-white/50">Seasons per docs/11 — re-verify before publishing.</p>
+    </div>
+  </section>
+
+  <!-- 5. Featured tours -->
+  <section class="mx-auto max-w-(--container-site) px-4 py-24 sm:px-10">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <p class="reveal eyebrow">Tours</p>
+        <h2 class="reveal mt-3 text-h2">Start with a route. Make it yours.</h2>
+      </div>
+      <a href="#" class="font-semibold text-primary underline underline-offset-4">
+        All tours
+      </a>
+    </div>
+    <div class="mt-12 grid gap-6 md:grid-cols-3">
+      {tours.map((t) => (
+        <a href="#" class="reveal tile group overflow-hidden rounded-media bg-surface shadow-sm ring-1 ring-black/5">
+          <div class:list={['ph relative aspect-[4/3]', `ph-${t.tone}`]}>
+            <span class="ph-label">Photo placeholder</span>
+            <span class="absolute top-4 left-4 rounded-pill bg-white/90 px-3 py-1 text-sm font-semibold text-ocean-900">
+              {t.days} days
+            </span>
+          </div>
+          <div class="p-6">
+            <h3 class="font-display text-2xl font-semibold">{t.title}</h3>
+            <p class="mt-1 text-sm text-muted">{t.route}</p>
+            <p class="mt-4 text-sm">
+              From <strong>{'{{TODO: price}}'}</strong> per person
+            </p>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- 6. Hotel deals -->
+  <section class="bg-sand-100 py-24 text-ink-900">
+    <div class="mx-auto max-w-(--container-site) px-4 sm:px-10">
+      <p class="reveal eyebrow">Hotel Deals</p>
+      <h2 class="reveal mt-3 max-w-[20ch] text-h2">Partner rates you won't find on booking sites.</h2>
+      <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {['South Coast', 'Hill Country', 'Cultural Triangle', 'East Coast'].map((area, i) => (
+          <article class="reveal tile overflow-hidden rounded-card bg-white shadow-sm">
+            <div class:list={['ph relative aspect-[4/3]', ['ph-ocean', 'ph-tea', 'ph-heritage', 'ph-wild'][i]]}>
+              <span class="ph-label">Hotel photo</span>
+              <span class="absolute top-3 left-3 rounded-pill bg-gold-500 px-3 py-1 text-xs font-bold text-ocean-900">
+                Paradise rate
+              </span>
+            </div>
+            <div class="p-5">
+              <p class="text-xs font-semibold tracking-wider text-stone-400 uppercase">{area}</p>
+              <h3 class="mt-1 font-semibold">{'{{TODO: partner hotel}}'}</h3>
+              <p class="mt-2 text-sm text-[#5A5F63]">Partner rate — request yours.</p>
+              <a href="#" class="mt-4 inline-flex font-semibold text-ocean-700 underline underline-offset-4">
+                Request this rate
+              </a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. Journey story -->
+  <section class="mx-auto max-w-(--container-site) px-4 py-24 sm:px-10">
+    <p class="reveal eyebrow">A journey across the island</p>
+    <div class="mt-10 grid gap-6 md:grid-cols-2">
+      {story.map((s, i) => (
+        <div
+          class:list={[
+            'reveal ph relative flex min-h-[340px] items-end overflow-hidden rounded-media p-8 text-white',
+            `ph-${s.tone}`,
+            i % 2 === 1 && 'md:translate-y-16',
+          ]}
+        >
+          <span class="ph-label">Photo placeholder</span>
+          <div>
+            <h3 class="font-display text-4xl font-semibold">{s.title}</h3>
+            <p class="mt-2 max-w-[36ch] text-white/85">{s.text}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- 8. Reviews -->
+  <section class="mx-auto max-w-(--container-site) px-4 pt-16 pb-24 sm:px-10">
+    <p class="reveal eyebrow">Reviews</p>
+    <h2 class="reveal mt-3 text-h2">In our travellers' words.</h2>
+    <div class="mt-12 columns-1 gap-6 sm:columns-2 lg:columns-3">
+      {[1, 2, 3].map(() => (
+        <figure class="reveal mb-6 break-inside-avoid rounded-card border-2 border-dashed border-stone-400/50 p-6">
+          <blockquote class="text-muted">
+            {'{{TODO: real review, shown with permission — source, name and date}}'}
+          </blockquote>
+          <figcaption class="mt-4 text-sm font-semibold">Google · Tripadvisor · Facebook</figcaption>
+        </figure>
+      ))}
+    </div>
+  </section>
+
+  <!-- 9. Final CTA -->
+  <section class="ph ph-heritage relative py-28 text-center text-white">
+    <span class="ph-label">Photo placeholder</span>
+    <div class="mx-auto max-w-2xl px-4">
+      <h2 class="reveal text-h2">Tell us your dream trip.</h2>
+      <p class="reveal mt-4 text-lg text-white/85">We reply with a plan — not a sales pitch.</p>
+      <div class="reveal mt-8 flex flex-wrap justify-center gap-4">
+        <a href="#" class="inline-flex min-h-12 items-center rounded-pill bg-cta px-7 font-semibold text-cta-text">
+          Plan My Trip
+        </a>
+        <a
+          href={SITE.whatsapp}
+          class="inline-flex min-h-12 items-center rounded-pill border border-white/60 px-7 font-semibold"
+        >
+          WhatsApp
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <footer slot="footer" class="bg-ocean-900 pt-16 pb-28 text-white/75 md:pb-16">
+    <div class="mx-auto grid max-w-(--container-site) gap-8 px-4 text-sm sm:px-10 md:grid-cols-3">
+      <div>
+        <p class="font-display text-xl text-white">{SITE.legalName}</p>
+        <p class="mt-2">Since {SITE.foundingYear}</p>
+      </div>
+      <address class="not-italic">{SITE.addressLine}</address>
+      <div>
+        <p>{SITE.phone}</p>
+        <p>{SITE.email}</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Mobile sticky bar -->
+  <nav
+    class="fixed inset-x-3 bottom-3 z-40 grid grid-cols-3 gap-2 rounded-pill bg-white/95 p-2 shadow-2xl ring-1 ring-black/10 backdrop-blur md:hidden"
+    aria-label="Quick contact"
+  >
+    <a href={SITE.whatsapp} class="grid min-h-12 place-items-center rounded-pill text-sm font-semibold text-tea-600">
+      WhatsApp
+    </a>
+    <a
+      href={`tel:${SITE.phoneE164}`}
+      class="grid min-h-12 place-items-center rounded-pill text-sm font-semibold text-ocean-700"
+    >
+      Call
+    </a>
+    <a href="#" class="grid min-h-12 place-items-center rounded-pill bg-cta text-sm font-semibold text-cta-text">
+      Plan trip
+    </a>
+  </nav>
+</BaseLayout>
+
+<style>
+  .eyebrow {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--c-ocean-500);
+  }
+  /* Placeholder "photos" — replaced by real images (Astro <Picture>) once supplied. */
+  .ph {
+    background-color: var(--c-ocean-700);
+  }
+  .ph::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(180deg, transparent 35%, rgb(6 42 53 / 0.75));
+  }
+  .ph > * {
+    position: relative;
+  }
+  .ph-ocean {
+    background-image:
+      radial-gradient(ellipse at 70% 20%, #f0cf85 0, transparent 35%),
+      linear-gradient(170deg, #7fd1c7 0%, #127a8c 45%, #062a35 100%);
+  }
+  .ph-tea {
+    background-image:
+      radial-gradient(ellipse at 30% 10%, #e8efe0 0, transparent 40%),
+      linear-gradient(160deg, #6f9e66 0%, #2f6b3f 50%, #15301d 100%);
+  }
+  .ph-heritage {
+    background-image:
+      radial-gradient(ellipse at 60% 25%, #f0cf85 0, transparent 40%),
+      linear-gradient(165deg, #d9a441 0%, #c2603c 50%, #4a2015 100%);
+  }
+  .ph-wild {
+    background-image:
+      radial-gradient(ellipse at 40% 20%, #f3ede2 0, transparent 35%),
+      linear-gradient(165deg, #a8a15a 0%, #5d6b33 50%, #232a12 100%);
+  }
+  .ph-label {
+    position: absolute !important;
+    top: 1rem;
+    right: 1rem;
+    padding: 0.25rem 0.6rem;
+    border-radius: 999px;
+    background: rgb(0 0 0 / 0.35);
+    color: #fff;
+    font-size: 0.7rem;
+    letter-spacing: 0.04em;
+  }
+  /* Darken top (header legibility) and bottom (copy legibility) of the hero placeholder. */
+  .hero-shade {
+    position: absolute !important;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgb(6 42 53 / 0.55) 0%,
+      transparent 30%,
+      transparent 45%,
+      rgb(6 42 53 / 0.6) 100%
+    );
+  }
+  section.ph > .ph-label {
+    top: auto;
+    bottom: 1rem;
+  }
+
+  /* Hover lift (docs/04 §6). */
+  .tile {
+    transition:
+      transform 200ms var(--ease-travel),
+      box-shadow 200ms var(--ease-travel);
+  }
+  .tile:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 40px -18px rgb(6 42 53 / 0.45);
+  }
+  .tile:hover .tile-icon {
+    transform: rotate(-8deg) scale(1.1);
+  }
+  .tile-icon {
+    transition: transform 300ms var(--ease-travel);
+  }
+  .tile-lg .tile-icon {
+    color: var(--c-gold-500);
+  }
+
+  /* Map */
+  .place {
+    color: rgb(255 255 255 / 0.55);
+    transition: color 200ms;
+  }
+  .place circle {
+    fill: currentColor;
+  }
+  .place.is-active {
+    color: var(--c-gold-300);
+  }
+
+  /* Reveal on scroll — fade + 24px rise, 600ms (docs/04 §6). Content is visible without JS. */
+  :global(.js) .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition:
+      opacity 600ms var(--ease-travel),
+      transform 600ms var(--ease-travel);
+  }
+  :global(.js) .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :global(.js) .reveal {
+      opacity: 1;
+      transform: none;
+    }
+    .tile:hover {
+      transform: none;
+    }
+  }
+</style>
+
+<script define:vars={{ westBest, eastBest, months }}>
+  document.documentElement.classList.add('js');
+
+  const io = new IntersectionObserver(
+    (entries) =>
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          e.target.classList.add('is-visible');
+          io.unobserve(e.target);
+        }
+      }),
+    { rootMargin: '0px 0px -8% 0px' },
+  );
+  document.querySelectorAll('.reveal').forEach((el, i) => {
+    el.style.transitionDelay = `${(i % 4) * 60}ms`;
+    io.observe(el);
+  });
+
+  const regionBtns = document.querySelectorAll('.region-btn');
+  const selectRegion = (id) => {
+    regionBtns.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.region === id)));
+    document.querySelectorAll('.place').forEach((p) => p.classList.toggle('is-active', p.dataset.region === id));
+  };
+  regionBtns.forEach((b) => b.addEventListener('click', () => selectRegion(b.dataset.region)));
+  selectRegion('triangle');
+
+  const monthBtns = document.querySelectorAll('#months button');
+  const result = document.getElementById('season-result');
+  const selectMonth = (m) => {
+    monthBtns.forEach((b) => b.setAttribute('aria-pressed', String(Number(b.dataset.month) === m)));
+    const coasts = [];
+    if (westBest.includes(m)) coasts.push('the west & south coasts and hill country');
+    if (eastBest.includes(m)) coasts.push('the east coast (Trincomalee, Arugam Bay)');
+    result.textContent = coasts.length
+      ? `In ${months[m]}, head for ${coasts.join(' and ')}.`
+      : `In ${months[m]}, it's shoulder season — the Cultural Triangle and hills still work well. Ask us.`;
+  };
+  monthBtns.forEach((b) => b.addEventListener('click', () => selectMonth(Number(b.dataset.month))));
+  selectMonth(11);
+</script>

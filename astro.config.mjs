@@ -40,7 +40,7 @@ export default defineConfig({
     mode: 'standalone',
   }),
 
-  integrations: [sitemap(), mdx(), react(), keystatic()],
+  integrations: [sitemap({ filter: (page) => !page.endsWith('/mockup') }), mdx(), react(), keystatic()],
 
   prefetch: { defaultStrategy: 'hover' },
 
