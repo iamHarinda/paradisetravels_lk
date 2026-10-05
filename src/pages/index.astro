@@ -13,6 +13,7 @@ import Icon from '../components/ui/Icon.astro';
 import Media from '../components/ui/Media.astro';
 import CtaBlock from '../components/ui/CtaBlock.astro';
 import TicketCard from '../components/tours/TicketCard.astro';
+import AirlineLogos from '../components/ui/AirlineLogos.astro';
 import { getEntries, byOrder } from '../lib/content';
 import { travelAgencySchema } from '../lib/schema-org';
 import { dateFmt } from '../lib/labels';
@@ -52,6 +53,17 @@ const facts = [
   jsonLd={[travelAgencySchema()]}
 >
   <Hero />
+  <section class="container-site pb-14" aria-labelledby="airlines-heading">
+    <div class="mb-5 flex flex-wrap items-baseline justify-between gap-2">
+      <h2 id="airlines-heading" class="detail font-sans text-muted">
+        Flight tickets on leading airlines
+      </h2>
+      <a href="/services/flight-tickets" class="text-sm font-semibold text-primary underline underline-offset-4">
+        Book flights with us
+      </a>
+    </div>
+    <AirlineLogos variant="strip" />
+  </section>
   <Marquee />
   <Bento />
   <IslandExplorer />

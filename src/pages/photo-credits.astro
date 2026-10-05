@@ -1,6 +1,7 @@
 ---
 import LegalLayout from '../layouts/LegalLayout.astro';
 import { PHOTO_CREDITS } from '../lib/photos';
+import { AIRLINES } from '../data/airlines';
 
 // Attribution required by the CC BY / CC BY-SA licences of the photos we use (docs: src/data/photo-credits.json).
 const LICENSE_URL: Record<string, string> = {
@@ -55,4 +56,20 @@ const credits = Object.values(PHOTO_CREDITS).sort((a, b) => a.alt.localeCompare(
       ))}
     </tbody>
   </table>
+  <h2>Airline logos</h2>
+  <p>
+    Airline logos are trademarks of their respective airlines and are shown to indicate airlines we issue tickets for;
+    they do not imply endorsement. Logo artwork sources:
+  </p>
+  <ul>
+    {AIRLINES.filter((a) => a.logo).map((a) => (
+      <li>
+        {a.name} —{' '}
+        <a href={a.url} rel="noopener">
+          {a.source}
+        </a>{' '}
+        ({a.license})
+      </li>
+    ))}
+  </ul>
 </LegalLayout>

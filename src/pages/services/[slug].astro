@@ -7,6 +7,7 @@ import Icon from '../../components/ui/Icon.astro';
 import type { IconName } from '../../lib/icons';
 import FaqSection from '../../components/ui/FaqSection.astro';
 import EnquiryForm from '../../components/forms/EnquiryForm.astro';
+import AirlineLogos from '../../components/ui/AirlineLogos.astro';
 import { faqSchema, serviceSchema } from '../../lib/schema-org';
 import { whatsappLink } from '../../lib/site';
 
@@ -82,6 +83,22 @@ const path = `/services/${entry.id}`;
       </div>
     </aside>
   </section>
+
+  {entry.id === 'flight-tickets' && (
+    <section class="container-site pb-16" aria-labelledby="airlines-heading">
+      <p class="chapter">
+        <span class="chapter-rule" aria-hidden="true" />
+        <span>Airlines</span>
+      </p>
+      <h2 id="airlines-heading" class="mt-4 text-h2">
+        Airlines we <em class="accent">book</em>
+      </h2>
+      <p class="mt-4 max-w-[60ch] text-muted">
+        Tickets on these airlines and more — ask us for any route. Logos are trademarks of their respective airlines.
+      </p>
+      <AirlineLogos class="mt-8" />
+    </section>
+  )}
 
   <FaqSection faqs={s.faqs} />
 

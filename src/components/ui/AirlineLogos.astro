@@ -1,0 +1,75 @@
+---
+import { AIRLINES } from '../../data/airlines';
+
+// Airline logos (CLAUDE.md: only airlines the owner confirmed). "strip" = slim greyscale row (home),
+// "grid" = named tiles (Flight Tickets page). Logos turn to full colour on hover/focus.
+interface Props {
+  variant?: 'strip' | 'grid';
+  class?: string;
+}
+const { variant = 'grid', class: className } = Astro.props;
+---
+
+<ul
+  class:list={[
+    variant === 'strip'
+      ? 'grid grid-cols-3 gap-2 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-12'
+      : 'grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4',
+    className,
+  ]}
+>
+  {AIRLINES.map((a) => (
+    <li
+      class:list={[
+        'airline group flex flex-col items-center justify-center gap-2 rounded-card bg-white text-center ring-1 ring-black/5',
+        variant === 'strip' ? 'h-20 px-3' : 'h-32 px-4',
+      ]}
+    >
+      {a.logo ? (
+        <img
+          src={a.logo}
+          alt={variant === 'strip' ? a.name : ''}
+          width="160"
+          height="48"
+          loading="lazy"
+          decoding="async"
+          class="w-auto max-w-[85%] object-contain"
+          style={`height: ${(variant === 'strip' ? 2 : 2.75) * (a.scale ?? 1)}rem`}
+        />
+      ) : (
+        <span
+          class:list={[
+            'airline-word font-display leading-tight font-semibold',
+            variant === 'strip' ? 'text-sm' : 'text-lg',
+          ]}
+        >
+          {a.name}
+        </span>
+      )}
+      {variant === 'grid' && a.logo && <span class="text-xs font-semibold text-[#5A5F63]">{a.name}</span>}
+    </li>
+  ))}
+</ul>
+
+<style>
+  /* Greyscale until hover so a dozen brand colours don't fight the page palette. */
+  .airline img {
+    filter: grayscale(1);
+    opacity: 0.75;
+    transition:
+      filter 300ms var(--ease-travel),
+      opacity 300ms var(--ease-travel);
+  }
+  .airline:hover img,
+  .airline:focus-within img {
+    filter: none;
+    opacity: 1;
+  }
+  .airline-word {
+    color: #6b6f72;
+    transition: color 300ms var(--ease-travel);
+  }
+  .airline:hover .airline-word {
+    color: #0b4a5c;
+  }
+</style>

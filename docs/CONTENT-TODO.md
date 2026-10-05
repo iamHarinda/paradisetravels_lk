@@ -32,6 +32,14 @@ credited on `/photo-credits` (required by their CC BY / CC BY-SA licences — ke
 - [ ] Office, team and Chairman/MD photos.
 - [ ] Ayurveda: no suitable free photo found — the Ayurveda pages use a hill-country landscape for now.
 
+## 3a. Airline logos
+The home page and Flight Tickets page show 12 airlines the owner confirmed (October 2026): SriLankan Airlines, Emirates,
+Qatar Airways, Etihad, flydubai, Air Arabia, Singapore Airlines, Turkish Airlines, Cathay Pacific, IndiGo, Air India,
+Korean Air. List: `src/data/airlines.ts`.
+- [ ] **SriLankan Airlines logo** — no freely licensed file exists; shown as a text wordmark. Get the official logo from the airline's agent/partner portal and add it to `public/logos/airlines/`.
+- [ ] Check each airline's agent brand-usage rules (some airlines provide official logo files to agents) and replace the community-sourced artwork if required.
+- [ ] Keep the list current — remove any airline the agency stops ticketing.
+
 ## 4. Business details
 - [ ] **[launch]** Office opening hours and WhatsApp reply hours → contact page, `TravelAgency` schema, and the "we reply within X" promise on the thank-you page.
 - [ ] Office map coordinates (for `geo` in schema) — from the Google Business Profile.
