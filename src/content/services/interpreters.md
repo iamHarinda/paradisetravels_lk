@@ -17,7 +17,7 @@ steps:
     body: Your interpreter travels with your group; we coordinate timings and transport.
 faqs:
   - q: Which languages can you provide?
-    a: "{{TODO: confirm language pairs available with the owner (e.g. Korean).}}"
+    a: '{{TODO: confirm language pairs available with the owner (e.g. Korean).}}'
 reviewed: false
 ---
 

@@ -7,8 +7,8 @@ interface Props {
   eyebrow?: string;
   title: string;
   intro?: string;
-  image?: ImageMetadata;
-  imageAlt?: string;
+  image?: ImageMetadata | null;
+  imageAlt?: string | null;
   tone?: 'ocean' | 'tea' | 'heritage' | 'wild' | 'sand';
   media?: boolean;
 }

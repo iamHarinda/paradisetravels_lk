@@ -5,14 +5,14 @@ coords:
   - 7.86
   - 80.65
 bestMonths:
-  - 2
-  - 3
-  - 4
-  - 5
-  - 6
-  - 7
-  - 8
-  - 9
+  - '2'
+  - '3'
+  - '4'
+  - '5'
+  - '6'
+  - '7'
+  - '8'
+  - '9'
 tone: heritage
 featured: false
 order: 6
@@ -27,7 +27,7 @@ tips:
 faqs: []
 seo:
   title: Dambulla Cave Temple Guide | Paradise Travels
-  description: "Dambulla Cave Temple in Sri Lanka’s Cultural Triangle: painted caves and Buddha statues, a UNESCO site easily combined with Sigiriya. Tips and tours."
+  description: 'Dambulla Cave Temple in Sri Lanka’s Cultural Triangle: painted caves and Buddha statues, a UNESCO site easily combined with Sigiriya. Tips and tours.'
   keyword: dambulla cave temple
 reviewed: false
 ---

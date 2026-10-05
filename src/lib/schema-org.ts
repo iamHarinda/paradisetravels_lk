@@ -85,7 +85,7 @@ export function touristTripSchema(t: {
   summary: string;
   path: string;
   places: string[];
-  priceFromUSD?: number;
+  priceFromUSD?: number | null;
 }): JsonLd {
   return {
     '@context': 'https://schema.org',
@@ -114,7 +114,7 @@ export function touristTripSchema(t: {
   };
 }
 
-export function hotelSchema(h: { name: string; area: string; path: string; stars?: number }): JsonLd {
+export function hotelSchema(h: { name: string; area: string; path: string; stars?: number | null }): JsonLd {
   return {
     '@context': 'https://schema.org',
     '@type': 'Hotel',
@@ -131,8 +131,8 @@ export function articleSchema(a: {
   description: string;
   path: string;
   published: Date;
-  updated?: Date;
-  author?: string;
+  updated?: Date | null;
+  author?: string | null;
 }): JsonLd {
   return {
     '@context': 'https://schema.org',

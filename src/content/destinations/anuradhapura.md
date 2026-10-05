@@ -5,14 +5,14 @@ coords:
   - 8.31
   - 80.4
 bestMonths:
-  - 2
-  - 3
-  - 4
-  - 5
-  - 6
-  - 7
-  - 8
-  - 9
+  - '2'
+  - '3'
+  - '4'
+  - '5'
+  - '6'
+  - '7'
+  - '8'
+  - '9'
 tone: heritage
 featured: false
 order: 7
@@ -31,7 +31,7 @@ tips:
 faqs: []
 seo:
   title: Anuradhapura Travel Guide | Ancient Capital
-  description: "Anuradhapura, Sri Lanka’s ancient capital and UNESCO site: Sri Maha Bodhi, great stupas and reservoirs. How to visit and Cultural Triangle tours that include it."
+  description: 'Anuradhapura, Sri Lanka’s ancient capital and UNESCO site: Sri Maha Bodhi, great stupas and reservoirs. How to visit and Cultural Triangle tours that include it.'
   keyword: anuradhapura
 reviewed: false
 ---

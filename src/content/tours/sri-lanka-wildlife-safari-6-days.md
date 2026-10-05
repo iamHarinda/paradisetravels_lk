@@ -14,12 +14,12 @@ destinations:
   - udawalawe
   - yala
 bestMonths:
-  - 2
-  - 3
-  - 4
-  - 5
-  - 6
-  - 7
+  - '2'
+  - '3'
+  - '4'
+  - '5'
+  - '6'
+  - '7'
 summary: Elephants in the north-central plains and Udawalawe, and leopards in Yala.
 days:
   - day: 1
@@ -46,8 +46,8 @@ days:
     title: Departure
     body: Drive to the airport via the Southern Expressway.
 seo:
-  title: "Sri Lanka Wildlife Safari Tour: 6 Days"
-  description: "A 6-day Sri Lanka wildlife tour: elephant safaris in Minneriya and Udawalawe and leopard safaris in Yala National Park, with a private driver throughout."
+  title: 'Sri Lanka Wildlife Safari Tour: 6 Days'
+  description: 'A 6-day Sri Lanka wildlife tour: elephant safaris in Minneriya and Udawalawe and leopard safaris in Yala National Park, with a private driver throughout.'
   keyword: sri lanka wildlife tour
 inclusions:
   - Private air-conditioned vehicle with driver for the whole trip
@@ -57,7 +57,7 @@ inclusions:
 exclusions:
   - International flights
   - Sri Lanka ETA (apply on the official portal)
-  - "{{TODO: confirm with owner whether entrance fees, safaris and meals are included}}"
+  - '{{TODO: confirm with owner whether entrance fees, safaris and meals are included}}'
 priceNote: Price depends on hotel class, season and group size — ask for a quote.
 reviewed: false
 ---

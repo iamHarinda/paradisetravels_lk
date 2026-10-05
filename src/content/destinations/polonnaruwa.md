@@ -5,14 +5,14 @@ coords:
   - 7.94
   - 81
 bestMonths:
-  - 2
-  - 3
-  - 4
-  - 5
-  - 6
-  - 7
-  - 8
-  - 9
+  - '2'
+  - '3'
+  - '4'
+  - '5'
+  - '6'
+  - '7'
+  - '8'
+  - '9'
 tone: heritage
 featured: true
 order: 5
@@ -29,7 +29,7 @@ tips:
 faqs: []
 seo:
   title: Polonnaruwa Ancient City Guide | Paradise Travels
-  description: "Polonnaruwa, Sri Lanka’s medieval capital and UNESCO site: Gal Vihara, palaces and temples by bicycle. Tips, best time to visit and tours that include it."
+  description: 'Polonnaruwa, Sri Lanka’s medieval capital and UNESCO site: Gal Vihara, palaces and temples by bicycle. Tips, best time to visit and tours that include it.'
   keyword: polonnaruwa
 reviewed: false
 ---

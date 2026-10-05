@@ -62,7 +62,11 @@ export default defineConfig({
       SMTP_PORT: envField.number({ context: 'server', access: 'secret', default: 465 }),
       SMTP_USER: envField.string({ context: 'server', access: 'secret', optional: true }),
       SMTP_PASS: envField.string({ context: 'server', access: 'secret', optional: true }),
-      MAIL_FROM: envField.string({ context: 'server', access: 'secret', default: 'Paradise Travels <hello@paradisetravels.lk>' }),
+      MAIL_FROM: envField.string({
+        context: 'server',
+        access: 'secret',
+        default: 'Paradise Travels <hello@paradisetravels.lk>',
+      }),
       MAIL_TO: envField.string({ context: 'server', access: 'secret', default: 'hello@paradisetravels.lk' }),
       LEAD_WEBHOOK_URL: envField.string({ context: 'server', access: 'secret', optional: true }),
     },

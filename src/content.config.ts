@@ -6,12 +6,13 @@ import { REGION_IDS } from './lib/seasons';
 // Content schemas (docs/08 §5). Keep in sync with keystatic.config.ts.
 
 const tone = z.enum(['ocean', 'tea', 'heritage', 'wild', 'sand']).default('ocean');
-const months = z.array(z.number().int().min(1).max(12)).default([]);
+// Keystatic stores multiselect values as strings — coerce. Empty Keystatic fields are saved as null, hence .nullish().
+const months = z.array(z.coerce.number().int().min(1).max(12)).default([]);
 const faqs = z.array(z.object({ q: z.string(), a: z.string() })).default([]);
 const seo = z.object({
   title: z.string().max(60),
   description: z.string().min(120).max(165),
-  keyword: z.string().optional(),
+  keyword: z.string().nullish(),
 });
 const source = z.object({ title: z.string(), url: z.url() });
 /**
@@ -38,8 +39,8 @@ const destinations = defineCollection({
       tips: z.array(z.string()).default([]),
       faqs,
       tone,
-      heroImage: image().optional(),
-      heroAlt: z.string().optional(),
+      heroImage: image().nullish(),
+      heroAlt: z.string().nullish(),
       featured: z.boolean().default(false),
       order: z.number().default(100),
       seo,
@@ -58,8 +59,8 @@ const experiences = defineCollection({
       highlights: z.array(z.string()).default([]),
       faqs,
       tone,
-      heroImage: image().optional(),
-      heroAlt: z.string().optional(),
+      heroImage: image().nullish(),
+      heroAlt: z.string().nullish(),
       order: z.number().default(100),
       seo,
       ...workflow,
@@ -89,15 +90,15 @@ const tours = defineCollection({
       styles: z.array(tourStyles).default([]),
       regions: z.array(z.enum(REGION_IDS)).default([]),
       destinations: z.array(reference('destinations')).default([]),
-      priceFromUSD: z.number().positive().optional(),
-      priceNote: z.string().optional(),
+      priceFromUSD: z.number().positive().nullish(),
+      priceNote: z.string().nullish(),
       bestMonths: months,
       days: z.array(
         z.object({
           day: z.number().int().positive(),
           title: z.string(),
           body: z.string(),
-          overnight: z.string().optional(),
+          overnight: z.string().nullish(),
         }),
       ),
       inclusions: z.array(z.string()).default([]),
@@ -105,8 +106,8 @@ const tours = defineCollection({
       hotels: z.array(reference('hotels')).default([]),
       faqs,
       tone,
-      heroImage: image().optional(),
-      heroAlt: z.string().optional(),
+      heroImage: image().nullish(),
+      heroAlt: z.string().nullish(),
       featured: z.boolean().default(false),
       order: z.number().default(100),
       seo,
@@ -136,20 +137,20 @@ const hotels = defineCollection({
       name: z.string(),
       area: z.string(),
       region: z.enum(REGION_IDS),
-      destination: reference('destinations').optional(),
-      stars: z.number().int().min(1).max(5).optional(),
+      destination: reference('destinations').nullish(),
+      stars: z.number().int().min(1).max(5).nullish(),
       type: z.array(z.string()).default([]),
       // Rate-parity display mode, set per hotel after the owner checks the contract (docs/10 §1).
       rateDisplay: z.enum(['public', 'package', 'on-request']),
-      priceFromUSD: z.number().positive().optional(),
-      packageOffer: z.string().optional(),
+      priceFromUSD: z.number().positive().nullish(),
+      packageOffer: z.string().nullish(),
       rooms: z
         .array(z.object({ name: z.string(), occupancy: z.number().int(), mealPlans: z.array(z.string()).default([]) }))
         .default([]),
-      deal: z.object({ label: z.string(), validTo: z.coerce.date().optional() }).optional(),
+      deal: z.object({ label: z.string(), validTo: z.coerce.date().nullish() }).nullish(),
       highlights: z.array(z.string()).default([]),
-      heroImage: image().optional(),
-      heroAlt: z.string().optional(),
+      heroImage: image().nullish(),
+      heroAlt: z.string().nullish(),
       tone,
       seo,
       ...workflow,
@@ -165,16 +166,16 @@ const guides = defineCollection({
       category: z.enum(['planning', 'visa', 'seasons', 'destinations', 'culture', 'transport', 'data']),
       pillar: z.boolean().default(false),
       published: z.coerce.date(),
-      updated: z.coerce.date().optional(),
+      updated: z.coerce.date().nullish(),
       lastChecked: z.coerce.date(),
       sources: z.array(source).default([]),
-      author: reference('team').optional(),
+      author: reference('team').nullish(),
       relatedTours: z.array(reference('tours')).default([]),
       relatedDestinations: z.array(reference('destinations')).default([]),
       relatedServices: z.array(reference('services')).default([]),
       tone,
-      heroImage: image().optional(),
-      heroAlt: z.string().optional(),
+      heroImage: image().nullish(),
+      heroAlt: z.string().nullish(),
       seo,
       ...workflow,
     }),
@@ -195,11 +196,11 @@ const testimonials = defineCollection({
   loader: glob({ pattern: '**/*.json', base: './src/content/testimonials' }),
   schema: z.object({
     name: z.string(),
-    country: z.string().optional(),
+    country: z.string().nullish(),
     source: z.enum(['google', 'tripadvisor', 'facebook', 'email']),
-    url: z.url().optional(),
+    url: z.url().or(z.literal('')).nullish(),
     date: z.coerce.date(),
-    rating: z.number().min(1).max(5).optional(),
+    rating: z.number().int().min(1).max(5).nullish(),
     text: z.string(),
     // Only real reviews, displayed with the reviewer's permission (CLAUDE.md hard rule 1).
     permission: z.literal(true),
@@ -213,8 +214,8 @@ const team = defineCollection({
     z.object({
       name: z.string(),
       role: z.string(),
-      bio: z.string().optional(),
-      photo: image().optional(),
+      bio: z.string().nullish(),
+      photo: image().nullish(),
       languages: z.array(z.string()).default([]),
       order: z.number().default(100),
       ...workflow,

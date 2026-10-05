@@ -5,11 +5,11 @@ coords:
   - 8.57
   - 81.23
 bestMonths:
-  - 5
-  - 6
-  - 7
-  - 8
-  - 9
+  - '5'
+  - '6'
+  - '7'
+  - '8'
+  - '9'
 tone: ocean
 featured: false
 order: 12
@@ -28,7 +28,7 @@ tips:
 faqs: []
 seo:
   title: Trincomalee & Nilaveli Travel Guide | Paradise
-  description: "Trincomalee and Nilaveli, Sri Lanka: calm east-coast beaches, Pigeon Island snorkelling and whale watching. Best time to visit is roughly May to September."
+  description: 'Trincomalee and Nilaveli, Sri Lanka: calm east-coast beaches, Pigeon Island snorkelling and whale watching. Best time to visit is roughly May to September.'
   keyword: trincomalee
 reviewed: false
 ---

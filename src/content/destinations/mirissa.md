@@ -5,11 +5,11 @@ coords:
   - 5.95
   - 80.46
 bestMonths:
-  - 12
-  - 1
-  - 2
-  - 3
-  - 4
+  - '12'
+  - '1'
+  - '2'
+  - '3'
+  - '4'
 tone: ocean
 featured: false
 order: 11
@@ -26,8 +26,8 @@ faqs:
   - q: When is whale watching season in Mirissa?
     a: Roughly November to April, when the south-coast sea is calmer.
 seo:
-  title: "Mirissa Travel Guide: Beaches & Whale Watching"
-  description: "Mirissa, Sri Lanka: whale watching season, beaches, Coconut Tree Hill and where to stay on the south coast. Plan your Mirissa trip with local experts."
+  title: 'Mirissa Travel Guide: Beaches & Whale Watching'
+  description: 'Mirissa, Sri Lanka: whale watching season, beaches, Coconut Tree Hill and where to stay on the south coast. Plan your Mirissa trip with local experts.'
   keyword: mirissa whale watching
 reviewed: false
 ---

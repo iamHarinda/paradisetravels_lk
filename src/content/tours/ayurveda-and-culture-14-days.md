@@ -15,11 +15,11 @@ destinations:
   - kandy
   - galle
 bestMonths:
-  - 12
-  - 1
-  - 2
-  - 3
-  - 4
+  - '12'
+  - '1'
+  - '2'
+  - '3'
+  - '4'
 summary: A short cultural round trip followed by a week-long Ayurveda programme at a partner retreat.
 days:
   - day: 1
@@ -54,7 +54,7 @@ days:
     title: Departure
     body: Transfer to the airport.
 seo:
-  title: "Ayurveda & Culture Tour Sri Lanka: 14 Days"
+  title: 'Ayurveda & Culture Tour Sri Lanka: 14 Days'
   description: Combine a Sri Lanka cultural round trip with a week-long Ayurveda programme at a partner retreat. 14 days, private driver, transfers and planning included.
   keyword: ayurveda tour sri lanka
 inclusions:
@@ -65,7 +65,7 @@ inclusions:
 exclusions:
   - International flights
   - Sri Lanka ETA (apply on the official portal)
-  - "{{TODO: confirm with owner whether entrance fees, safaris and meals are included}}"
+  - '{{TODO: confirm with owner whether entrance fees, safaris and meals are included}}'
 priceNote: Price depends on hotel class, season and group size — ask for a quote.
 reviewed: false
 ---

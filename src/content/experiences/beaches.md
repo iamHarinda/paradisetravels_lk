@@ -3,17 +3,17 @@ title: Beaches
 order: 3
 tone: ocean
 bestMonths:
-  - 1
-  - 2
-  - 3
-  - 4
-  - 5
-  - 6
-  - 7
-  - 8
-  - 9
-  - 12
-summary: "Sri Lanka is always in season somewhere: the south and west in winter, the east in summer."
+  - '1'
+  - '2'
+  - '3'
+  - '4'
+  - '5'
+  - '6'
+  - '7'
+  - '8'
+  - '9'
+  - '12'
+summary: 'Sri Lanka is always in season somewhere: the south and west in winter, the east in summer.'
 destinations:
   - galle
   - mirissa
@@ -21,14 +21,14 @@ destinations:
   - trincomalee
   - arugam-bay
 highlights:
-  - "South coast: roughly December–April"
-  - "East coast: roughly May–September"
+  - 'South coast: roughly December–April'
+  - 'East coast: roughly May–September'
   - Whale watching from Mirissa or Trincomalee
 faqs:
   - q: Which coast should I choose?
     a: Travelling between roughly December and April, go west or south. Between roughly May and September, head to the east coast — Trincomalee, Nilaveli or Arugam Bay.
 seo:
-  title: "Sri Lanka Beaches: Best Coast by Month | Paradise"
+  title: 'Sri Lanka Beaches: Best Coast by Month | Paradise'
   description: Which Sri Lanka beach when? South and west coasts roughly December to April, east coast roughly May to September. Beach guides and holidays by local experts.
   keyword: best beaches sri lanka
 reviewed: false

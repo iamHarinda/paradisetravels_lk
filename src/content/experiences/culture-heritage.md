@@ -3,14 +3,14 @@ title: Culture & Heritage
 order: 1
 tone: heritage
 bestMonths:
-  - 2
-  - 3
-  - 4
-  - 5
-  - 6
-  - 7
-  - 8
-  - 9
+  - '2'
+  - '3'
+  - '4'
+  - '5'
+  - '6'
+  - '7'
+  - '8'
+  - '9'
 summary: Ancient capitals, rock fortresses and living temples across the Cultural Triangle and Kandy.
 destinations:
   - sigiriya
@@ -30,7 +30,7 @@ faqs:
     a: Two to three days based around Sigiriya covers Sigiriya, Dambulla and Polonnaruwa; add a day for Anuradhapura.
 seo:
   title: Sri Lanka Culture & Heritage Tours | UNESCO Sites
-  description: "Explore Sri Lanka’s UNESCO heritage: Sigiriya, Dambulla, Anuradhapura, Polonnaruwa, Kandy and Galle. Itinerary ideas and cultural tours from local experts."
+  description: 'Explore Sri Lanka’s UNESCO heritage: Sigiriya, Dambulla, Anuradhapura, Polonnaruwa, Kandy and Galle. Itinerary ideas and cultural tours from local experts.'
   keyword: sri lanka cultural triangle tour
 reviewed: false
 ---

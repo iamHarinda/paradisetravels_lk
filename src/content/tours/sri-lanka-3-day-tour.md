@@ -14,19 +14,19 @@ destinations:
   - sigiriya
   - dambulla
 bestMonths:
-  - 1
-  - 2
-  - 3
-  - 4
-  - 5
-  - 6
-  - 7
-  - 8
-  - 9
-  - 10
-  - 11
-  - 12
-summary: "A short stopover taste of the island: Kandy’s temple and the rock fortress of Sigiriya."
+  - '1'
+  - '2'
+  - '3'
+  - '4'
+  - '5'
+  - '6'
+  - '7'
+  - '8'
+  - '9'
+  - '10'
+  - '11'
+  - '12'
+summary: 'A short stopover taste of the island: Kandy’s temple and the rock fortress of Sigiriya.'
 days:
   - day: 1
     title: Airport to Kandy
@@ -40,8 +40,8 @@ days:
     title: Back to the airport
     body: Optional sunrise climb of Pidurangala, then return to the airport or Colombo.
 seo:
-  title: "Sri Lanka 3 Day Tour: Kandy & Sigiriya | Paradise"
-  description: "A 3-day Sri Lanka tour for short stays and stopovers: Kandy, the Temple of the Tooth, Dambulla and Sigiriya, with a private car and driver throughout."
+  title: 'Sri Lanka 3 Day Tour: Kandy & Sigiriya | Paradise'
+  description: 'A 3-day Sri Lanka tour for short stays and stopovers: Kandy, the Temple of the Tooth, Dambulla and Sigiriya, with a private car and driver throughout.'
   keyword: sri lanka 3 day tour
 inclusions:
   - Private air-conditioned vehicle with driver for the whole trip
@@ -51,7 +51,7 @@ inclusions:
 exclusions:
   - International flights
   - Sri Lanka ETA (apply on the official portal)
-  - "{{TODO: confirm with owner whether entrance fees, safaris and meals are included}}"
+  - '{{TODO: confirm with owner whether entrance fees, safaris and meals are included}}'
 priceNote: Price depends on hotel class, season and group size — ask for a quote.
 reviewed: false
 ---

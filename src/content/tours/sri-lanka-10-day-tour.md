@@ -24,11 +24,11 @@ destinations:
   - mirissa
   - galle
 bestMonths:
-  - 12
-  - 1
-  - 2
-  - 3
-  - 4
+  - '12'
+  - '1'
+  - '2'
+  - '3'
+  - '4'
 summary: The classic route at a gentler pace, with a leopard safari in Yala and beach days on the south coast.
 days:
   - day: 1
@@ -71,8 +71,8 @@ days:
     title: Galle and departure
     body: Galle Fort, then the expressway to the airport.
 seo:
-  title: "Sri Lanka 10 Day Tour: Culture, Tea & Beach"
-  description: "A 10-day Sri Lanka tour: Sigiriya, Kandy, the Ella train, a Yala leopard safari and the south coast beaches. Private driver and hotels chosen for you."
+  title: 'Sri Lanka 10 Day Tour: Culture, Tea & Beach'
+  description: 'A 10-day Sri Lanka tour: Sigiriya, Kandy, the Ella train, a Yala leopard safari and the south coast beaches. Private driver and hotels chosen for you.'
   keyword: sri lanka 10 day tour
 inclusions:
   - Private air-conditioned vehicle with driver for the whole trip
@@ -82,7 +82,7 @@ inclusions:
 exclusions:
   - International flights
   - Sri Lanka ETA (apply on the official portal)
-  - "{{TODO: confirm with owner whether entrance fees, safaris and meals are included}}"
+  - '{{TODO: confirm with owner whether entrance fees, safaris and meals are included}}'
 priceNote: Price depends on hotel class, season and group size — ask for a quote.
 reviewed: false
 ---

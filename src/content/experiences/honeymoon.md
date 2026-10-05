@@ -3,11 +3,11 @@ title: Honeymoons
 order: 7
 tone: ocean
 bestMonths:
-  - 12
-  - 1
-  - 2
-  - 3
-  - 4
+  - '12'
+  - '1'
+  - '2'
+  - '3'
+  - '4'
 summary: Hill-country hideaways, private safaris and beach villas — a honeymoon planned around the two of you.
 destinations:
   - kandy
@@ -21,7 +21,7 @@ highlights:
 faqs: []
 seo:
   title: Sri Lanka Honeymoon Packages | Paradise Travels
-  description: "Plan a Sri Lanka honeymoon: hill-country hideaways, safaris, train rides and beach villas, with a private driver and a route designed around the two of you."
+  description: 'Plan a Sri Lanka honeymoon: hill-country hideaways, safaris, train rides and beach villas, with a private driver and a route designed around the two of you.'
   keyword: sri lanka honeymoon package
 reviewed: false
 ---

@@ -6,7 +6,7 @@ short: Venues, delegates, transport and tours — your conference, fully handled
 audience: Conference organisers, associations and companies running meetings and incentives
 seo:
   title: Conference Organisers Sri Lanka (MICE) | Paradise
-  description: "Conference and MICE packages in Sri Lanka: venues, delegate accommodation, airport transfers and tours for small and mid-size groups, handled by one team."
+  description: 'Conference and MICE packages in Sri Lanka: venues, delegate accommodation, airport transfers and tours for small and mid-size groups, handled by one team.'
   keyword: conference organisers sri lanka
 steps:
   - title: Requirements

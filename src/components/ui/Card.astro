@@ -7,13 +7,13 @@ import Badge from './Badge.astro';
 interface Props {
   href: string;
   title: string;
-  text?: string;
+  text?: string | null;
   eyebrow?: string;
   meta?: string;
   badge?: string;
   badgeTone?: 'gold' | 'light' | 'ocean';
-  image?: ImageMetadata;
-  imageAlt?: string;
+  image?: ImageMetadata | null;
+  imageAlt?: string | null;
   tone?: 'ocean' | 'tea' | 'heritage' | 'wild' | 'sand';
   aspect?: string;
   class?: string;

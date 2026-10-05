@@ -2,8 +2,8 @@
 // Rate-parity-safe price display (docs/10 §1). Never shows a room-only price unless the hotel allows it.
 interface Props {
   mode: 'public' | 'package' | 'on-request';
-  priceFromUSD?: number;
-  packageOffer?: string;
+  priceFromUSD?: number | null;
+  packageOffer?: string | null;
   class?: string;
 }
 const { mode, priceFromUSD, packageOffer, class: className } = Astro.props;

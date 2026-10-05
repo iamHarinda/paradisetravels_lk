@@ -30,6 +30,7 @@ Booking a flight online is easy — until something changes. A missed connection
 We have been issuing air tickets in Colombo since 2007, including consolidator fares to Asia, the Middle East, Europe, Africa, the Americas and the South Pacific. We handle individual trips, family travel, groups and workers travelling overseas.
 
 **What we can arrange**
+
 - Return and one-way tickets to and from Colombo
 - Multi-city routes and stopovers
 - Group bookings

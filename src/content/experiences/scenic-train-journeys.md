@@ -3,11 +3,11 @@ title: Scenic Train Journeys
 order: 4
 tone: tea
 bestMonths:
-  - 12
-  - 1
-  - 2
-  - 3
-  - 4
+  - '12'
+  - '1'
+  - '2'
+  - '3'
+  - '4'
 summary: The Kandy to Ella line through the tea hills — one of the world’s great train rides.
 destinations:
   - kandy
@@ -22,7 +22,7 @@ faqs:
     a: Reserved seats on the hill-country line are limited and sell out, especially in peak season. Book ahead or let us arrange tickets for you.
 seo:
   title: Kandy to Ella Train & Sri Lanka Rail Journeys
-  description: "The Kandy to Ella train and other scenic Sri Lanka rail journeys: what to expect, booking reserved seats and combining the train with a private driver."
+  description: 'The Kandy to Ella train and other scenic Sri Lanka rail journeys: what to expect, booking reserved seats and combining the train with a private driver.'
   keyword: kandy to ella train
 reviewed: false
 ---

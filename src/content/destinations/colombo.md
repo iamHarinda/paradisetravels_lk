@@ -5,11 +5,11 @@ coords:
   - 6.93
   - 79.86
 bestMonths:
-  - 12
-  - 1
-  - 2
-  - 3
-  - 4
+  - '12'
+  - '1'
+  - '2'
+  - '3'
+  - '4'
 tone: sand
 featured: true
 order: 1
@@ -22,7 +22,7 @@ thingsToDo:
   - title: Pettah markets
     tip: Best explored on foot in the morning, before the midday heat.
   - title: Gangaramaya Temple
-    tip: "Dress modestly: shoulders and knees covered, shoes off."
+    tip: 'Dress modestly: shoulders and knees covered, shoes off.'
   - title: Colombo National Museum
     tip: A good first stop for context on the island’s history.
 tips:
@@ -33,7 +33,7 @@ faqs:
     a: One or two nights is enough for most visitors — enough time for the markets, temples, museum and a sunset walk on Galle Face Green.
 seo:
   title: Colombo Travel Guide & Tours | Paradise Travels
-  description: "Things to do in Colombo, Sri Lanka’s capital: markets, temples, museums and Galle Face Green. Best time to visit, getting there and tours that include it."
+  description: 'Things to do in Colombo, Sri Lanka’s capital: markets, temples, museums and Galle Face Green. Best time to visit, getting there and tours that include it.'
   keyword: things to do in colombo
 reviewed: false
 ---

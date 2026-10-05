@@ -200,6 +200,21 @@ const steps = ['When?', 'Who?', 'What?', 'How?', 'You'];
   </div>
 </form>
 
+<style>
+  /* Before the wizard script runs, pre-render the first step in its final layout to avoid layout shift. */
+  :global(.js) [data-trip-builder]:not([data-ready]) [data-step]:not([data-step='0']),
+  :global(.js) [data-trip-builder]:not([data-ready]) [data-final],
+  :global(.js) [data-trip-builder]:not([data-ready]) [data-review] {
+    display: none;
+  }
+  :global(.js) [data-trip-builder]:not([data-ready]) [data-progress-wrap] {
+    display: block;
+  }
+  :global(.js) [data-trip-builder]:not([data-ready]) [data-nav] {
+    display: flex;
+  }
+</style>
+
 <script>
   import '../../scripts/forms.ts';
 
@@ -378,6 +393,7 @@ const steps = ['When?', 'Who?', 'What?', 'How?', 'You'];
       true,
     );
     form.addEventListener('change', save);
+    form.dataset.ready = '';
     form.addEventListener('input', () => current === steps.length - 1 && renderReview());
   }
 </script>

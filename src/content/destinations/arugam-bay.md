@@ -5,11 +5,11 @@ coords:
   - 6.84
   - 81.83
 bestMonths:
-  - 5
-  - 6
-  - 7
-  - 8
-  - 9
+  - '5'
+  - '6'
+  - '7'
+  - '8'
+  - '9'
 tone: ocean
 featured: true
 order: 13
@@ -26,7 +26,7 @@ tips:
 faqs: []
 seo:
   title: Arugam Bay Surf & Travel Guide | Paradise Travels
-  description: "Arugam Bay, Sri Lanka’s surf capital: surf season roughly May to October, beaches, lagoons and where to stay. Plan an east-coast trip with local experts."
+  description: 'Arugam Bay, Sri Lanka’s surf capital: surf season roughly May to October, beaches, lagoons and where to stay. Plan an east-coast trip with local experts.'
   keyword: arugam bay surf
 reviewed: false
 ---

@@ -5,12 +5,12 @@ coords:
   - 6.37
   - 81.52
 bestMonths:
-  - 2
-  - 3
-  - 4
-  - 5
-  - 6
-  - 7
+  - '2'
+  - '3'
+  - '4'
+  - '5'
+  - '6'
+  - '7'
 tone: wild
 featured: true
 order: 9
@@ -24,13 +24,13 @@ thingsToDo:
     tip: Combine with a morning drive if you have two days.
 tips:
   - Choose a responsible operator who keeps a respectful distance from animals.
-  - "{{TODO: confirm annual park closure dates before publishing.}}"
+  - '{{TODO: confirm annual park closure dates before publishing.}}'
 faqs:
   - q: Will I see a leopard in Yala?
     a: Yala is one of the best places in the world to see leopards, but sightings are never guaranteed. Two safaris improve your chances.
 seo:
   title: Yala National Park Safari Guide | Paradise Travels
-  description: "Yala National Park, Sri Lanka: leopard and elephant safaris, best time to visit, where to stay and wildlife tours. Plan your Yala safari with local experts."
+  description: 'Yala National Park, Sri Lanka: leopard and elephant safaris, best time to visit, where to stay and wildlife tours. Plan your Yala safari with local experts.'
   keyword: yala safari
 reviewed: false
 ---

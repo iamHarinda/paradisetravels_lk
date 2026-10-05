@@ -5,11 +5,11 @@ coords:
   - 7.29
   - 80.63
 bestMonths:
-  - 12
-  - 1
-  - 2
-  - 3
-  - 4
+  - '12'
+  - '1'
+  - '2'
+  - '3'
+  - '4'
 tone: tea
 featured: true
 order: 2
@@ -32,8 +32,8 @@ faqs:
   - q: When is the Kandy Esala Perahera?
     a: The Esala Perahera is held in July or August. Exact dates follow the lunar calendar and are announced each year.
 seo:
-  title: "Kandy Travel Guide: Temple, Lake & Perahera"
-  description: "Kandy, Sri Lanka: the Temple of the Sacred Tooth Relic, Kandy Lake, Peradeniya gardens and the Esala Perahera. Best time to visit and tours that include it."
+  title: 'Kandy Travel Guide: Temple, Lake & Perahera'
+  description: 'Kandy, Sri Lanka: the Temple of the Sacred Tooth Relic, Kandy Lake, Peradeniya gardens and the Esala Perahera. Best time to visit and tours that include it.'
   keyword: things to do in kandy
 reviewed: false
 ---

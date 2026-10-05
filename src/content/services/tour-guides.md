@@ -17,7 +17,7 @@ steps:
     body: Your guide handles tickets, timing and the stories behind each place.
 faqs:
   - q: Which languages do your guides speak?
-    a: "{{TODO: confirm languages available with the owner.}}"
+    a: '{{TODO: confirm languages available with the owner.}}'
 reviewed: false
 ---
 

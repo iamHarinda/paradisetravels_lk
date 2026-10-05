@@ -2,7 +2,7 @@
 import PageLayout from '../layouts/PageLayout.astro';
 import Button from '../components/ui/Button.astro';
 import Icon from '../components/ui/Icon.astro';
-import { SITE, whatsappLink } from '../lib/site';
+import { whatsappLink } from '../lib/site';
 ---
 
 <PageLayout
@@ -32,7 +32,7 @@ import { SITE, whatsappLink } from '../lib/site';
         rel="noopener"
         data-track="whatsapp"
       >
-        <Icon name="whatsapp" /> Anything urgent? WhatsApp {SITE.phone}
+        <Icon name="whatsapp" /> Urgent? WhatsApp us
       </Button>
       <Button href="/travel-guide" variant="secondary">
         Read our travel guides

@@ -6,7 +6,7 @@ short: One-day escapes from Colombo — wildlife, rafting, beaches or culture.
 audience: Companies, schools, families and visitors with a free day
 seo:
   title: Day Outings & Day Trips from Colombo | Paradise
-  description: "Day outing packages from Colombo for companies, schools and families: wildlife, white-water rafting, beaches and cultural sites, with transport included."
+  description: 'Day outing packages from Colombo for companies, schools and families: wildlife, white-water rafting, beaches and cultural sites, with transport included.'
   keyword: day outing packages sri lanka
 steps:
   - title: Pick a theme

@@ -5,11 +5,11 @@ coords:
   - 6.87
   - 81.05
 bestMonths:
-  - 12
-  - 1
-  - 2
-  - 3
-  - 4
+  - '12'
+  - '1'
+  - '2'
+  - '3'
+  - '4'
 tone: tea
 featured: true
 order: 4
@@ -29,8 +29,8 @@ faqs:
   - q: How do I get the Kandy to Ella train?
     a: The train runs through the hill country between Kandy and Ella and takes most of a day. Reserved seats are limited and sell out, so book ahead or let us arrange it.
 seo:
-  title: "Ella Travel Guide: Nine Arch Bridge & Hikes"
-  description: "Ella, Sri Lanka: Nine Arch Bridge, Little Adam’s Peak, Ella Rock and the Kandy to Ella train. Best time to visit, how to get there and tours."
+  title: 'Ella Travel Guide: Nine Arch Bridge & Hikes'
+  description: 'Ella, Sri Lanka: Nine Arch Bridge, Little Adam’s Peak, Ella Rock and the Kandy to Ella train. Best time to visit, how to get there and tours.'
   keyword: things to do in ella
 reviewed: false
 ---

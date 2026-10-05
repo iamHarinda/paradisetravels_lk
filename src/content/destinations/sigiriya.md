@@ -5,14 +5,14 @@ coords:
   - 7.96
   - 80.76
 bestMonths:
-  - 2
-  - 3
-  - 4
-  - 5
-  - 6
-  - 7
-  - 8
-  - 9
+  - '2'
+  - '3'
+  - '4'
+  - '5'
+  - '6'
+  - '7'
+  - '8'
+  - '9'
 tone: heritage
 featured: true
 order: 3
@@ -34,7 +34,7 @@ faqs:
     a: Sigiriya is the historic site with frescoes and the palace ruins on top. Pidurangala is a separate, rougher climb nearby with a view of Sigiriya. Many visitors do both.
 seo:
   title: Sigiriya Rock Fortress Guide | Paradise Travels
-  description: "Visiting Sigiriya, Sri Lanka’s 5th-century rock fortress and UNESCO site: when to climb, Pidurangala, where to stay and tours of the Cultural Triangle."
+  description: 'Visiting Sigiriya, Sri Lanka’s 5th-century rock fortress and UNESCO site: when to climb, Pidurangala, where to stay and tours of the Cultural Triangle.'
   keyword: sigiriya rock
 reviewed: false
 ---

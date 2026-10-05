@@ -5,11 +5,11 @@ coords:
   - 6.03
   - 80.22
 bestMonths:
-  - 12
-  - 1
-  - 2
-  - 3
-  - 4
+  - '12'
+  - '1'
+  - '2'
+  - '3'
+  - '4'
 tone: ocean
 featured: true
 order: 10
@@ -28,7 +28,7 @@ tips:
 faqs: []
 seo:
   title: Galle Fort Travel Guide | Paradise Travels
-  description: "Galle Fort, Sri Lanka: UNESCO-listed ramparts, cobbled lanes, cafés and nearby beaches. Best time to visit, getting there and south coast tours."
+  description: 'Galle Fort, Sri Lanka: UNESCO-listed ramparts, cobbled lanes, cafés and nearby beaches. Best time to visit, getting there and south coast tours.'
   keyword: galle fort
 reviewed: false
 ---

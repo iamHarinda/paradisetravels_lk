@@ -5,18 +5,18 @@ coords:
   - 6.47
   - 80.89
 bestMonths:
-  - 1
-  - 2
-  - 3
-  - 4
-  - 5
-  - 6
-  - 7
-  - 8
-  - 9
-  - 10
-  - 11
-  - 12
+  - '1'
+  - '2'
+  - '3'
+  - '4'
+  - '5'
+  - '6'
+  - '7'
+  - '8'
+  - '9'
+  - '10'
+  - '11'
+  - '12'
 tone: wild
 featured: false
 order: 15
@@ -32,7 +32,7 @@ tips: []
 faqs: []
 seo:
   title: Udawalawe National Park Elephant Safari Guide
-  description: "Udawalawe National Park, Sri Lanka: open grassland and reliable wild elephant sightings, plus the Elephant Transit Home. How to visit and safari tours."
+  description: 'Udawalawe National Park, Sri Lanka: open grassland and reliable wild elephant sightings, plus the Elephant Transit Home. How to visit and safari tours.'
   keyword: udawalawe safari
 reviewed: false
 ---

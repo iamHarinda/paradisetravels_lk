@@ -14,6 +14,10 @@ const props = Astro.props;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#062A35" />
+    <!-- Mark JS before first paint so enhanced layouts render in their final shape (no CLS). -->
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <!-- Preload only the display font used above the fold (docs/04 §3). -->
     <Font cssVariable="--font-fraunces" preload />

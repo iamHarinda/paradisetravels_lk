@@ -5,11 +5,11 @@ coords:
   - 6.97
   - 80.78
 bestMonths:
-  - 12
-  - 1
-  - 2
-  - 3
-  - 4
+  - '12'
+  - '1'
+  - '2'
+  - '3'
+  - '4'
 tone: tea
 featured: true
 order: 8
@@ -27,8 +27,8 @@ tips:
   - Pack a warm layer — evenings are cold.
 faqs: []
 seo:
-  title: "Nuwara Eliya Travel Guide: Tea Country Escapes"
-  description: "Nuwara Eliya, Sri Lanka’s cool tea-country town: tea factories, Horton Plains and colonial bungalows. Best time to visit, getting there and tours."
+  title: 'Nuwara Eliya Travel Guide: Tea Country Escapes'
+  description: 'Nuwara Eliya, Sri Lanka’s cool tea-country town: tea factories, Horton Plains and colonial bungalows. Best time to visit, getting there and tours.'
   keyword: nuwara eliya
 reviewed: false
 ---

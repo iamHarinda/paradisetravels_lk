@@ -1,7 +1,7 @@
 ---
 // Day-by-day vertical timeline (docs/04 §5.5). Each day is a disclosure so long tours stay scannable.
 interface Props {
-  days: { day: number; title: string; body: string; overnight?: string }[];
+  days: { day: number; title: string; body: string; overnight?: string | null }[];
 }
 const { days } = Astro.props;
 ---

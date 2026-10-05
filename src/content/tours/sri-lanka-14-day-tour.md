@@ -29,11 +29,11 @@ destinations:
   - galle
   - colombo
 bestMonths:
-  - 12
-  - 1
-  - 2
-  - 3
-  - 4
+  - '12'
+  - '1'
+  - '2'
+  - '3'
+  - '4'
 summary: Two weeks for ancient capitals, tea country, two safaris and proper beach time.
 days:
   - day: 1
@@ -92,8 +92,8 @@ days:
     title: Galle and departure
     body: Galle Fort, then Colombo or the airport.
 seo:
-  title: "Sri Lanka 14 Day Tour: The Whole Island"
-  description: "A 14-day Sri Lanka tour: Anuradhapura, Sigiriya, Kandy, tea country, the Ella train, Udawalawe and Yala safaris, and the south coast. Fully customisable."
+  title: 'Sri Lanka 14 Day Tour: The Whole Island'
+  description: 'A 14-day Sri Lanka tour: Anuradhapura, Sigiriya, Kandy, tea country, the Ella train, Udawalawe and Yala safaris, and the south coast. Fully customisable.'
   keyword: 2 weeks in sri lanka
 inclusions:
   - Private air-conditioned vehicle with driver for the whole trip
@@ -103,7 +103,7 @@ inclusions:
 exclusions:
   - International flights
   - Sri Lanka ETA (apply on the official portal)
-  - "{{TODO: confirm with owner whether entrance fees, safaris and meals are included}}"
+  - '{{TODO: confirm with owner whether entrance fees, safaris and meals are included}}'
 priceNote: Price depends on hotel class, season and group size — ask for a quote.
 reviewed: false
 ---

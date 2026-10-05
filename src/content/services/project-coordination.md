@@ -6,7 +6,7 @@ short: On-the-ground coordination for foreign teams working in Sri Lanka.
 audience: Companies, NGOs and foreign organisations with teams working in Sri Lanka
 seo:
   title: Project Coordination Services in Sri Lanka
-  description: "Logistics for foreign teams working in Sri Lanka: accommodation, transport, interpreters, travel and local coordination from one Colombo team since 2007."
+  description: 'Logistics for foreign teams working in Sri Lanka: accommodation, transport, interpreters, travel and local coordination from one Colombo team since 2007.'
   keyword: project coordination sri lanka
 steps:
   - title: Scope the project

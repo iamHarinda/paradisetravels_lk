@@ -19,11 +19,11 @@ destinations:
   - galle
   - mirissa
 bestMonths:
-  - 12
-  - 1
-  - 2
-  - 3
-  - 4
+  - '12'
+  - '1'
+  - '2'
+  - '3'
+  - '4'
 summary: Sunrise at Sigiriya, a hill-country hideaway and slow beach days, with a private driver throughout.
 days:
   - day: 1
@@ -66,8 +66,8 @@ days:
     title: Departure
     body: Transfer to the airport.
 seo:
-  title: "Sri Lanka Honeymoon Itinerary: 10 Days | Paradise"
-  description: "A 10-day Sri Lanka honeymoon: Sigiriya, Kandy, a tea-estate hideaway, the Ella train and the south coast, with private driver and boutique hotels."
+  title: 'Sri Lanka Honeymoon Itinerary: 10 Days | Paradise'
+  description: 'A 10-day Sri Lanka honeymoon: Sigiriya, Kandy, a tea-estate hideaway, the Ella train and the south coast, with private driver and boutique hotels.'
   keyword: sri lanka honeymoon itinerary
 inclusions:
   - Private air-conditioned vehicle with driver for the whole trip
@@ -77,7 +77,7 @@ inclusions:
 exclusions:
   - International flights
   - Sri Lanka ETA (apply on the official portal)
-  - "{{TODO: confirm with owner whether entrance fees, safaris and meals are included}}"
+  - '{{TODO: confirm with owner whether entrance fees, safaris and meals are included}}'
 priceNote: Price depends on hotel class, season and group size — ask for a quote.
 reviewed: false
 ---

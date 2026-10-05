@@ -141,9 +141,9 @@ const isCurrent = (href: string) => path === href || path.startsWith(`${href}/`)
       </ul>
     </nav>
 
-    <Button href="/plan-your-trip" class="ml-auto hidden sm:inline-flex xl:ml-2">
-      Plan My Trip
-    </Button>
+    <div class="ml-auto hidden sm:block xl:ml-2">
+      <Button href="/plan-your-trip">Plan My Trip</Button>
+    </div>
 
     <button
       type="button"
