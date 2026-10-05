@@ -1,0 +1,55 @@
+---
+import LegalLayout from '../layouts/LegalLayout.astro';
+import { SITE } from '../lib/site';
+---
+
+<LegalLayout
+  title="Privacy policy"
+  seoTitle="Privacy Policy | Paradise Travels"
+  description="How Paradise Travels collects, uses and protects the personal information you share through our website forms, WhatsApp and email when planning travel."
+  path="/privacy"
+  updated={new Date('2026-10-05')}
+  draft
+>
+  <p>
+    This policy explains how {SITE.legalName} (“we”) handles personal information sent to us through this website. It
+    reflects how the site actually works today.{' '}
+    {'{{TODO: legal review against the Sri Lanka Personal Data Protection Act and GDPR basics (docs/08 §9).}}'}
+  </p>
+  <h2>What we collect</h2>
+  <ul>
+    <li>
+      Details you type into our forms: name, email, phone/WhatsApp number, country, travel dates, party size,
+      preferences and messages.
+    </li>
+    <li>
+      The page you were on and any campaign tags in the link you followed (for example <code>utm_source</code>), so we
+      know which pages help travellers.
+    </li>
+    <li>Messages you send us directly by WhatsApp, KakaoTalk, phone or email.</li>
+  </ul>
+  <h2>How we use it</h2>
+  <p>
+    Only to reply to your enquiry, prepare quotes and arrange the travel services you ask for. We do not sell your data.
+  </p>
+  <h2>Who processes it</h2>
+  <ul>
+    <li>Our email provider, which delivers your form submission to our team and a confirmation to you.</li>
+    <li>Cloudflare, which protects the site and runs the Turnstile spam check on our forms.</li>
+    <li>Our hosting provider, which runs the website.</li>
+    <li>Hotels, transport providers and other suppliers — only the details needed to book what you ask for.</li>
+  </ul>
+  <h2>Cookies</h2>
+  <p>This website does not set advertising or tracking cookies. {'{{TODO: update if analytics are added.}}'}</p>
+  <h2>How long we keep it</h2>
+  <p>{'{{TODO: retention period to be confirmed by the owner.}}'}</p>
+  <h2>Your rights</h2>
+  <p>
+    You can ask to see, correct or delete the information we hold about you by emailing{' '}
+    <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.
+  </p>
+  <h2>Contact</h2>
+  <p>
+    {SITE.legalName}, {SITE.addressLine}. Email <a href={`mailto:${SITE.email}`}>{SITE.email}</a>, phone {SITE.phone}.
+  </p>
+</LegalLayout>

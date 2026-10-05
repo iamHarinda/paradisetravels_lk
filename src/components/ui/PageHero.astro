@@ -1,0 +1,30 @@
+---
+import type { ImageMetadata } from 'astro';
+import Media from './Media.astro';
+
+// Standard hero for hub and detail pages: heading block + large rounded media (LCP).
+interface Props {
+  eyebrow?: string;
+  title: string;
+  intro?: string;
+  image?: ImageMetadata;
+  imageAlt?: string;
+  tone?: 'ocean' | 'tea' | 'heritage' | 'wild' | 'sand';
+  media?: boolean;
+}
+const { eyebrow, title, intro, image, imageAlt, tone = 'ocean', media = true } = Astro.props;
+---
+
+<section class="container-site pt-8 pb-12 sm:pt-12">
+  <div class="max-w-4xl">
+    {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+    <h1 class="mt-3 text-h1">{title}</h1>
+    {intro && <p class="mt-6 max-w-[60ch] text-lg text-muted">{intro}</p>}
+    <slot />
+  </div>
+  {media && (
+    <div class="mt-10 aspect-[16/9] overflow-hidden rounded-media sm:aspect-[21/9]">
+      <Media image={image} alt={imageAlt} tone={tone} priority sizes="(min-width: 1440px) 1360px, 100vw" />
+    </div>
+  )}
+</section>

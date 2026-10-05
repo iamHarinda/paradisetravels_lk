@@ -1,0 +1,143 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getEntry } from 'astro:content';
+import { getEntries, byOrder } from '../../lib/content';
+import PageLayout from '../../layouts/PageLayout.astro';
+import PageHero from '../../components/ui/PageHero.astro';
+import Card from '../../components/ui/Card.astro';
+import Badge from '../../components/ui/Badge.astro';
+import Icon from '../../components/ui/Icon.astro';
+import RateDisplay from '../../components/hotels/RateDisplay.astro';
+import RateRequestForm from '../../components/hotels/RateRequestForm.astro';
+import { hotelSchema } from '../../lib/schema-org';
+import { REGIONS } from '../../lib/seasons';
+import { tourPrice, dateFmt } from '../../lib/labels';
+
+export const getStaticPaths = (async () => {
+  const hotels = await getEntries('hotels');
+  return hotels.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}) satisfies GetStaticPaths;
+
+const { entry } = Astro.props;
+const h = entry.data;
+const destination = h.destination ? await getEntry(h.destination) : undefined;
+const tours = destination
+  ? (await getEntries('tours'))
+      .filter((t) => t.data.destinations.some((r) => r.id === destination.id))
+      .sort(byOrder)
+      .slice(0, 3)
+  : [];
+const mealPlans = [...new Set(h.rooms.flatMap((r) => r.mealPlans))];
+const path = `/hotel-deals/${entry.id}`;
+const dealActive = h.deal && (!h.deal.validTo || h.deal.validTo >= new Date());
+---
+
+<PageLayout
+  title={h.seo.title}
+  description={h.seo.description}
+  noindex={h.sample}
+  breadcrumbs={[
+    { name: 'Hotel Deals', href: '/hotel-deals' },
+    { name: h.name, href: path },
+  ]}
+  jsonLd={[hotelSchema({ name: h.name, area: h.area, path, stars: h.stars })]}
+>
+  <PageHero
+    eyebrow={`${h.area} · ${REGIONS[h.region].name}`}
+    title={h.name}
+    image={h.heroImage}
+    imageAlt={h.heroAlt}
+    tone={h.tone}
+  >
+    <div class="mt-6 flex flex-wrap items-center gap-3">
+      {h.stars && <Badge tone="ocean">{h.stars}-star</Badge>}
+      <Badge tone="gold">Paradise rate</Badge>
+      {h.type.map((t) => (
+        <span class="text-sm text-muted capitalize">{t}</span>
+      ))}
+    </div>
+  </PageHero>
+
+  <section class="container-site grid gap-12 pb-16 lg:grid-cols-[1.2fr_1fr]">
+    <div class="space-y-12">
+      {dealActive && h.deal && (
+        <p class="rounded-card bg-gold-300/40 p-5 font-semibold text-ink-900 dark:text-text">
+          {h.deal.label}
+          {h.deal.validTo && (
+            <span class="block text-sm font-normal">Valid until {dateFmt.format(h.deal.validTo)}</span>
+          )}
+        </p>
+      )}
+      {h.highlights.length > 0 && (
+        <section aria-labelledby="hl-heading">
+          <h2 id="hl-heading" class="text-h2">
+            Highlights
+          </h2>
+          <ul class="mt-6 space-y-3">
+            {h.highlights.map((x) => (
+              <li class="flex gap-3">
+                <Icon name="check" class="mt-1 size-4 shrink-0 text-tea-600 dark:text-lagoon-300" />
+                {x}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+      {h.rooms.length > 0 && (
+        <section aria-labelledby="rooms-heading">
+          <h2 id="rooms-heading" class="text-h2">
+            Rooms
+          </h2>
+          <ul class="mt-6 divide-y divide-line rounded-card bg-surface ring-1 ring-line">
+            {h.rooms.map((r) => (
+              <li class="flex flex-wrap items-center justify-between gap-2 p-5">
+                <span class="font-semibold">{r.name}</span>
+                <span class="text-sm text-muted">
+                  Up to {r.occupancy} guests{r.mealPlans.length > 0 && ` · ${r.mealPlans.join(' / ')}`}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+      {destination && (
+        <p>
+          <a href={`/destinations/${destination.id}`} class="font-semibold text-primary underline underline-offset-4">
+            Things to do in {destination.data.title}
+          </a>
+        </p>
+      )}
+    </div>
+
+    <aside class="rounded-media bg-surface p-6 ring-1 ring-line sm:p-8 lg:self-start" id="request">
+      <RateDisplay mode={h.rateDisplay} priceFromUSD={h.priceFromUSD} packageOffer={h.packageOffer} />
+      <hr class="my-6 border-line" />
+      <h2 class="text-2xl font-semibold">Request this rate</h2>
+      <div class="mt-6">
+        <RateRequestForm hotel={h.name} mealPlans={mealPlans} />
+      </div>
+    </aside>
+  </section>
+
+  {tours.length > 0 && (
+    <section class="container-site pb-24" aria-labelledby="tours-heading">
+      <h2 id="tours-heading" class="text-h2">
+        Tours nearby
+      </h2>
+      <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {tours.map((t) => (
+          <Card
+            href={`/tours/${t.id}`}
+            title={t.data.title}
+            text={t.data.summary}
+            badge={`${t.data.durationDays} days`}
+            meta={tourPrice(t.data)}
+            tone={t.data.tone}
+            image={t.data.heroImage}
+            imageAlt={t.data.heroAlt}
+          />
+        ))}
+      </div>
+    </section>
+  )}
+</PageLayout>

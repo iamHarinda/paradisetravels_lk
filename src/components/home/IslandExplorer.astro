@@ -1,0 +1,122 @@
+---
+import IslandMap from './IslandMap.astro';
+import Icon from '../ui/Icon.astro';
+import { REGIONS, REGION_IDS, MONTHS, MONTHS_LONG, monthRange } from '../../lib/seasons';
+import { getEntries, byOrder } from '../../lib/content';
+
+// Island Explorer + Season Picker (docs/04 §5.2–5.3). Works as plain lists without JS; JS adds highlighting.
+const destinations = (await getEntries('destinations')).sort(byOrder);
+const byRegion = Object.fromEntries(REGION_IDS.map((r) => [r, destinations.filter((d) => d.data.region === r)]));
+const regionIds = REGION_IDS.filter((r) => byRegion[r]!.length > 0);
+const seasons = Object.fromEntries(regionIds.map((r) => [r, REGIONS[r].bestMonths]));
+---
+
+<section class="bg-ocean-900 py-24 text-white" aria-labelledby="explorer-heading">
+  <div class="container-site grid items-center gap-12 lg:grid-cols-[1.1fr_1fr]">
+    <div>
+      <p class="reveal eyebrow text-lagoon-300!">Island Explorer</p>
+      <h2 id="explorer-heading" class="reveal mt-3 text-h2">
+        Small island. Six worlds.
+      </h2>
+      <ul class="mt-8 grid gap-2 sm:grid-cols-2" data-regions>
+        {regionIds.map((r, i) => (
+          <li>
+            <button
+              type="button"
+              data-region={r}
+              aria-pressed={i === 0 ? 'true' : 'false'}
+              class="w-full rounded-card border border-white/15 p-4 text-left transition-colors hover:border-lagoon-300 aria-pressed:border-gold-500 aria-pressed:bg-white/5"
+            >
+              <span class="block font-semibold">{REGIONS[r].name}</span>
+              <span class="block text-sm text-white/70">{REGIONS[r].blurb}</span>
+              <span class="mt-2 block text-xs text-lagoon-300">Best: {monthRange(REGIONS[r].bestMonths)}</span>
+            </button>
+            <ul class="region-links mt-2 hidden flex-wrap gap-2 px-1" data-links={r}>
+              {byRegion[r]!.map((d) => (
+                <li>
+                  <a
+                    href={`/destinations/${d.id}`}
+                    class="inline-flex min-h-10 items-center gap-1 rounded-pill bg-white/10 px-3 text-sm hover:bg-white/20"
+                  >
+                    {d.data.title} <Icon name="arrow" class="size-3.5" />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </li>
+        ))}
+      </ul>
+    </div>
+    <IslandMap
+      class="reveal mx-auto w-full max-w-[22rem]"
+      places={destinations.map((d) => ({
+        id: d.id,
+        title: d.data.title,
+        region: d.data.region,
+        coords: d.data.coords,
+      }))}
+    />
+  </div>
+
+  <div class="container-site mt-20" data-season-picker data-seasons={JSON.stringify(seasons)}>
+    <h3 class="reveal font-display text-3xl">When are you travelling?</h3>
+    <div class="mt-6 flex flex-wrap gap-2" role="group" aria-label="Choose a month">
+      {MONTHS.map((m, i) => (
+        <button
+          type="button"
+          data-month={i + 1}
+          aria-pressed="false"
+          aria-label={MONTHS_LONG[i]}
+          class="min-h-12 min-w-14 rounded-pill border border-white/25 px-4 text-sm font-semibold transition-colors hover:border-gold-300 aria-pressed:border-gold-500 aria-pressed:bg-gold-500 aria-pressed:text-ocean-900"
+        >
+          {m}
+        </button>
+      ))}
+    </div>
+    <p class="mt-6 min-h-[3.5rem] max-w-3xl text-lg text-white/90" aria-live="polite" data-season-result>
+      Pick a month to see which parts of the island are in season.
+    </p>
+    <p class="text-xs text-white/60">Seasons are approximate and vary year to year.</p>
+  </div>
+</section>
+
+<style>
+  .region-links.is-open {
+    display: flex;
+  }
+</style>
+
+<script>
+  import { MONTHS_LONG, REGIONS, type RegionId } from '../../lib/seasons';
+
+  const buttons = [...document.querySelectorAll<HTMLButtonElement>('[data-regions] button[data-region]')];
+  const select = (id: string) => {
+    buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.region === id)));
+    document
+      .querySelectorAll<HTMLElement>('[data-links]')
+      .forEach((l) => l.classList.toggle('is-open', l.dataset.links === id));
+    document
+      .querySelectorAll('.map-place')
+      .forEach((p) => p.classList.toggle('is-active', (p as HTMLElement).dataset.region === id));
+  };
+  buttons.forEach((b) => b.addEventListener('click', () => select(b.dataset.region!)));
+  if (buttons[0]) select(buttons[0].dataset.region!);
+
+  const picker = document.querySelector<HTMLElement>('[data-season-picker]');
+  if (picker) {
+    const seasons = JSON.parse(picker.dataset.seasons!) as Record<RegionId, number[]>;
+    const result = picker.querySelector('[data-season-result]')!;
+    const months = [...picker.querySelectorAll<HTMLButtonElement>('button[data-month]')];
+    const pick = (m: number) => {
+      months.forEach((b) => b.setAttribute('aria-pressed', String(Number(b.dataset.month) === m)));
+      const good = (Object.keys(seasons) as RegionId[]).filter((r) => seasons[r].includes(m));
+      result.textContent = good.length
+        ? `In ${MONTHS_LONG[m - 1]}, head for: ${good.map((r) => REGIONS[r].name).join(', ')}.`
+        : `${MONTHS_LONG[m - 1]} is shoulder season almost everywhere — ask us for the best route.`;
+      document.querySelectorAll('.map-place').forEach((p) => {
+        p.classList.toggle('is-active', good.includes((p as HTMLElement).dataset.region as RegionId));
+      });
+    };
+    months.forEach((b) => b.addEventListener('click', () => pick(Number(b.dataset.month))));
+  }
+</script>

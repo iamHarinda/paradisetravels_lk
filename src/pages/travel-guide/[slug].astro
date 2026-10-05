@@ -1,0 +1,204 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { render, getEntry, getEntries as getRefs } from 'astro:content';
+import { getEntries } from '../../lib/content';
+import PageLayout from '../../layouts/PageLayout.astro';
+import Media from '../../components/ui/Media.astro';
+import Card from '../../components/ui/Card.astro';
+import Icon from '../../components/ui/Icon.astro';
+import Button from '../../components/ui/Button.astro';
+import { articleSchema } from '../../lib/schema-org';
+import { GUIDE_CATEGORIES, dateFmt, tourPrice } from '../../lib/labels';
+import { whatsappLink, SITE } from '../../lib/site';
+
+export const getStaticPaths = (async () => {
+  const guides = await getEntries('guides');
+  return guides.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}) satisfies GetStaticPaths;
+
+const { entry } = Astro.props;
+const g = entry.data;
+const { Content, headings } = await render(entry);
+const toc = headings.filter((h) => h.depth === 2);
+const author = g.author ? await getEntry(g.author) : undefined;
+const [tours, destinations, services] = await Promise.all([
+  g.relatedTours.length ? getRefs(g.relatedTours) : [],
+  g.relatedDestinations.length ? getRefs(g.relatedDestinations) : [],
+  g.relatedServices.length ? getRefs(g.relatedServices) : [],
+]);
+const moreGuides = (await getEntries('guides')).filter((o) => o.id !== entry.id).slice(0, 3);
+const path = `/travel-guide/${entry.id}`;
+---
+
+<PageLayout
+  title={g.seo.title}
+  description={g.seo.description}
+  type="article"
+  breadcrumbs={[
+    { name: 'Travel Guide', href: '/travel-guide' },
+    { name: GUIDE_CATEGORIES[g.category]!, href: `/travel-guide/category/${g.category}` },
+    { name: g.title, href: path },
+  ]}
+  jsonLd={[
+    articleSchema({
+      title: g.title,
+      description: g.description,
+      path,
+      published: g.published,
+      updated: g.updated,
+      author: author?.data.name,
+    }),
+  ]}
+>
+  <article>
+    <header class="container-site max-w-5xl pt-8 pb-10 sm:pt-12">
+      <p class="eyebrow">{GUIDE_CATEGORIES[g.category]}</p>
+      <h1 class="mt-3 text-[clamp(2.25rem,4.5vw+1rem,4.5rem)] leading-[1.05] tracking-tight">{g.title}</h1>
+      <p class="mt-6 max-w-[60ch] text-lg text-muted">{g.description}</p>
+      <p class="mt-6 flex flex-wrap gap-x-5 gap-y-1 text-sm text-muted">
+        <span>By {author?.data.name ?? `the ${SITE.name} team`}</span>
+        <span>Published {dateFmt.format(g.published)}</span>
+        {g.updated && <span>Updated {dateFmt.format(g.updated)}</span>}
+        <span class="font-semibold text-text">Last checked: {dateFmt.format(g.lastChecked)}</span>
+      </p>
+      <div class="mt-10 aspect-[16/9] overflow-hidden rounded-media">
+        <Media image={g.heroImage} alt={g.heroAlt} tone={g.tone} priority sizes="(min-width: 1100px) 1000px, 100vw" />
+      </div>
+    </header>
+
+    <div class="container-site grid max-w-6xl gap-12 pb-16 lg:grid-cols-[1fr_16rem]">
+      <div>
+        <div class="prose">
+          <Content />
+        </div>
+
+        {g.sources.length > 0 && (
+          <section
+            class="mt-14 max-w-[68ch] rounded-card bg-surface p-6 ring-1 ring-line"
+            aria-labelledby="sources-heading"
+          >
+            <h2 id="sources-heading" class="text-xl font-semibold">
+              Sources
+            </h2>
+            <p class="mt-1 text-sm text-muted">
+              Last checked {dateFmt.format(g.lastChecked)}. Rules change — always confirm with the official source.
+            </p>
+            <ul class="mt-4 space-y-2 text-sm">
+              {g.sources.map((s) => (
+                <li>
+                  <a
+                    href={s.url}
+                    rel="noopener"
+                    class="inline-flex items-center gap-1 text-primary underline underline-offset-4"
+                  >
+                    {s.title} <Icon name="external" class="size-3.5" />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        <section class="mt-10 max-w-[68ch] rounded-media bg-ocean-900 p-8 text-white" aria-label="Plan your trip">
+          <h2 class="text-3xl font-semibold">Want us to plan it for you?</h2>
+          <p class="mt-3 text-white/85">Tell us your dates and interests — we reply with a tailored plan and quote.</p>
+          <div class="mt-6 flex flex-wrap gap-3">
+            <Button href="/plan-your-trip">Plan My Trip</Button>
+            <Button
+              href={whatsappLink(undefined, new URL(path, Astro.site))}
+              variant="light"
+              rel="noopener"
+              data-track="whatsapp"
+            >
+              <Icon name="whatsapp" /> WhatsApp
+            </Button>
+          </div>
+        </section>
+      </div>
+
+      <aside class="space-y-8 text-sm lg:sticky lg:top-28 lg:self-start">
+        {toc.length > 1 && (
+          <nav aria-labelledby="toc-heading">
+            <h2 id="toc-heading" class="font-sans text-xs font-semibold tracking-wider text-muted uppercase">
+              On this page
+            </h2>
+            <ol class="mt-3 space-y-2 border-l border-line pl-4">
+              {toc.map((h) => (
+                <li>
+                  <a href={`#${h.slug}`} class="hover:text-primary">
+                    {h.text}
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </nav>
+        )}
+        {(services.length > 0 || destinations.length > 0) && (
+          <nav aria-labelledby="related-heading">
+            <h2 id="related-heading" class="font-sans text-xs font-semibold tracking-wider text-muted uppercase">
+              Related
+            </h2>
+            <ul class="mt-3 space-y-2">
+              {services.map((s) => (
+                <li>
+                  <a href={`/services/${s.id}`} class="text-primary underline underline-offset-4">
+                    {s.data.title}
+                  </a>
+                </li>
+              ))}
+              {destinations.map((d) => (
+                <li>
+                  <a href={`/destinations/${d.id}`} class="text-primary underline underline-offset-4">
+                    {d.data.title}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )}
+      </aside>
+    </div>
+  </article>
+
+  {tours.length > 0 && (
+    <section class="container-site pb-16" aria-labelledby="tours-heading">
+      <h2 id="tours-heading" class="text-h2">
+        Related tours
+      </h2>
+      <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {tours.map((t) => (
+          <Card
+            href={`/tours/${t.id}`}
+            title={t.data.title}
+            text={t.data.summary}
+            badge={`${t.data.durationDays} days`}
+            meta={tourPrice(t.data)}
+            tone={t.data.tone}
+            image={t.data.heroImage}
+            imageAlt={t.data.heroAlt}
+          />
+        ))}
+      </div>
+    </section>
+  )}
+
+  <section class="container-site pb-24" aria-labelledby="more-heading">
+    <h2 id="more-heading" class="text-h2">
+      More guides
+    </h2>
+    <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {moreGuides.map((o) => (
+        <Card
+          href={`/travel-guide/${o.id}`}
+          title={o.data.title}
+          text={o.data.description}
+          eyebrow={`Last checked ${dateFmt.format(o.data.lastChecked)}`}
+          tone={o.data.tone}
+          image={o.data.heroImage}
+          imageAlt={o.data.heroAlt}
+          aspect="aspect-[16/9]"
+        />
+      ))}
+    </div>
+  </section>
+</PageLayout>

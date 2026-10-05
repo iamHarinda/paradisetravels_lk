@@ -1,0 +1,383 @@
+---
+import ContactFields from './ContactFields.astro';
+import FormFooter from './FormFooter.astro';
+import { MONTHS_LONG } from '../../lib/seasons';
+
+// Trip builder (docs/10 §7): When? → Who? → What? → How? → You → review → submit.
+// Without JS every step is visible and the form posts normally; with JS it becomes a stepped wizard.
+const interests = [
+  'Culture & heritage',
+  'Wildlife safaris',
+  'Beaches',
+  'Tea country',
+  'Ayurveda',
+  'Adventure',
+  'Food',
+  'Surfing',
+  'Pilgrimage',
+  'Whale watching',
+];
+const occasions = ['Holiday', 'Honeymoon', 'Family', 'Solo', 'Friends', 'Group', 'Corporate'];
+const steps = ['When?', 'Who?', 'What?', 'How?', 'You'];
+---
+
+<form action="/api/trip-builder" method="post" data-form data-trip-builder class="relative" id="trip-builder">
+  <div class="mb-8 hidden" data-progress-wrap>
+    <ol class="flex gap-2" aria-label="Progress">
+      {steps.map((s, i) => (
+        <li class="flex-1" data-progress-step={i}>
+          <span class="block h-1.5 rounded-pill bg-line transition-colors" />
+          <span class="mt-2 hidden text-xs font-semibold text-muted sm:block">{s}</span>
+        </li>
+      ))}
+    </ol>
+    <p class="mt-3 text-sm text-muted sm:hidden" aria-live="polite" data-step-label></p>
+  </div>
+
+  <input type="hidden" name="where" />
+  <input type="hidden" name="tour" />
+
+  <fieldset class="step" data-step="0">
+    <legend class="text-3xl font-semibold">When are you travelling?</legend>
+    <p class="mt-2 text-muted" data-prefill-note></p>
+    <div class="mt-6 grid gap-5 sm:grid-cols-3">
+      <div>
+        <label class="field-label" for="tb-date">
+          Start date
+        </label>
+        <input class="field-input" id="tb-date" name="startDate" type="date" />
+      </div>
+      <div>
+        <label class="field-label" for="tb-month">
+          …or month
+        </label>
+        <select class="field-input" id="tb-month" name="month">
+          <option value="">Not sure yet</option>
+          {MONTHS_LONG.map((m) => (
+            <option value={m}>{m}</option>
+          ))}
+        </select>
+      </div>
+      <div>
+        <label class="field-label" for="tb-days">
+          Number of days
+        </label>
+        <input class="field-input" id="tb-days" name="days" type="number" min="1" max="90" placeholder="e.g. 10" />
+      </div>
+    </div>
+    <label class="choice mt-5">
+      <input type="checkbox" name="flexible" value="yes" /> My dates are flexible
+    </label>
+  </fieldset>
+
+  <fieldset class="step mt-14" data-step="1">
+    <legend class="text-3xl font-semibold">Who is travelling?</legend>
+    <div class="mt-6 grid gap-5 sm:grid-cols-3">
+      <div>
+        <label class="field-label" for="tb-adults">
+          Adults
+        </label>
+        <input class="field-input" id="tb-adults" name="adults" type="number" min="1" max="100" value="2" required />
+      </div>
+      <div>
+        <label class="field-label" for="tb-children">
+          Children
+        </label>
+        <input class="field-input" id="tb-children" name="children" type="number" min="0" max="50" value="0" />
+      </div>
+      <div>
+        <label class="field-label" for="tb-ages">
+          Children’s ages
+        </label>
+        <input class="field-input" id="tb-ages" name="childAges" maxlength="100" placeholder="e.g. 6, 9" />
+      </div>
+    </div>
+    <p class="field-label mt-6" id="tb-occasion">
+      Occasion
+    </p>
+    <div class="flex flex-wrap gap-2" role="radiogroup" aria-labelledby="tb-occasion">
+      {occasions.map((o) => (
+        <label class="choice">
+          <input type="radio" name="occasion" value={o} /> {o}
+        </label>
+      ))}
+    </div>
+  </fieldset>
+
+  <fieldset class="step mt-14" data-step="2">
+    <legend class="text-3xl font-semibold">What would you love to do?</legend>
+    <p class="mt-2 text-muted">Choose as many as you like.</p>
+    <div class="mt-6 flex flex-wrap gap-2">
+      {interests.map((i) => (
+        <label class="choice">
+          <input type="checkbox" name="interests" value={i} /> {i}
+        </label>
+      ))}
+    </div>
+  </fieldset>
+
+  <fieldset class="step mt-14" data-step="3">
+    <legend class="text-3xl font-semibold">How do you like to travel?</legend>
+    <p class="field-label mt-6" id="tb-style">
+      Travel style
+    </p>
+    <div class="flex flex-wrap gap-2" role="radiogroup" aria-labelledby="tb-style">
+      {['Budget', 'Comfort', 'Luxury'].map((s) => (
+        <label class="choice">
+          <input type="radio" name="style" value={s} /> {s}
+        </label>
+      ))}
+    </div>
+    <p class="field-label mt-6" id="tb-hotel">
+      Hotels
+    </p>
+    <div class="flex flex-wrap gap-2" role="radiogroup" aria-labelledby="tb-hotel">
+      {['3-star', '4-star', '5-star', 'Boutique', 'Mix'].map((s) => (
+        <label class="choice">
+          <input type="radio" name="hotelClass" value={s} /> {s}
+        </label>
+      ))}
+    </div>
+    <p class="field-label mt-6" id="tb-transport">
+      Getting around
+    </p>
+    <div class="flex flex-wrap gap-2" role="radiogroup" aria-labelledby="tb-transport">
+      {['Private car & driver', 'Car + scenic train', 'Not sure — advise me'].map((s) => (
+        <label class="choice">
+          <input type="radio" name="transport" value={s} /> {s}
+        </label>
+      ))}
+    </div>
+    <div class="mt-6 flex flex-wrap gap-2">
+      <label class="choice">
+        <input type="checkbox" name="needFlights" value="yes" /> I need flights
+      </label>
+      <label class="choice">
+        <input type="checkbox" name="needVisa" value="yes" /> I need ETA / visa help
+      </label>
+    </div>
+  </fieldset>
+
+  <fieldset class="step mt-14" data-step="4">
+    <legend class="text-3xl font-semibold">Where should we send your plan?</legend>
+    <div class="mt-6">
+      <ContactFields idPrefix="tb" />
+    </div>
+    <div class="mt-5">
+      <label class="field-label" for="tb-notes">
+        Anything else we should know? <span class="font-normal text-muted">(optional)</span>
+      </label>
+      <textarea class="field-input min-h-28" id="tb-notes" name="notes" maxlength="3000"></textarea>
+    </div>
+  </fieldset>
+
+  <section class="mt-10 hidden rounded-card bg-sand-100 p-6 text-ink-900" data-review aria-labelledby="review-heading">
+    <h2 id="review-heading" class="text-2xl font-semibold">
+      Check your request
+    </h2>
+    <dl class="mt-4 grid gap-x-6 gap-y-2 text-sm sm:grid-cols-[10rem_1fr]" data-review-list></dl>
+  </section>
+
+  <div data-final>
+    <FormFooter submitLabel="Send my trip request" />
+  </div>
+
+  <div class="mt-10 hidden flex-wrap justify-between gap-3" data-nav>
+    <button
+      type="button"
+      class="inline-flex min-h-12 items-center rounded-pill border border-line px-6 font-semibold"
+      data-prev
+    >
+      Back
+    </button>
+    <button
+      type="button"
+      class="ml-auto inline-flex min-h-12 items-center rounded-pill bg-ocean-900 px-8 font-semibold text-white"
+      data-next
+    >
+      Next
+    </button>
+  </div>
+</form>
+
+<script>
+  import '../../scripts/forms.ts';
+
+  const form = document.querySelector<HTMLFormElement>('[data-trip-builder]');
+  if (form) {
+    const steps = [...form.querySelectorAll<HTMLFieldSetElement>('[data-step]')];
+    const nav = form.querySelector<HTMLElement>('[data-nav]')!;
+    const prev = form.querySelector<HTMLButtonElement>('[data-prev]')!;
+    const next = form.querySelector<HTMLButtonElement>('[data-next]')!;
+    const final = form.querySelector<HTMLElement>('[data-final]')!;
+    const review = form.querySelector<HTMLElement>('[data-review]')!;
+    const reviewList = form.querySelector<HTMLElement>('[data-review-list]')!;
+    const progressWrap = form.querySelector<HTMLElement>('[data-progress-wrap]')!;
+    const stepLabel = form.querySelector<HTMLElement>('[data-step-label]')!;
+    const KEY = 'pt-trip-builder';
+    let current = 0;
+
+    // Prefill from links like /plan-your-trip?where=Ella&tour=…&days=7&interest=…
+    const params = new URLSearchParams(location.search);
+    const setValue = (name: string, value: string | null) => {
+      const el = form.elements.namedItem(name);
+      if (value && el instanceof HTMLInputElement) el.value = value;
+    };
+    setValue('where', params.get('where'));
+    setValue('tour', params.get('tour'));
+    setValue('days', params.get('days'));
+    const note = [
+      params.get('tour') && `Tour: ${params.get('tour')}`,
+      params.get('where') && `Including: ${params.get('where')}`,
+    ]
+      .filter(Boolean)
+      .join(' · ');
+    if (note) form.querySelector('[data-prefill-note]')!.textContent = note;
+    const interest = params.get('interest');
+    if (interest) {
+      form.querySelectorAll<HTMLInputElement>('input[name="interests"]').forEach((cb) => {
+        if (interest.toLowerCase().includes(cb.value.split(' ')[0]!.toLowerCase())) cb.checked = true;
+      });
+    }
+
+    // Autosave (sessionStorage, wrapped — docs/04 §5.9). Contact details are not stored.
+    const SKIP = new Set([
+      'name',
+      'email',
+      'phone',
+      'phoneCode',
+      'country',
+      'notes',
+      'company_website',
+      'cf-turnstile-response',
+      'page',
+    ]);
+    const save = () => {
+      const data: Record<string, string[]> = {};
+      new FormData(form).forEach((v, k) => {
+        if (!SKIP.has(k) && typeof v === 'string') (data[k] ??= []).push(v);
+      });
+      try {
+        sessionStorage.setItem(KEY, JSON.stringify({ data, step: current }));
+      } catch {
+        /* storage unavailable */
+      }
+    };
+    try {
+      const saved = JSON.parse(sessionStorage.getItem(KEY) ?? 'null') as {
+        data: Record<string, string[]>;
+        step: number;
+      } | null;
+      if (saved && !note) {
+        for (const [k, values] of Object.entries(saved.data)) {
+          form.querySelectorAll<HTMLInputElement | HTMLSelectElement>(`[name="${k}"]`).forEach((el) => {
+            if (el instanceof HTMLInputElement && (el.type === 'checkbox' || el.type === 'radio'))
+              el.checked = values.includes(el.value);
+            else el.value = values[0] ?? '';
+          });
+        }
+        current = Math.min(saved.step ?? 0, steps.length - 1);
+      }
+    } catch {
+      /* ignore */
+    }
+
+    const labels: Record<string, string> = {
+      startDate: 'Start date',
+      month: 'Month',
+      days: 'Days',
+      flexible: 'Flexible dates',
+      adults: 'Adults',
+      children: 'Children',
+      childAges: 'Children’s ages',
+      occasion: 'Occasion',
+      interests: 'Interests',
+      style: 'Style',
+      hotelClass: 'Hotels',
+      transport: 'Getting around',
+      needFlights: 'Flights',
+      needVisa: 'ETA / visa help',
+      where: 'Including',
+      tour: 'Tour',
+      name: 'Name',
+      email: 'Email',
+      phone: 'Phone',
+      preferredContact: 'Reply by',
+    };
+    const renderReview = () => {
+      const data = new FormData(form);
+      reviewList.replaceChildren();
+      for (const [k, label] of Object.entries(labels)) {
+        const v = data
+          .getAll(k)
+          .filter((x) => typeof x === 'string' && x !== '')
+          .join(', ');
+        if (!v) continue;
+        const dt = document.createElement('dt');
+        dt.className = 'font-semibold';
+        dt.textContent = label;
+        const dd = document.createElement('dd');
+        dd.textContent = v;
+        reviewList.append(dt, dd);
+      }
+    };
+
+    const show = (i: number, focus = true) => {
+      current = i;
+      steps.forEach((s, j) => {
+        s.hidden = j !== i;
+        s.classList.remove('mt-14');
+      });
+      const last = i === steps.length - 1;
+      final.hidden = !last;
+      review.hidden = !last;
+      if (last) renderReview();
+      prev.style.visibility = i === 0 ? 'hidden' : 'visible';
+      next.hidden = last;
+      form.querySelectorAll<HTMLElement>('[data-progress-step]').forEach((p, j) => {
+        p.firstElementChild!.className = `block h-1.5 rounded-pill transition-colors ${j <= i ? 'bg-gold-500' : 'bg-line'}`;
+      });
+      stepLabel.textContent = `Step ${i + 1} of ${steps.length}`;
+      if (focus) steps[i]!.querySelector<HTMLElement>('legend')?.setAttribute('tabindex', '-1');
+      if (focus) steps[i]!.querySelector<HTMLElement>('legend')?.focus();
+    };
+
+    const valid = (i: number) => {
+      const fields = [...steps[i]!.querySelectorAll<HTMLInputElement>('input, select, textarea')];
+      const bad = fields.find((f) => !f.checkValidity());
+      bad?.reportValidity();
+      return !bad;
+    };
+
+    progressWrap.classList.remove('hidden');
+    nav.classList.remove('hidden');
+    nav.classList.add('flex');
+    review.classList.remove('hidden');
+    show(current, false);
+
+    next.addEventListener('click', () => {
+      if (!valid(current)) return;
+      save();
+      show(current + 1);
+      form.scrollIntoView({ block: 'start', behavior: 'smooth' });
+    });
+    prev.addEventListener('click', () => {
+      show(current - 1);
+      form.scrollIntoView({ block: 'start', behavior: 'smooth' });
+    });
+    // Enter on an early step moves forward instead of submitting (capture runs before the fetch handler).
+    form.addEventListener(
+      'submit',
+      (e) => {
+        if (current < steps.length - 1) {
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          next.click();
+        }
+      },
+      true,
+    );
+    form.addEventListener('change', save);
+    form.addEventListener('input', () => current === steps.length - 1 && renderReview());
+  }
+</script>

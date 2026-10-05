@@ -1,0 +1,55 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import TripBuilder from '../components/forms/TripBuilder.astro';
+import Icon from '../components/ui/Icon.astro';
+import { SITE, whatsappLink } from '../lib/site';
+---
+
+<PageLayout
+  title="Plan Your Sri Lanka Trip | Free Tailor-Made Quote"
+  description="Tell us when, who and what you love — our Colombo team replies with a tailor-made Sri Lanka itinerary and quote. Flights, ETA, hotels, driver and guides included."
+  breadcrumbs={[{ name: 'Plan your trip', href: '/plan-your-trip' }]}
+>
+  <section class="container-site grid gap-12 pt-8 pb-24 sm:pt-12 lg:grid-cols-[1fr_2fr]">
+    <div class="lg:sticky lg:top-28 lg:self-start">
+      <p class="eyebrow">Plan My Trip</p>
+      <h1 class="mt-3 text-[clamp(2.5rem,4vw+1rem,4.5rem)] leading-[1.05]">Tell us your dream trip.</h1>
+      <p class="mt-5 text-lg text-muted">
+        Five quick steps. A real person on our team reads every request and replies with a plan — not an automated
+        quote.
+      </p>
+      <ul class="mt-8 space-y-3 text-sm">
+        <li class="flex gap-3">
+          <Icon name="check" class="mt-0.5 size-4 shrink-0 text-tea-600 dark:text-lagoon-300" /> Free, no obligation
+        </li>
+        <li class="flex gap-3">
+          <Icon name="check" class="mt-0.5 size-4 shrink-0 text-tea-600 dark:text-lagoon-300" /> Fully private and
+          tailor-made
+        </li>
+        <li class="flex gap-3">
+          <Icon name="check" class="mt-0.5 size-4 shrink-0 text-tea-600 dark:text-lagoon-300" /> Arranged in Colombo
+          since {SITE.foundingYear}
+        </li>
+      </ul>
+      <p class="mt-8 text-sm text-muted">
+        Rather talk?{' '}
+        <a
+          href={whatsappLink()}
+          class="font-semibold text-tea-600 underline dark:text-lagoon-300"
+          rel="noopener"
+          data-track="whatsapp"
+        >
+          WhatsApp us
+        </a>
+        or call{' '}
+        <a href={`tel:${SITE.phoneE164}`} class="font-semibold underline" data-track="phone">
+          {SITE.phone}
+        </a>
+        .
+      </p>
+    </div>
+    <div class="rounded-media bg-surface p-6 ring-1 ring-line sm:p-10">
+      <TripBuilder />
+    </div>
+  </section>
+</PageLayout>

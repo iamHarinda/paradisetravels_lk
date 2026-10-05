@@ -1,0 +1,75 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import EnquiryForm from '../components/forms/EnquiryForm.astro';
+import Icon from '../components/ui/Icon.astro';
+import { SITE, whatsappLink } from '../lib/site';
+import { travelAgencySchema } from '../lib/schema-org';
+
+const ways = [
+  { icon: 'whatsapp', label: 'WhatsApp', value: SITE.phone, href: whatsappLink(), track: 'whatsapp' },
+  { icon: 'chat', label: 'KakaoTalk', value: SITE.phone, href: undefined, track: 'kakao' },
+  { icon: 'phone', label: 'Phone', value: SITE.phone, href: `tel:${SITE.phoneE164}`, track: 'phone' },
+  { icon: 'mail', label: 'Email', value: SITE.email, href: `mailto:${SITE.email}`, track: 'email' },
+] as const;
+---
+
+<PageLayout
+  title="Contact Paradise Travels | Colombo Travel Agency"
+  description={`Contact Paradise Travels in Mirihana, Nugegoda: WhatsApp and KakaoTalk ${SITE.phone}, email ${SITE.email}. Visit our office or send us a message.`}
+  breadcrumbs={[{ name: 'Contact', href: '/contact' }]}
+  jsonLd={[travelAgencySchema()]}
+>
+  <section class="container-site grid gap-12 pt-8 pb-24 sm:pt-12 lg:grid-cols-[1fr_1.3fr]">
+    <div>
+      <p class="eyebrow">Contact</p>
+      <h1 class="mt-3 text-[clamp(2.5rem,4vw+1rem,4.5rem)] leading-[1.05]">Talk to our team.</h1>
+      <p class="mt-5 text-lg text-muted">Message, call or visit — whatever suits you.</p>
+      <ul class="mt-10 grid gap-3 sm:grid-cols-2">
+        {ways.map((w) => (
+          <li>
+            {w.href ? (
+              <a
+                href={w.href}
+                class="lift flex h-full items-start gap-3 rounded-card bg-surface p-5 ring-1 ring-line"
+                rel="noopener"
+                data-track={w.track}
+              >
+                <Icon name={w.icon} class="mt-0.5 size-6 text-primary" />
+                <span>
+                  <span class="block text-sm text-muted">{w.label}</span>
+                  <span class="block font-semibold break-all">{w.value}</span>
+                </span>
+              </a>
+            ) : (
+              <div class="flex h-full items-start gap-3 rounded-card bg-surface p-5 ring-1 ring-line">
+                <Icon name={w.icon} class="mt-0.5 size-6 text-primary" />
+                <span>
+                  <span class="block text-sm text-muted">{w.label}</span>
+                  <span class="block font-semibold">{w.value}</span>
+                </span>
+              </div>
+            )}
+          </li>
+        ))}
+      </ul>
+      <div class="mt-10 rounded-media bg-ocean-900 p-6 text-white">
+        <h2 class="text-2xl font-semibold">Visit our office</h2>
+        <address class="mt-3 not-italic text-white/85">{SITE.addressLine}</address>
+        <p class="mt-2 text-sm text-white/70">{'{{TODO: office opening hours}}'}</p>
+        <a
+          href={SITE.mapsUrl}
+          rel="noopener"
+          class="mt-5 inline-flex min-h-12 items-center gap-2 rounded-pill bg-white/10 px-5 font-semibold hover:bg-white/20"
+        >
+          <Icon name="pin" /> Open in Google Maps
+        </a>
+      </div>
+    </div>
+    <div class="rounded-media bg-surface p-6 ring-1 ring-line sm:p-10">
+      <h2 class="text-3xl font-semibold">Send us a message</h2>
+      <div class="mt-8">
+        <EnquiryForm subject="Contact page" />
+      </div>
+    </div>
+  </section>
+</PageLayout>

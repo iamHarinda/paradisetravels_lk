@@ -24,6 +24,7 @@
   --color-cta: var(--c-cta);
   --color-cta-text: var(--c-cta-text);
   --color-focus: var(--c-focus);
+  --color-line: var(--c-line);
 
   --font-display: var(--font-fraunces);
   --font-sans: var(--font-inter);
@@ -34,6 +35,7 @@
   --text-h1--letter-spacing: -0.02em;
   --text-h2: clamp(2rem, 3.5vw + 1rem, 3.75rem);
   --text-h2--line-height: 1.1;
+  --text-h2--letter-spacing: -0.01em;
   --text-body: clamp(1rem, 0.3vw + 0.95rem, 1.125rem);
   --text-body--line-height: 1.6;
 
@@ -45,10 +47,34 @@
   --ease-travel: var(--ease-travel);
 }
 
+@utility container-site {
+  width: 100%;
+  max-width: var(--container-site);
+  margin-inline: auto;
+  padding-inline: 1rem;
+  @media (width >= 40rem) {
+    padding-inline: 2.5rem;
+  }
+}
+
+@utility eyebrow {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--c-eyebrow);
+}
+
+/* Cross-document page transitions — zero JS (docs/04 §6). */
+@view-transition {
+  navigation: auto;
+}
+
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
+    scroll-padding-top: 6rem;
   }
 
   body {
@@ -61,7 +87,8 @@
   }
 
   h1,
-  h2 {
+  h2,
+  h3 {
     font-family: var(--font-display);
     text-wrap: balance;
   }
@@ -73,6 +100,14 @@
   :focus-visible {
     outline: 3px solid var(--c-focus);
     outline-offset: 3px;
+  }
+
+  main:focus {
+    outline: none;
+  }
+
+  summary {
+    cursor: pointer;
   }
 }
 
@@ -90,6 +125,97 @@
   .skip-link:focus {
     top: 1rem;
   }
+
+  /* Long-form content (guides, destination intros). */
+  .prose {
+    max-width: 68ch;
+    color: var(--c-text);
+  }
+  .prose > * + * {
+    margin-top: 1.1em;
+  }
+  .prose h2 {
+    margin-top: 2em;
+    font-size: clamp(1.6rem, 1.5vw + 1rem, 2.25rem);
+    line-height: 1.15;
+  }
+  .prose h3 {
+    margin-top: 1.6em;
+    font-size: 1.35rem;
+  }
+  .prose a {
+    color: var(--c-primary);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+  .prose ul,
+  .prose ol {
+    padding-left: 1.25rem;
+  }
+  .prose ul {
+    list-style: disc;
+  }
+  .prose ol {
+    list-style: decimal;
+  }
+  .prose li + li {
+    margin-top: 0.4em;
+  }
+  .prose strong {
+    font-weight: 650;
+  }
+  .prose table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95em;
+    display: block;
+    overflow-x: auto;
+  }
+  .prose th,
+  .prose td {
+    border-bottom: 1px solid var(--c-line);
+    padding: 0.6em 0.75em;
+    text-align: left;
+    vertical-align: top;
+  }
+  .prose th {
+    font-weight: 650;
+  }
+  .prose blockquote {
+    border-left: 3px solid var(--c-gold-500);
+    padding-left: 1rem;
+    color: var(--c-text-muted);
+  }
+
+  /* Hover lift (docs/04 §6) — transform/opacity only. */
+  .lift {
+    transition:
+      transform 200ms var(--ease-travel),
+      box-shadow 200ms var(--ease-travel);
+  }
+  .lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 40px -18px rgb(6 42 53 / 0.45);
+  }
+  .lift .lift-media {
+    transition: transform 400ms var(--ease-travel);
+  }
+  .lift:hover .lift-media {
+    transform: scale(1.04);
+  }
+
+  /* Reveal on scroll — fade + 24px rise, 600ms. Only hidden once JS has run (content readable without JS). */
+  .js .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition:
+      opacity 600ms var(--ease-travel),
+      transform 600ms var(--ease-travel);
+  }
+  .js .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 /* Every effect must have a reduced-motion fallback (CLAUDE.md hard rule 4). */
@@ -101,5 +227,117 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+  .js .reveal {
+    opacity: 1;
+    transform: none;
+  }
+  .lift:hover,
+  .lift:hover .lift-media {
+    transform: none;
+  }
+  @view-transition {
+    navigation: none;
+  }
+}
+
+/* Placeholder "photos" (Media.astro) — replaced automatically when a real image is set in content. */
+@layer components {
+  .ph {
+    position: relative;
+    background-color: var(--c-ocean-700);
+  }
+  .ph-ocean {
+    background-image:
+      radial-gradient(ellipse at 70% 20%, #f0cf85 0, transparent 35%),
+      linear-gradient(170deg, #7fd1c7 0%, #127a8c 45%, #062a35 100%);
+  }
+  .ph-tea {
+    background-image:
+      radial-gradient(ellipse at 30% 10%, #e8efe0 0, transparent 40%),
+      linear-gradient(160deg, #6f9e66 0%, #2f6b3f 50%, #15301d 100%);
+  }
+  .ph-heritage {
+    background-image:
+      radial-gradient(ellipse at 60% 25%, #f0cf85 0, transparent 40%),
+      linear-gradient(165deg, #d9a441 0%, #c2603c 50%, #4a2015 100%);
+  }
+  .ph-wild {
+    background-image:
+      radial-gradient(ellipse at 40% 20%, #f3ede2 0, transparent 35%),
+      linear-gradient(165deg, #a8a15a 0%, #5d6b33 50%, #232a12 100%);
+  }
+  .ph-sand {
+    background-image:
+      radial-gradient(ellipse at 50% 20%, #ffffff 0, transparent 40%),
+      linear-gradient(165deg, #f3ede2 0%, #d9c7a4 55%, #9a7b4f 100%);
+  }
+  .ph-label {
+    position: absolute;
+    right: 0.75rem;
+    bottom: 0.75rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+    background: rgb(0 0 0 / 0.45);
+    color: #fff;
+    font-size: 0.68rem;
+    letter-spacing: 0.04em;
+  }
+}
+
+/* Form controls — 48px targets, visible focus, error state (docs/04 §7, §9). */
+@layer components {
+  .field-label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+  .field-input {
+    display: block;
+    width: 100%;
+    min-height: 3rem;
+    padding: 0.65rem 0.9rem;
+    border-radius: var(--radius-card);
+    border: 1px solid var(--c-line);
+    background: var(--c-surface);
+    color: var(--c-text);
+    font: inherit;
+  }
+  .field-input:focus-visible {
+    outline: 3px solid var(--c-focus);
+    outline-offset: 1px;
+  }
+  .field-input[aria-invalid='true'] {
+    border-color: var(--c-laterite-500);
+  }
+  .field-error {
+    margin-top: 0.35rem;
+    font-size: 0.85rem;
+    color: var(--c-laterite-500);
+  }
+  .choice {
+    display: inline-flex;
+    min-height: 3rem;
+    cursor: pointer;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--c-line);
+    padding: 0 1.1rem;
+    font-size: 0.95rem;
+    user-select: none;
+  }
+  .choice:has(input:checked) {
+    border-color: var(--c-primary);
+    background: color-mix(in srgb, var(--c-primary) 12%, transparent);
+    font-weight: 600;
+  }
+  .choice:has(input:focus-visible) {
+    outline: 3px solid var(--c-focus);
+    outline-offset: 2px;
+  }
+  .choice input {
+    accent-color: var(--c-ocean-700);
   }
 }

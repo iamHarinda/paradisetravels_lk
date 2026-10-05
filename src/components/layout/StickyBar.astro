@@ -1,0 +1,31 @@
+---
+import Icon from '../ui/Icon.astro';
+import { SITE, whatsappLink } from '../../lib/site';
+
+// Mobile thumb bar: WhatsApp · Call · Plan My Trip (docs/04 §5.8). Hidden from md up.
+const page = Astro.url;
+---
+
+<nav
+  class="fixed inset-x-3 bottom-3 z-40 grid grid-cols-3 gap-1 rounded-pill bg-surface/95 p-1.5 text-sm font-semibold shadow-2xl ring-1 ring-line backdrop-blur md:hidden"
+  aria-label="Quick contact"
+>
+  <a
+    href={whatsappLink(undefined, new URL(page.pathname, Astro.site))}
+    class="flex min-h-12 items-center justify-center gap-1.5 rounded-pill text-tea-600 dark:text-lagoon-300"
+    rel="noopener"
+    data-track="whatsapp"
+  >
+    <Icon name="whatsapp" class="size-5" /> WhatsApp
+  </a>
+  <a
+    href={`tel:${SITE.phoneE164}`}
+    class="flex min-h-12 items-center justify-center gap-1.5 rounded-pill text-primary"
+    data-track="phone"
+  >
+    <Icon name="phone" class="size-5" /> Call
+  </a>
+  <a href="/plan-your-trip" class="flex min-h-12 items-center justify-center rounded-pill bg-cta text-cta-text">
+    Plan trip
+  </a>
+</nav>

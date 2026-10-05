@@ -1,0 +1,41 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import PageHero from '../../components/ui/PageHero.astro';
+import GuideGrid from '../../components/cards/GuideGrid.astro';
+import { getEntries } from '../../lib/content';
+import { GUIDE_CATEGORIES } from '../../lib/labels';
+import { itemListSchema } from '../../lib/schema-org';
+
+const guides = (await getEntries('guides')).sort(
+  (a, b) => Number(b.data.pillar) - Number(a.data.pillar) || b.data.published.getTime() - a.data.published.getTime(),
+);
+const categories = Object.keys(GUIDE_CATEGORIES).filter((c) => guides.some((g) => g.data.category === c));
+---
+
+<PageLayout
+  title="Sri Lanka Travel Guide 2026 | Paradise Travels"
+  description="Practical, up-to-date Sri Lanka travel guides from a Colombo team: the free ETA, best time to visit, getting around, travel tips and tourism statistics."
+  breadcrumbs={[{ name: 'Travel Guide', href: '/travel-guide' }]}
+  jsonLd={[itemListSchema(guides.map((g) => ({ name: g.data.title, path: `/travel-guide/${g.id}` })))]}
+>
+  <PageHero
+    eyebrow="Travel Guide"
+    title="Know before you go"
+    intro="Honest, practical guides from people who live here — with the date we last checked the facts and where they came from."
+    media={false}
+  >
+    <nav class="mt-8 flex flex-wrap gap-2" aria-label="Guide categories">
+      {categories.map((c) => (
+        <a
+          href={`/travel-guide/category/${c}`}
+          class="inline-flex min-h-10 items-center rounded-pill border border-line px-4 text-sm hover:border-primary"
+        >
+          {GUIDE_CATEGORIES[c]}
+        </a>
+      ))}
+    </nav>
+  </PageHero>
+  <section class="container-site pb-24">
+    <GuideGrid guides={guides} />
+  </section>
+</PageLayout>

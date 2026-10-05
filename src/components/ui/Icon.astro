@@ -1,0 +1,26 @@
+---
+// Inline stroke icons (no icon font, no runtime). Decorative unless `label` is given.
+import { ICONS, type IconName } from '../../lib/icons';
+
+interface Props {
+  name: IconName;
+  class?: string;
+  label?: string;
+}
+const { name, class: className = 'size-5', label } = Astro.props;
+---
+
+<svg
+  class={className}
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.7"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden={label ? undefined : 'true'}
+  role={label ? 'img' : undefined}
+  aria-label={label}
+>
+  <path d={ICONS[name]}></path>
+</svg>

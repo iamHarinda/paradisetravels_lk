@@ -1,0 +1,32 @@
+{
+  "name": "Sample Fort Hotel (template preview)",
+  "area": "Galle Fort",
+  "region": "south",
+  "destination": "galle",
+  "stars": 4,
+  "type": [
+    "boutique",
+    "heritage"
+  ],
+  "rateDisplay": "on-request",
+  "rooms": [
+    {
+      "name": "Deluxe Double",
+      "occupancy": 2,
+      "mealPlans": [
+        "BB",
+        "HB"
+      ]
+    }
+  ],
+  "highlights": [
+    "Placeholder highlight — replace with real hotel data"
+  ],
+  "tone": "ocean",
+  "sample": true,
+  "reviewed": false,
+  "seo": {
+    "title": "Sample Hotel — template preview only",
+    "description": "Placeholder hotel used only to preview the hotel template during development. It is never built in production and must not be published under any circumstances."
+  }
+}

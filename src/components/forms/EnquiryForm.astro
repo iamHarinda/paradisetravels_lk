@@ -1,0 +1,32 @@
+---
+import ContactFields from './ContactFields.astro';
+import FormFooter from './FormFooter.astro';
+
+interface Props {
+  subject?: string;
+}
+const { subject } = Astro.props;
+---
+
+<form action="/api/enquiry" method="post" data-form class="relative" id="enquiry-form">
+  {subject && <input type="hidden" name="subject" value={subject} />}
+  <ContactFields idPrefix="enq" />
+  <div class="mt-5">
+    <label class="field-label" for="enq-message">
+      How can we help?
+    </label>
+    <textarea
+      class="field-input min-h-36"
+      id="enq-message"
+      name="message"
+      required
+      minlength="5"
+      maxlength="5000"
+    ></textarea>
+  </div>
+  <FormFooter submitLabel="Send message" />
+</form>
+
+<script>
+  import '../../scripts/forms.ts';
+</script>

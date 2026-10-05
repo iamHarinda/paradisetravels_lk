@@ -1,0 +1,23 @@
+---
+import LegalLayout from '../layouts/LegalLayout.astro';
+import { SITE } from '../lib/site';
+---
+
+<LegalLayout
+  title="Terms & conditions"
+  seoTitle="Terms & Conditions | Paradise Travels"
+  description="Booking terms and conditions for travel services arranged by Paradise Travels (Pvt) Ltd, Colombo — quotes, confirmations, payments and responsibilities."
+  path="/terms"
+  updated={new Date('2026-10-05')}
+  draft
+>
+  <p>
+    {
+      '{{TODO: the owner’s booking terms and conditions — quotes and validity, confirmation, deposits and balance payments, changes, supplier terms, liability, travel insurance, governing law.}}'
+    }
+  </p>
+  <p>
+    Until these are published, the terms stated in your written quote apply. Questions:{' '}
+    <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.
+  </p>
+</LegalLayout>

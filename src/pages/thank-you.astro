@@ -1,0 +1,54 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import Button from '../components/ui/Button.astro';
+import Icon from '../components/ui/Icon.astro';
+import { SITE, whatsappLink } from '../lib/site';
+---
+
+<PageLayout
+  title="Thank you — Paradise Travels"
+  description="Thank you for your request. A member of the Paradise Travels team in Colombo will reply soon. For anything urgent, message us on WhatsApp."
+  noindex
+>
+  <section class="container-site max-w-3xl py-24">
+    <Icon name="check" class="size-14 rounded-full bg-tea-600 p-3 text-white" />
+    <h1 class="mt-8 text-[clamp(2.5rem,4vw+1rem,4.5rem)] leading-[1.05]">Thank you — we’ve got it.</h1>
+    <p class="mt-5 text-lg text-muted" data-thanks-text>
+      We have sent a confirmation to your email.
+    </p>
+    <h2 class="mt-12 text-2xl font-semibold">What happens next</h2>
+    <ol class="mt-4 space-y-3">
+      <li>1. A member of our Colombo team reads your request.</li>
+      <li>
+        2. We reply by your preferred method with questions or a first plan and quote.{' '}
+        {'{{TODO: confirmed reply-time promise.}}'}
+      </li>
+      <li>3. When you are happy, we confirm everything and send a secure payment link.</li>
+    </ol>
+    <div class="mt-10 flex flex-wrap gap-3">
+      <Button
+        href={whatsappLink('Hello Paradise Travels, I just sent a request on your website.')}
+        variant="whatsapp"
+        rel="noopener"
+        data-track="whatsapp"
+      >
+        <Icon name="whatsapp" /> Anything urgent? WhatsApp {SITE.phone}
+      </Button>
+      <Button href="/travel-guide" variant="secondary">
+        Read our travel guides
+      </Button>
+    </div>
+  </section>
+</PageLayout>
+
+<script>
+  // Conversion event (docs/06 §8) + clear the saved trip-builder draft.
+  const type = new URLSearchParams(location.search).get('type') ?? 'enquiry';
+  const w = window as unknown as { dataLayer?: unknown[] };
+  (w.dataLayer ??= []).push({ event: 'generate_lead', form: type });
+  try {
+    sessionStorage.removeItem('pt-trip-builder');
+  } catch {
+    /* ignore */
+  }
+</script>

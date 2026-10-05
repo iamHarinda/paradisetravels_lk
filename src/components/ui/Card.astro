@@ -1,0 +1,71 @@
+---
+import type { ImageMetadata } from 'astro';
+import Media from './Media.astro';
+import Badge from './Badge.astro';
+
+// Generic content card used by destinations, experiences, tours, hotels and guides.
+interface Props {
+  href: string;
+  title: string;
+  text?: string;
+  eyebrow?: string;
+  meta?: string;
+  badge?: string;
+  badgeTone?: 'gold' | 'light' | 'ocean';
+  image?: ImageMetadata;
+  imageAlt?: string;
+  tone?: 'ocean' | 'tea' | 'heritage' | 'wild' | 'sand';
+  aspect?: string;
+  class?: string;
+}
+const {
+  href,
+  title,
+  text,
+  eyebrow,
+  meta,
+  badge,
+  badgeTone = 'light',
+  image,
+  imageAlt,
+  tone,
+  aspect = 'aspect-[4/3]',
+  class: className,
+} = Astro.props;
+---
+
+<article
+  class:list={[
+    'reveal lift group relative flex flex-col overflow-hidden rounded-media bg-surface ring-1 ring-line',
+    className,
+  ]}
+>
+  <div class:list={['relative overflow-hidden', aspect]}>
+    <Media
+      image={image}
+      alt={imageAlt}
+      tone={tone}
+      class="lift-media"
+      sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+    />
+    {badge && (
+      <Badge tone={badgeTone} class="absolute top-4 left-4">
+        {badge}
+      </Badge>
+    )}
+  </div>
+  <div class="flex flex-1 flex-col p-6">
+    {eyebrow && <p class="text-xs font-semibold tracking-wider text-muted uppercase">{eyebrow}</p>}
+    <h3 class="mt-1 text-2xl font-semibold">
+      <a
+        href={href}
+        class="after:absolute after:inset-0 focus-visible:outline-none after:focus-visible:rounded-media after:focus-visible:outline-3 after:focus-visible:outline-focus"
+      >
+        {title}
+      </a>
+    </h3>
+    {text && <p class="mt-2 text-sm text-muted">{text}</p>}
+    {meta && <p class="mt-auto pt-4 text-sm font-semibold text-primary">{meta}</p>}
+    <slot />
+  </div>
+</article>

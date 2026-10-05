@@ -1,0 +1,39 @@
+---
+import { TURNSTILE_SITE_KEY } from 'astro:env/client';
+import Button from '../ui/Button.astro';
+import { SITE } from '../../lib/site';
+
+// Honeypot + Turnstile + tracking fields + submit + live error region, shared by every lead form.
+interface Props {
+  submitLabel?: string;
+}
+const { submitLabel = 'Send request' } = Astro.props;
+---
+
+<div class="absolute -left-[9999px]" aria-hidden="true">
+  <label>
+    Leave this empty <input name="company_website" tabindex="-1" autocomplete="off" />
+  </label>
+</div>
+<input type="hidden" name="page" />
+<input type="hidden" name="utm_source" />
+<input type="hidden" name="utm_medium" />
+<input type="hidden" name="utm_campaign" />
+{TURNSTILE_SITE_KEY && <div class="cf-turnstile mt-6" data-sitekey={TURNSTILE_SITE_KEY} data-theme="auto"></div>}
+<p class="mt-6 text-sm font-semibold text-laterite-500" role="alert" aria-live="assertive" data-form-message></p>
+<div class="mt-4 flex flex-wrap items-center gap-4">
+  <Button type="submit" size="lg" data-submit>
+    {submitLabel}
+  </Button>
+  <p class="text-sm text-muted">
+    We use your details only to reply to you — see our{' '}
+    <a href="/privacy" class="underline">
+      privacy policy
+    </a>
+    . Prefer chat?{' '}
+    <a href={SITE.whatsapp} class="underline" rel="noopener">
+      WhatsApp us
+    </a>
+    .
+  </p>
+</div>

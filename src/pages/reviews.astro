@@ -1,0 +1,21 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import PageHero from '../components/ui/PageHero.astro';
+import ReviewWall from '../components/home/ReviewWall.astro';
+import CtaBlock from '../components/ui/CtaBlock.astro';
+---
+
+<PageLayout
+  title="Reviews of Paradise Travels | Real Traveller Feedback"
+  description="Real reviews from Paradise Travels clients, shown with permission and linked to Google, Tripadvisor and Facebook. Read what travellers say about our Colombo team."
+  breadcrumbs={[{ name: 'Reviews', href: '/reviews' }]}
+>
+  <PageHero
+    eyebrow="Reviews"
+    title="What our travellers say"
+    intro="Every review here is real, shown with the reviewer’s permission, with its source and date. We never edit wording beyond trimming."
+    media={false}
+  />
+  <ReviewWall limit={100} />
+  <CtaBlock />
+</PageLayout>

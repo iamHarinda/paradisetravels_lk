@@ -1,0 +1,188 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { render } from 'astro:content';
+import { getEntries, byOrder } from '../../lib/content';
+import PageLayout from '../../layouts/PageLayout.astro';
+import PageHero from '../../components/ui/PageHero.astro';
+import MonthBar from '../../components/ui/MonthBar.astro';
+import Card from '../../components/ui/Card.astro';
+import FaqSection from '../../components/ui/FaqSection.astro';
+import CtaBlock from '../../components/ui/CtaBlock.astro';
+import { REGIONS } from '../../lib/seasons';
+import { faqSchema, touristDestinationSchema } from '../../lib/schema-org';
+import { tourPrice } from '../../lib/labels';
+
+export const getStaticPaths = (async () => {
+  const destinations = await getEntries('destinations');
+  return destinations.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}) satisfies GetStaticPaths;
+
+const { entry } = Astro.props;
+const d = entry.data;
+const { Content } = await render(entry);
+
+const [tours, experiences, hotels] = await Promise.all([
+  getEntries('tours'),
+  getEntries('experiences'),
+  getEntries('hotels'),
+]);
+const relatedTours = tours
+  .filter((t) => t.data.destinations.some((r) => r.id === entry.id))
+  .sort(byOrder)
+  .slice(0, 3);
+const relatedExperiences = experiences.filter((e) => e.data.destinations.some((r) => r.id === entry.id));
+const relatedHotels = hotels.filter((h) => h.data.destination?.id === entry.id);
+const path = `/destinations/${entry.id}`;
+---
+
+<PageLayout
+  title={d.seo.title}
+  description={d.seo.description}
+  breadcrumbs={[
+    { name: 'Destinations', href: '/destinations' },
+    { name: d.title, href: path },
+  ]}
+  jsonLd={[
+    touristDestinationSchema({ title: d.title, summary: d.summary, path, coords: d.coords }),
+    faqSchema(d.faqs),
+  ].filter((x) => !!x)}
+>
+  <PageHero
+    eyebrow={REGIONS[d.region].name}
+    title={`${d.title}, Sri Lanka`}
+    intro={d.summary}
+    image={d.heroImage}
+    imageAlt={d.heroAlt}
+    tone={d.tone}
+  />
+
+  <section class="container-site grid gap-12 pb-16 lg:grid-cols-[2fr_1fr]">
+    <div>
+      <div class="prose">
+        <Content />
+      </div>
+
+      {d.thingsToDo.length > 0 && (
+        <section class="mt-14" aria-labelledby="todo-heading">
+          <h2 id="todo-heading" class="text-h2">
+            Top things to do
+          </h2>
+          <ol class="mt-6 grid gap-4 sm:grid-cols-2">
+            {d.thingsToDo.map((t, i) => (
+              <li class="rounded-card bg-surface p-5 ring-1 ring-line">
+                <p class="text-sm font-semibold text-muted">{String(i + 1).padStart(2, '0')}</p>
+                <h3 class="mt-1 text-xl font-semibold">{t.title}</h3>
+                <p class="mt-2 text-sm text-muted">Tip: {t.tip}</p>
+              </li>
+            ))}
+          </ol>
+        </section>
+      )}
+
+      <section class="mt-14" aria-labelledby="when-heading">
+        <h2 id="when-heading" class="text-h2">
+          When to visit
+        </h2>
+        <MonthBar bestMonths={d.bestMonths} class="mt-6" />
+      </section>
+
+      {d.tips.length > 0 && (
+        <section class="mt-14" aria-labelledby="tips-heading">
+          <h2 id="tips-heading" class="text-h2">
+            Practical tips
+          </h2>
+          <ul class="prose mt-6">
+            {d.tips.map((t) => (
+              <li>{t}</li>
+            ))}
+          </ul>
+        </section>
+      )}
+    </div>
+
+    <aside class="lg:sticky lg:top-28 lg:self-start">
+      <dl class="divide-y divide-line rounded-media bg-surface p-6 ring-1 ring-line">
+        <div class="pb-4">
+          <dt class="text-xs font-semibold tracking-wider text-muted uppercase">Region</dt>
+          <dd class="mt-1">{REGIONS[d.region].name}</dd>
+        </div>
+        <div class="py-4">
+          <dt class="text-xs font-semibold tracking-wider text-muted uppercase">Ideal stay</dt>
+          <dd class="mt-1">{d.idealStay}</dd>
+        </div>
+        <div class="py-4">
+          <dt class="text-xs font-semibold tracking-wider text-muted uppercase">Getting there</dt>
+          <dd class="mt-1 text-sm">{d.gettingThere}</dd>
+        </div>
+        {relatedExperiences.length > 0 && (
+          <div class="pt-4">
+            <dt class="text-xs font-semibold tracking-wider text-muted uppercase">Experiences here</dt>
+            <dd class="mt-2 flex flex-wrap gap-2">
+              {relatedExperiences.map((e) => (
+                <a
+                  href={`/experiences/${e.id}`}
+                  class="inline-flex min-h-10 items-center rounded-pill border border-line px-3 text-sm hover:border-primary"
+                >
+                  {e.data.title}
+                </a>
+              ))}
+            </dd>
+          </div>
+        )}
+      </dl>
+      <a
+        href={`/plan-your-trip?where=${encodeURIComponent(d.title)}`}
+        class="mt-4 flex min-h-12 items-center justify-center rounded-pill bg-cta px-4 text-center font-semibold text-cta-text"
+      >
+        Plan a trip including {d.title}
+      </a>
+    </aside>
+  </section>
+
+  {relatedHotels.length > 0 && (
+    <section class="container-site pb-16" aria-labelledby="stay-heading">
+      <h2 id="stay-heading" class="text-h2">
+        Where to stay
+      </h2>
+      <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {relatedHotels.map((h) => (
+          <Card
+            href={`/hotel-deals/${h.id}`}
+            title={h.data.name}
+            eyebrow={h.data.area}
+            badge="Paradise rate"
+            badgeTone="gold"
+            tone={h.data.tone}
+            image={h.data.heroImage}
+            imageAlt={h.data.heroAlt}
+          />
+        ))}
+      </div>
+    </section>
+  )}
+
+  {relatedTours.length > 0 && (
+    <section class="container-site pb-16" aria-labelledby="tours-heading">
+      <h2 id="tours-heading" class="text-h2">
+        Tours that include {d.title}
+      </h2>
+      <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {relatedTours.map((t) => (
+          <Card
+            href={`/tours/${t.id}`}
+            title={t.data.title}
+            text={t.data.summary}
+            badge={`${t.data.durationDays} days`}
+            meta={tourPrice(t.data)}
+            tone={t.data.tone}
+            image={t.data.heroImage}
+            imageAlt={t.data.heroAlt}
+          />
+        ))}
+      </div>
+    </section>
+  )}
+
+  <FaqSection faqs={d.faqs} title={`${d.title} FAQs`} />
+  <CtaBlock tone={d.tone === 'sand' ? 'ocean' : d.tone} />
+</PageLayout>

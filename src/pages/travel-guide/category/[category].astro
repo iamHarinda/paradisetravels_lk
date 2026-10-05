@@ -1,0 +1,40 @@
+---
+import type { GetStaticPaths } from 'astro';
+import PageLayout from '../../../layouts/PageLayout.astro';
+import PageHero from '../../../components/ui/PageHero.astro';
+import GuideGrid from '../../../components/cards/GuideGrid.astro';
+import { getEntries } from '../../../lib/content';
+import { GUIDE_CATEGORIES } from '../../../lib/labels';
+
+export const getStaticPaths = (async () => {
+  const guides = await getEntries('guides');
+  return Object.keys(GUIDE_CATEGORIES)
+    .map((category) => ({
+      params: { category },
+      props: {
+        label: GUIDE_CATEGORIES[category]!,
+        guides: guides
+          .filter((g) => g.data.category === category)
+          .sort((a, b) => b.data.published.getTime() - a.data.published.getTime()),
+      },
+    }))
+    .filter((p) => p.props.guides.length > 0);
+}) satisfies GetStaticPaths;
+
+const { label, guides } = Astro.props;
+const path = `/travel-guide/category/${Astro.params.category}`;
+---
+
+<PageLayout
+  title={`${label} | Sri Lanka Travel Guide`}
+  description={`Sri Lanka travel guides about ${label.toLowerCase()}, written and fact-checked by our Colombo team, with sources and the date each guide was last checked.`}
+  breadcrumbs={[
+    { name: 'Travel Guide', href: '/travel-guide' },
+    { name: label, href: path },
+  ]}
+>
+  <PageHero eyebrow="Travel Guide" title={label} media={false} />
+  <section class="container-site pb-24">
+    <GuideGrid guides={guides} />
+  </section>
+</PageLayout>

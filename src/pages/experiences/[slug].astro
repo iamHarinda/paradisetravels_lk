@@ -1,0 +1,135 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { render, getEntries as getRefs } from 'astro:content';
+import { getEntries, byOrder } from '../../lib/content';
+import PageLayout from '../../layouts/PageLayout.astro';
+import PageHero from '../../components/ui/PageHero.astro';
+import MonthBar from '../../components/ui/MonthBar.astro';
+import Card from '../../components/ui/Card.astro';
+import Icon from '../../components/ui/Icon.astro';
+import FaqSection from '../../components/ui/FaqSection.astro';
+import CtaBlock from '../../components/ui/CtaBlock.astro';
+import { faqSchema } from '../../lib/schema-org';
+import { tourPrice } from '../../lib/labels';
+import { monthRange } from '../../lib/seasons';
+
+export const getStaticPaths = (async () => {
+  const experiences = await getEntries('experiences');
+  return experiences.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}) satisfies GetStaticPaths;
+
+const { entry } = Astro.props;
+const e = entry.data;
+const { Content } = await render(entry);
+const destinations = e.destinations.length ? await getRefs(e.destinations) : [];
+const destIds = new Set(e.destinations.map((r) => r.id));
+const overlap = (t: { data: { destinations: { id: string }[] } }) =>
+  t.data.destinations.filter((r) => destIds.has(r.id)).length;
+const tours = (await getEntries('tours'))
+  .filter((t) => overlap(t) > 0)
+  .sort((a, b) => overlap(b) - overlap(a) || byOrder(a, b))
+  .slice(0, 3);
+const path = `/experiences/${entry.id}`;
+---
+
+<PageLayout
+  title={e.seo.title}
+  description={e.seo.description}
+  breadcrumbs={[
+    { name: 'Experiences', href: '/experiences' },
+    { name: e.title, href: path },
+  ]}
+  jsonLd={[faqSchema(e.faqs)].filter((x) => !!x)}
+>
+  <PageHero
+    eyebrow="Experience"
+    title={e.title}
+    intro={e.summary}
+    image={e.heroImage}
+    imageAlt={e.heroAlt}
+    tone={e.tone}
+  />
+
+  <section class="container-site grid gap-12 pb-16 lg:grid-cols-[2fr_1fr]">
+    <div>
+      <div class="prose">
+        <Content />
+      </div>
+      {e.bestMonths.length > 0 && e.bestMonths.length < 12 && (
+        <section class="mt-14" aria-labelledby="when-heading">
+          <h2 id="when-heading" class="text-h2">
+            When to go
+          </h2>
+          <MonthBar bestMonths={e.bestMonths} class="mt-6" />
+        </section>
+      )}
+    </div>
+    <aside class="space-y-4 lg:sticky lg:top-28 lg:self-start">
+      {e.highlights.length > 0 && (
+        <div class="rounded-media bg-surface p-6 ring-1 ring-line">
+          <h2 class="text-xl font-semibold">Highlights</h2>
+          <ul class="mt-4 space-y-3 text-sm">
+            {e.highlights.map((h) => (
+              <li class="flex gap-3">
+                <Icon name="check" class="mt-0.5 size-4 shrink-0 text-tea-600 dark:text-lagoon-300" />
+                {h}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      <a
+        href={`/plan-your-trip?interest=${encodeURIComponent(e.title)}`}
+        class="flex min-h-12 items-center justify-center rounded-pill bg-cta px-4 text-center font-semibold text-cta-text"
+      >
+        Plan a trip around this
+      </a>
+    </aside>
+  </section>
+
+  {destinations.length > 0 && (
+    <section class="container-site pb-16" aria-labelledby="where-heading">
+      <h2 id="where-heading" class="text-h2">
+        Where to go
+      </h2>
+      <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {destinations.map((d) => (
+          <Card
+            href={`/destinations/${d.id}`}
+            title={d.data.title}
+            text={d.data.summary}
+            meta={`Best: ${monthRange(d.data.bestMonths)}`}
+            tone={d.data.tone}
+            image={d.data.heroImage}
+            imageAlt={d.data.heroAlt}
+          />
+        ))}
+      </div>
+    </section>
+  )}
+
+  {tours.length > 0 && (
+    <section class="container-site pb-16" aria-labelledby="tours-heading">
+      <h2 id="tours-heading" class="text-h2">
+        Tours to match
+      </h2>
+      <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {tours.map((t) => (
+          <Card
+            href={`/tours/${t.id}`}
+            title={t.data.title}
+            text={t.data.summary}
+            badge={`${t.data.durationDays} days`}
+            meta={tourPrice(t.data)}
+            tone={t.data.tone}
+            image={t.data.heroImage}
+            imageAlt={t.data.heroAlt}
+          />
+        ))}
+      </div>
+    </section>
+  )}
+
+  <FaqSection faqs={e.faqs} />
+  <CtaBlock tone={e.tone === 'sand' ? 'ocean' : e.tone} />
+</PageLayout>

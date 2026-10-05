@@ -1,46 +1,200 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import { SITE } from '../lib/site';
+import PageLayout from '../layouts/PageLayout.astro';
+import Hero from '../components/home/Hero.astro';
+import Bento from '../components/home/Bento.astro';
+import IslandExplorer from '../components/home/IslandExplorer.astro';
+import ScrollStory from '../components/home/ScrollStory.astro';
+import ReviewWall from '../components/home/ReviewWall.astro';
+import SectionHeading from '../components/ui/SectionHeading.astro';
+import Card from '../components/ui/Card.astro';
+import Button from '../components/ui/Button.astro';
+import Icon from '../components/ui/Icon.astro';
+import CtaBlock from '../components/ui/CtaBlock.astro';
+import { getEntries, byOrder } from '../lib/content';
 import { travelAgencySchema } from '../lib/schema-org';
+import { tourPrice, dateFmt } from '../lib/labels';
+import { SITE } from '../lib/site';
 
-// Phase 0 "coming soon" page — replaced by the real home page in Phase 2.
-const whatsappLink = `${SITE.whatsapp}?text=${encodeURIComponent('Hello Paradise Travels, I would like help planning a trip to Sri Lanka.')}`;
+const tours = (await getEntries('tours')).sort(byOrder);
+const featured = [
+  ...tours.filter((t) => t.data.featured),
+  ...tours.filter(
+    (t) => !t.data.featured && (t.data.styles.includes('honeymoon') || t.data.styles.includes('ayurveda')),
+  ),
+].slice(0, 5);
+const hotels = (await getEntries('hotels')).slice(0, 4);
+const guides = (await getEntries('guides'))
+  .sort((a, b) => b.data.published.getTime() - a.data.published.getTime())
+  .slice(0, 3);
+const leader = (await getEntries('team')).find((t) => t.data.order === 1);
+
+const why = [
+  {
+    icon: 'clock',
+    title: `Since ${SITE.foundingYear}`,
+    text: 'Nearly two decades of arranging travel from our office in Nugegoda, Colombo.',
+  },
+  {
+    icon: 'users',
+    title: 'One team, end to end',
+    text: 'Flights, visa, hotels, driver and guides — one point of contact for all of it.',
+  },
+  {
+    icon: 'compass',
+    title: 'Local knowledge',
+    text: 'Honest advice on seasons, distances and crowds, from people who live here.',
+  },
+  {
+    icon: 'whatsapp',
+    title: 'Real people on WhatsApp',
+    text: 'Message the same team before, during and after your trip.',
+  },
+  { icon: 'bed', title: 'Partner hotel rates', text: 'Contracted rates and packages with hotels around the island.' },
+] as const;
 ---
 
-<BaseLayout
-  title="Paradise Travels — Sri Lanka Travel Agency Since 2007"
-  description="Paradise Travels, Colombo travel agency since 2007: Sri Lanka tours, partner hotel rates, flights, visas, transport, guides, events and Ayurveda. New site coming soon."
+<PageLayout
+  title="Sri Lanka Tours, Hotels & Travel Agency | Paradise Travels"
+  description="Colombo travel agency since 2007: tailor-made Sri Lanka tours, partner hotel rates, flights, ETA and visa help, drivers, guides, events and Ayurveda."
   jsonLd={[travelAgencySchema()]}
+  overlayHeader
 >
-  <section class="mx-auto flex min-h-dvh max-w-(--container-site) flex-col justify-center gap-8 px-4 py-16 sm:px-10">
-    <p class="text-sm font-semibold tracking-[0.2em] text-primary uppercase">
-      {SITE.legalName} · Since {SITE.foundingYear}
-    </p>
-    <h1 class="max-w-[14ch] text-h1">Sri Lanka, planned end-to-end.</h1>
-    <p class="max-w-[60ch] text-muted">
-      Flights, visas, handpicked hotels at partner rates, private drivers, expert guides and Ayurveda retreats —
-      arranged by one Colombo team that has been doing this since {SITE.foundingYear}. Our new website is on its way.
-    </p>
-    <div class="flex flex-wrap gap-4">
-      <a
-        class="inline-flex min-h-12 items-center rounded-pill bg-cta px-6 font-semibold text-cta-text transition-transform duration-200 ease-travel hover:-translate-y-0.5"
-        href={whatsappLink}
-        rel="noopener"
-      >
-        Message us on WhatsApp
-      </a>
-      <a
-        class="inline-flex min-h-12 items-center rounded-pill border border-current px-6 font-semibold text-primary"
-        href={`mailto:${SITE.email}`}
-      >
-        {SITE.email}
-      </a>
+  <Hero />
+  <Bento />
+  <IslandExplorer />
+
+  <section class="container-site py-24" aria-labelledby="tours-heading">
+    <div class="flex flex-wrap items-end justify-between gap-6">
+      <SectionHeading eyebrow="Tours" title="Start with a route. Make it yours." id="tours-heading" />
+      <Button href="/tours" variant="secondary">
+        All tours <Icon name="arrow" class="size-4" />
+      </Button>
     </div>
-    <address class="text-sm text-muted not-italic">
-      {SITE.addressLine} ·
-      <a class="underline underline-offset-4" href={`tel:${SITE.phoneE164}`}>
-        {SITE.phone}
-      </a>
-    </address>
+    <div class="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {featured.map((t) => (
+        <Card
+          href={`/tours/${t.id}`}
+          title={t.data.title}
+          text={t.data.summary}
+          badge={`${t.data.durationDays} days`}
+          meta={tourPrice(t.data)}
+          image={t.data.heroImage}
+          imageAlt={t.data.heroAlt}
+          tone={t.data.tone}
+        />
+      ))}
+    </div>
   </section>
-</BaseLayout>
+
+  <section class="bg-sand-100 py-24 text-ink-900" aria-labelledby="deals-heading">
+    <div class="container-site">
+      <div class="flex flex-wrap items-end justify-between gap-6">
+        <div class="max-w-3xl">
+          <p class="reveal eyebrow text-ocean-700!">Hotel Deals</p>
+          <h2 id="deals-heading" class="reveal mt-3 text-h2">
+            Partner rates you won’t find on booking sites.
+          </h2>
+          <p class="reveal mt-5 text-lg text-[#4a4f53]">
+            We hold contracted rates with hotels around the island. Tell us where and when — we reply with options and a
+            quote.
+          </p>
+        </div>
+        <Button href="/hotel-deals">
+          See hotel deals <Icon name="arrow" class="size-4" />
+        </Button>
+      </div>
+      {hotels.length > 0 && (
+        <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {hotels.map((h) => (
+            <Card
+              href={`/hotel-deals/${h.id}`}
+              title={h.data.name}
+              eyebrow={h.data.area}
+              badge="Paradise rate"
+              badgeTone="gold"
+              image={h.data.heroImage}
+              imageAlt={h.data.heroAlt}
+              tone={h.data.tone}
+              meta="Request this rate"
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+
+  <ScrollStory />
+
+  <section class="bg-surface py-24" aria-labelledby="why-heading">
+    <div class="container-site">
+      <SectionHeading eyebrow="Why Paradise Travels" title="A local partner, not a call centre." id="why-heading" />
+      <ul class="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-5">
+        {why.map((w) => (
+          <li class="reveal">
+            <Icon name={w.icon} class="size-8 text-ocean-500 dark:text-lagoon-300" />
+            <h3 class="mt-4 text-xl font-semibold">{w.title}</h3>
+            <p class="mt-2 text-sm text-muted">{w.text}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <ReviewWall limit={6} />
+
+  <section class="container-site py-24" aria-labelledby="guides-heading">
+    <div class="flex flex-wrap items-end justify-between gap-6">
+      <SectionHeading eyebrow="Travel Guide" title="Know before you go." id="guides-heading" />
+      <Button href="/travel-guide" variant="secondary">
+        All guides <Icon name="arrow" class="size-4" />
+      </Button>
+    </div>
+    <div class="mt-12 grid gap-6 md:grid-cols-3">
+      {guides.map((g) => (
+        <Card
+          href={`/travel-guide/${g.id}`}
+          title={g.data.title}
+          text={g.data.description}
+          eyebrow={`Last checked ${dateFmt.format(g.data.lastChecked)}`}
+          image={g.data.heroImage}
+          imageAlt={g.data.heroAlt}
+          tone={g.data.tone}
+          aspect="aspect-[16/9]"
+        />
+      ))}
+    </div>
+  </section>
+
+  {leader && (
+    <section class="container-site pb-24" aria-labelledby="leader-heading">
+      <div class="reveal grid gap-8 rounded-media bg-sand-100 p-8 text-ink-900 sm:p-12 md:grid-cols-[auto_1fr] md:items-center">
+        <div
+          class="grid size-28 place-items-center rounded-full bg-ocean-900 font-display text-3xl text-gold-300"
+          aria-hidden="true"
+        >
+          {leader.data.name
+            .split(' ')
+            .map((n) => n[0])
+            .join('')}
+        </div>
+        <div>
+          <h2 id="leader-heading" class="text-3xl font-semibold">
+            A family business, personally run.
+          </h2>
+          <p class="mt-3 max-w-[60ch] text-[#4a4f53]">
+            Paradise Travels has been led from our Colombo office since {SITE.foundingYear}. When you plan with us, you
+            plan with the people who answer the phone.
+          </p>
+          <p class="mt-4 text-sm font-semibold">
+            {leader.data.name} · {leader.data.role}
+          </p>
+          <a href="/about" class="mt-2 inline-block text-sm font-semibold text-ocean-700 underline underline-offset-4">
+            Our story
+          </a>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <CtaBlock />
+</PageLayout>

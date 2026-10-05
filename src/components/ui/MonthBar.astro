@@ -1,0 +1,31 @@
+---
+import { MONTHS, MONTHS_LONG, monthRange } from '../../lib/seasons';
+
+// Best-time month chart. Colour is not the only signal: good months are also marked with a dot + text summary.
+interface Props {
+  bestMonths: number[];
+  class?: string;
+}
+const { bestMonths, class: className } = Astro.props;
+const good = new Set(bestMonths);
+---
+
+<div class={className}>
+  <p class="mb-3 text-sm font-semibold">Best time: {monthRange(bestMonths)}</p>
+  <ol class="grid grid-cols-6 gap-1 sm:grid-cols-12" aria-label="Month by month">
+    {MONTHS.map((m, i) => (
+      <li
+        class:list={[
+          'flex flex-col items-center gap-1 rounded-lg py-2 text-xs',
+          good.has(i + 1) ? 'bg-tea-600 font-semibold text-white' : 'bg-line/60 text-muted',
+        ]}
+      >
+        <span aria-hidden="true">{m}</span>
+        <span aria-hidden="true">{good.has(i + 1) ? '●' : '○'}</span>
+        <span class="sr-only">
+          {MONTHS_LONG[i]}: {good.has(i + 1) ? 'good time to visit' : 'off season'}
+        </span>
+      </li>
+    ))}
+  </ol>
+</div>

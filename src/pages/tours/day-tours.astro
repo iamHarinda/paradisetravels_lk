@@ -1,0 +1,70 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import PageHero from '../../components/ui/PageHero.astro';
+import Icon from '../../components/ui/Icon.astro';
+import CtaBlock from '../../components/ui/CtaBlock.astro';
+import Button from '../../components/ui/Button.astro';
+
+// Day tours / Day Outing Packages hub (docs/03). Individual day-tour pages come in phase 2.
+const ideas = [
+  {
+    title: 'White-water rafting in Kitulgala',
+    text: 'A morning on the river in the hills east of Colombo.',
+    icon: 'compass',
+  },
+  {
+    title: 'Galle Fort day trip',
+    text: 'Down the Southern Expressway to walk the ramparts and lanes of the fort.',
+    icon: 'pin',
+  },
+  {
+    title: 'Kandy day trip',
+    text: 'The Temple of the Sacred Tooth Relic, the lake and the botanic gardens.',
+    icon: 'star',
+  },
+  { title: 'Safari day', text: 'An early start for a national-park jeep safari.', icon: 'sun' },
+  { title: 'Colombo city tour', text: 'Markets, temples, colonial Fort and sunset on Galle Face Green.', icon: 'grid' },
+  {
+    title: 'Corporate & school outings',
+    text: 'Group days out with transport, meals and activities planned for you.',
+    icon: 'users',
+  },
+] as const;
+---
+
+<PageLayout
+  title="Day Tours & Day Outings from Colombo | Paradise"
+  description="Day tours and day outing packages from Colombo: rafting in Kitulgala, Galle Fort, Kandy, safaris and city tours — for visitors, companies, schools and families."
+  breadcrumbs={[
+    { name: 'Tours', href: '/tours' },
+    { name: 'Day tours', href: '/tours/day-tours' },
+  ]}
+>
+  <PageHero
+    eyebrow="Day tours"
+    title="Day tours & outings from Colombo"
+    intro="One day is enough for a real Sri Lankan adventure. We plan day trips for visitors with a free day, and outings for companies, schools and families."
+    tone="wild"
+  />
+  <section class="container-site pb-16">
+    <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {ideas.map((i) => (
+        <li class="reveal rounded-media bg-surface p-6 ring-1 ring-line">
+          <Icon name={i.icon} class="size-8 text-ocean-500 dark:text-lagoon-300" />
+          <h2 class="mt-4 text-2xl font-semibold">{i.title}</h2>
+          <p class="mt-2 text-muted">{i.text}</p>
+        </li>
+      ))}
+    </ul>
+    <p class="mt-10 max-w-2xl text-muted">
+      Prices depend on group size, vehicle and inclusions. Send us your date and group size for a quote.
+    </p>
+    <div class="mt-6 flex flex-wrap gap-3">
+      <Button href="/plan-your-trip?interest=Day%20tour">Ask for a day-tour quote</Button>
+      <Button href="/services/day-outings" variant="secondary">
+        Day outing packages
+      </Button>
+    </div>
+  </section>
+  <CtaBlock tone="wild" />
+</PageLayout>

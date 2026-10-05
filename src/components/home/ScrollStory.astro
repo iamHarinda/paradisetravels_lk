@@ -1,0 +1,97 @@
+---
+import Media from '../ui/Media.astro';
+
+// "A journey across the island" (docs/04 §6 pinned storytelling). Without JS / on mobile / with reduced motion
+// it is a simple stacked list; on desktop GSAP ScrollTrigger crossfades the pinned media as the text scrolls.
+const chapters = [
+  {
+    title: 'The coast',
+    text: 'Fort walls in Galle, whales off Mirissa, surf at Arugam Bay — and a beach in season all year.',
+    tone: 'ocean',
+    href: '/experiences/beaches',
+  },
+  {
+    title: 'The tea hills',
+    text: 'Misty estates, planters’ bungalows and the slow, beautiful train from Kandy to Ella.',
+    tone: 'tea',
+    href: '/experiences/tea-country',
+  },
+  {
+    title: 'The ancient cities',
+    text: 'Sigiriya at sunrise, painted caves and two-thousand-year-old stupas.',
+    tone: 'heritage',
+    href: '/experiences/culture-heritage',
+  },
+  {
+    title: 'The wild',
+    text: 'Leopards in Yala and herds of elephants in Udawalawe.',
+    tone: 'wild',
+    href: '/experiences/wildlife-safaris',
+  },
+] as const;
+---
+
+<section class="container-site py-24" aria-labelledby="story-heading" data-story>
+  <p class="reveal eyebrow">A journey across the island</p>
+  <h2 id="story-heading" class="reveal mt-3 max-w-[16ch] text-h2">
+    Four landscapes, one trip.
+  </h2>
+  <div class="mt-12 lg:grid lg:grid-cols-2 lg:gap-16">
+    <div class="hidden lg:block">
+      <div class="sticky top-28 aspect-[4/5] overflow-hidden rounded-media" data-story-media>
+        {chapters.map((c, i) => (
+          <div class:list={['absolute inset-0 transition-opacity duration-700', i > 0 && 'opacity-0']} data-story-layer>
+            <Media tone={c.tone} sizes="(min-width: 1024px) 50vw, 100vw" />
+          </div>
+        ))}
+      </div>
+    </div>
+    <ol class="space-y-6 lg:space-y-0">
+      {chapters.map((c) => (
+        <li class="lg:flex lg:min-h-[80vh] lg:items-center" data-story-step>
+          <div class="reveal">
+            <div class="mb-6 aspect-[4/3] overflow-hidden rounded-media lg:hidden">
+              <Media tone={c.tone} sizes="100vw" />
+            </div>
+            <h3 class="text-4xl font-semibold">{c.title}</h3>
+            <p class="mt-3 max-w-[40ch] text-lg text-muted">{c.text}</p>
+            <a href={c.href} class="mt-4 inline-block font-semibold text-primary underline underline-offset-4">
+              Explore {c.title.replace('The ', '')}
+            </a>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<script>
+  import { loadGsap, prefersReducedMotion, whenNear } from '../../scripts/gsap';
+
+  const story = document.querySelector<HTMLElement>('[data-story]');
+  if (story && !prefersReducedMotion() && window.matchMedia('(min-width: 1024px)').matches) {
+    whenNear(story, async () => {
+      const { gsap, ScrollTrigger } = await loadGsap();
+      const layers = story.querySelectorAll<HTMLElement>('[data-story-layer]');
+      story.querySelectorAll('[data-story-step]').forEach((step, i) => {
+        ScrollTrigger.create({
+          trigger: step,
+          start: 'top center',
+          end: 'bottom center',
+          onToggle: (self) => {
+            if (!self.isActive) return;
+            layers.forEach((layer, j) =>
+              gsap.to(layer, { opacity: j === i ? 1 : 0, duration: 0.7, ease: 'power2.out' }),
+            );
+          },
+        });
+      });
+      // Subtle parallax on the pinned media (≤ 10%, docs/04 §6).
+      gsap.fromTo(
+        story.querySelector('[data-story-media]'),
+        { yPercent: 4 },
+        { yPercent: -4, ease: 'none', scrollTrigger: { trigger: story, scrub: true } },
+      );
+    });
+  }
+</script>

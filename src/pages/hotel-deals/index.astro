@@ -1,0 +1,129 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import PageHero from '../../components/ui/PageHero.astro';
+import Card from '../../components/ui/Card.astro';
+import Icon from '../../components/ui/Icon.astro';
+import RateRequestForm from '../../components/hotels/RateRequestForm.astro';
+import { getEntries } from '../../lib/content';
+import { REGIONS } from '../../lib/seasons';
+import { itemListSchema } from '../../lib/schema-org';
+
+const hotels = await getEntries('hotels');
+const regions = [...new Set(hotels.map((h) => h.data.region))];
+const steps = [
+  { title: 'Tell us where and when', text: 'Choose a hotel, or just an area and style.' },
+  { title: 'Get a partner-rate quote', text: 'We reply with options and prices for your dates.' },
+  { title: 'Confirm securely', text: 'Pay through a secure payment link and receive your voucher.' },
+  { title: 'Add the extras', text: 'Transfers, a car with driver or tours — same team.' },
+];
+---
+
+<PageLayout
+  title="Sri Lanka Hotel Deals: Partner Rates | Paradise"
+  description="Partner rates at handpicked Sri Lanka hotels: beach resorts, hill-country bungalows, safari lodges and Ayurveda retreats. Request a rate for your dates."
+  breadcrumbs={[{ name: 'Hotel Deals', href: '/hotel-deals' }]}
+  jsonLd={
+    hotels.length ? [itemListSchema(hotels.map((h) => ({ name: h.data.name, path: `/hotel-deals/${h.id}` })))] : []
+  }
+>
+  <PageHero
+    eyebrow="Hotel Deals"
+    title="Partner rates at handpicked hotels"
+    intro="We hold contracted rates with hotels around Sri Lanka — often better value than the big booking sites, especially combined with transfers or touring. Book just the hotel, or the whole trip."
+    tone="ocean"
+  />
+
+  <section class="container-site pb-16" aria-labelledby="how-heading">
+    <h2 id="how-heading" class="sr-only">
+      How it works
+    </h2>
+    <ol class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      {steps.map((s, i) => (
+        <li class="reveal rounded-card bg-surface p-6 ring-1 ring-line">
+          <span class="grid size-9 place-items-center rounded-full bg-gold-500 text-sm font-bold text-ocean-900">
+            {i + 1}
+          </span>
+          <h3 class="mt-4 text-xl font-semibold">{s.title}</h3>
+          <p class="mt-2 text-sm text-muted">{s.text}</p>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  {hotels.length > 0 ? (
+    <section class="container-site pb-16" aria-labelledby="hotels-heading" data-hotel-filters>
+      <h2 id="hotels-heading" class="text-h2">
+        Partner hotels
+      </h2>
+      {regions.length > 1 && (
+        <div class="mt-6 flex flex-wrap gap-2" role="group" aria-label="Filter by region">
+          <button type="button" class="choice" aria-pressed="true" data-region="">
+            All
+          </button>
+          {regions.map((r) => (
+            <button type="button" class="choice" aria-pressed="false" data-region={r}>
+              {REGIONS[r].name}
+            </button>
+          ))}
+        </div>
+      )}
+      <ul class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {hotels.map((h) => (
+          <li data-hotel-region={h.data.region}>
+            <Card
+              href={`/hotel-deals/${h.id}`}
+              title={h.data.name}
+              eyebrow={`${h.data.area}${h.data.stars ? ` · ${h.data.stars}★` : ''}`}
+              text={h.data.deal?.label}
+              badge="Paradise rate"
+              badgeTone="gold"
+              meta="Request this rate"
+              tone={h.data.tone}
+              image={h.data.heroImage}
+              imageAlt={h.data.heroAlt}
+              class="h-full"
+            />
+          </li>
+        ))}
+      </ul>
+    </section>
+  ) : (
+    <section class="container-site pb-16">
+      <div class="rounded-media border border-dashed border-line p-8">
+        <p class="flex items-center gap-3 text-lg font-semibold">
+          <Icon name="bed" class="size-6 text-primary" /> Our partner hotel list is being added.
+        </p>
+        <p class="mt-2 max-w-2xl text-muted">
+          Tell us where you want to stay below and we will reply with partner-rate options for your dates.
+        </p>
+      </div>
+    </section>
+  )}
+
+  <section class="container-site grid gap-12 pb-24 lg:grid-cols-[1fr_1.4fr]" aria-labelledby="request-heading">
+    <div>
+      <h2 id="request-heading" class="text-h2">
+        Request a rate
+      </h2>
+      <p class="mt-4 text-muted">
+        Tell us the hotel or area, your dates and who is travelling. We check availability with our partners and send a
+        quote. Availability is confirmed by our team — prices are not live.
+      </p>
+    </div>
+    <div class="rounded-media bg-surface p-6 ring-1 ring-line sm:p-8">
+      <RateRequestForm />
+    </div>
+  </section>
+</PageLayout>
+
+<script>
+  const root = document.querySelector('[data-hotel-filters]');
+  root?.querySelectorAll<HTMLButtonElement>('button[data-region]').forEach((btn) =>
+    btn.addEventListener('click', () => {
+      root.querySelectorAll('button[data-region]').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+      root.querySelectorAll<HTMLElement>('[data-hotel-region]').forEach((li) => {
+        li.hidden = !!btn.dataset.region && li.dataset.hotelRegion !== btn.dataset.region;
+      });
+    }),
+  );
+</script>

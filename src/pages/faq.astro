@@ -1,0 +1,43 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import PageHero from '../components/ui/PageHero.astro';
+import Accordion from '../components/ui/Accordion.astro';
+import CtaBlock from '../components/ui/CtaBlock.astro';
+import { getEntries, byOrder } from '../lib/content';
+import { faqSchema } from '../lib/schema-org';
+
+const faqs = (await getEntries('faqs')).sort((a, b) => byOrder(a, b));
+const categories = [
+  ['booking', 'Booking'],
+  ['payments', 'Payments'],
+  ['travel', 'Travelling in Sri Lanka'],
+  ['services', 'Our services'],
+] as const;
+const items = (cat: string) =>
+  faqs.filter((f) => f.data.category === cat).map((f) => ({ q: f.data.question, a: f.data.answer }));
+---
+
+<PageLayout
+  title="FAQ: Booking a Sri Lanka Trip | Paradise Travels"
+  description="Answers to common questions about booking with Paradise Travels: how it works, payments, the Sri Lanka ETA, best time to visit and getting around the island."
+  breadcrumbs={[{ name: 'FAQ', href: '/faq' }]}
+  jsonLd={[faqSchema(faqs.map((f) => ({ q: f.data.question, a: f.data.answer })))].filter((x) => !!x)}
+>
+  <PageHero eyebrow="FAQ" title="Questions, answered" media={false} />
+  <section class="container-site max-w-4xl space-y-14 pb-24">
+    {categories.map(([id, label]) =>
+      items(id).length ? (
+        <section aria-labelledby={`faq-${id}`}>
+          <h2 id={`faq-${id}`} class="mb-4 text-3xl font-semibold">
+            {label}
+          </h2>
+          <Accordion items={items(id)} />
+        </section>
+      ) : null,
+    )}
+  </section>
+  <CtaBlock
+    title="Still have a question?"
+    text="Ask us on WhatsApp or send your trip details — we are happy to help."
+  />
+</PageLayout>

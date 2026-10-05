@@ -1,0 +1,117 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import PageHero from '../../components/ui/PageHero.astro';
+import Card from '../../components/ui/Card.astro';
+import CtaBlock from '../../components/ui/CtaBlock.astro';
+import { getEntries, byOrder } from '../../lib/content';
+import { itemListSchema } from '../../lib/schema-org';
+import { STYLE_LABELS, tourPrice } from '../../lib/labels';
+
+const tours = (await getEntries('tours')).sort((a, b) => a.data.durationDays - b.data.durationDays || byOrder(a, b));
+const styles = [...new Set(tours.flatMap((t) => t.data.styles))];
+const durations = [
+  { id: 'short', label: 'Up to 5 days', test: (n: number) => n <= 5 },
+  { id: 'week', label: '6–9 days', test: (n: number) => n >= 6 && n <= 9 },
+  { id: 'long', label: '10+ days', test: (n: number) => n >= 10 },
+];
+const durationOf = (n: number) => durations.find((d) => d.test(n))!.id;
+---
+
+<PageLayout
+  title="Sri Lanka Tour Packages & Itineraries | Paradise"
+  description="Private Sri Lanka tour packages from 3 to 14 days: culture, tea country, wildlife, beaches, honeymoons and Ayurveda. Every itinerary can be tailored to you."
+  breadcrumbs={[{ name: 'Tours', href: '/tours' }]}
+  jsonLd={[itemListSchema(tours.map((t) => ({ name: t.data.title, path: `/tours/${t.id}` })))]}
+>
+  <PageHero
+    eyebrow="Tours"
+    title="Sri Lanka tours, built around you"
+    intro="Every itinerary is private and a starting point — change the days, the hotels or the pace. Filter by length and style."
+    media={false}
+  />
+
+  <section class="container-site pb-24" data-filters>
+    <form class="flex flex-wrap gap-6 rounded-media bg-surface p-5 ring-1 ring-line" aria-label="Filter tours">
+      <fieldset>
+        <legend class="mb-2 text-sm font-semibold">Length</legend>
+        <div class="flex flex-wrap gap-2">
+          {durations.map((d) => (
+            <label class="inline-flex min-h-10 cursor-pointer items-center gap-2 rounded-pill border border-line px-4 text-sm has-checked:border-primary has-checked:bg-primary/10">
+              <input type="checkbox" name="duration" value={d.id} class="accent-ocean-700" />
+              {d.label}
+            </label>
+          ))}
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend class="mb-2 text-sm font-semibold">Style</legend>
+        <div class="flex flex-wrap gap-2">
+          {styles.map((s) => (
+            <label class="inline-flex min-h-10 cursor-pointer items-center gap-2 rounded-pill border border-line px-4 text-sm has-checked:border-primary has-checked:bg-primary/10">
+              <input type="checkbox" name="style" value={s} class="accent-ocean-700" />
+              {STYLE_LABELS[s]}
+            </label>
+          ))}
+        </div>
+      </fieldset>
+    </form>
+    <p class="mt-6 text-sm text-muted" aria-live="polite" data-count>
+      {tours.length} tours
+    </p>
+
+    <ul class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {tours.map((t) => (
+        <li data-duration={durationOf(t.data.durationDays)} data-styles={t.data.styles.join(' ')}>
+          <Card
+            href={`/tours/${t.id}`}
+            title={t.data.title}
+            text={t.data.summary}
+            badge={`${t.data.durationDays} days`}
+            meta={tourPrice(t.data)}
+            tone={t.data.tone}
+            image={t.data.heroImage}
+            imageAlt={t.data.heroAlt}
+            class="h-full"
+          />
+        </li>
+      ))}
+      <li data-duration="short" data-styles="">
+        <Card
+          href="/tours/day-tours"
+          title="Day tours & outings"
+          text="One-day escapes from Colombo — wildlife, rafting, beaches or culture."
+          badge="1 day"
+          tone="wild"
+          class="h-full"
+        />
+      </li>
+    </ul>
+  </section>
+
+  <CtaBlock
+    title="Want something different?"
+    text="Every trip we plan is tailor-made. Tell us what you have in mind."
+  />
+</PageLayout>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-filters]');
+  if (root) {
+    const form = root.querySelector('form')!;
+    const items = [...root.querySelectorAll<HTMLElement>('li[data-duration]')];
+    const count = root.querySelector('[data-count]')!;
+    form.addEventListener('change', () => {
+      const data = new FormData(form);
+      const durations = data.getAll('duration') as string[];
+      const styles = data.getAll('style') as string[];
+      let shown = 0;
+      for (const li of items) {
+        const okD = !durations.length || durations.includes(li.dataset.duration!);
+        const okS = !styles.length || styles.some((s) => li.dataset.styles!.split(' ').includes(s));
+        li.hidden = !(okD && okS);
+        if (!li.hidden) shown++;
+      }
+      count.textContent = `${shown} tour${shown === 1 ? '' : 's'}`;
+    });
+  }
+</script>

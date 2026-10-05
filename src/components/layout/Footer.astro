@@ -1,0 +1,108 @@
+---
+import Logo from './Logo.astro';
+import Icon from '../ui/Icon.astro';
+import { SITE, whatsappLink } from '../../lib/site';
+
+const columns = [
+  {
+    title: 'Explore',
+    links: [
+      ['Destinations', '/destinations'],
+      ['Experiences', '/experiences'],
+      ['Tours', '/tours'],
+      ['Hotel Deals', '/hotel-deals'],
+      ['Travel Guide', '/travel-guide'],
+    ],
+  },
+  {
+    title: 'Services',
+    links: [
+      ['Flight tickets', '/services/flight-tickets'],
+      ['Visa & ETA help', '/services/visa-assistance'],
+      ['Transport & chauffeur', '/services/transport-chauffeur'],
+      ['Conferences & events', '/services/conferences-mice'],
+      ['All services', '/services'],
+    ],
+  },
+  {
+    title: 'Company',
+    links: [
+      ['About us', '/about'],
+      ['Reviews', '/reviews'],
+      ['FAQ', '/faq'],
+      ['Contact', '/contact'],
+      ['Plan your trip', '/plan-your-trip'],
+    ],
+  },
+];
+const legal = [
+  ['Terms', '/terms'],
+  ['Privacy', '/privacy'],
+  ['Cancellation policy', '/cancellation-policy'],
+];
+---
+
+<footer class="bg-ocean-900 text-white/80">
+  <div class="container-site grid gap-12 py-16 lg:grid-cols-[1.4fr_repeat(3,1fr)]">
+    <div>
+      <Logo class="text-white [&>span:first-child]:bg-white/10" />
+      <p class="mt-4 max-w-sm text-sm">
+        {SITE.legalName}. A Colombo travel agency since {SITE.foundingYear} — tours, partner hotel rates, flights,
+        visas, transport, guides, events and Ayurveda.
+      </p>
+      <address class="mt-6 space-y-2 text-sm not-italic">
+        <a href={SITE.mapsUrl} class="flex gap-2 hover:text-white" rel="noopener">
+          <Icon name="pin" class="mt-0.5 size-4 shrink-0" />
+          {SITE.addressLine}
+        </a>
+        <a href={`tel:${SITE.phoneE164}`} class="flex gap-2 hover:text-white" data-track="phone">
+          <Icon name="phone" class="mt-0.5 size-4 shrink-0" />
+          {SITE.phone}
+        </a>
+        <a href={whatsappLink()} class="flex gap-2 hover:text-white" rel="noopener" data-track="whatsapp">
+          <Icon name="whatsapp" class="mt-0.5 size-4 shrink-0" />
+          WhatsApp & KakaoTalk: {SITE.phone}
+        </a>
+        <a href={`mailto:${SITE.email}`} class="flex gap-2 hover:text-white" data-track="email">
+          <Icon name="mail" class="mt-0.5 size-4 shrink-0" />
+          {SITE.email}
+        </a>
+      </address>
+    </div>
+    {columns.map((col) => (
+      <nav aria-label={col.title}>
+        <p class="font-semibold text-white">{col.title}</p>
+        <ul class="mt-4 space-y-1 text-sm">
+          {col.links.map(([label, href]) => (
+            <li>
+              <a href={href} class="inline-block py-1.5 hover:text-white">
+                {label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    ))}
+  </div>
+  <div class="border-t border-white/10">
+    <div class="container-site flex flex-wrap items-center justify-between gap-4 py-6 pb-28 text-xs md:pb-6">
+      <p>
+        © {new Date().getFullYear()} {SITE.legalName}
+      </p>
+      <ul class="flex flex-wrap gap-x-5 gap-y-2">
+        {legal.map(([label, href]) => (
+          <li>
+            <a href={href} class="hover:text-white">
+              {label}
+            </a>
+          </li>
+        ))}
+        <li>
+          <a href={SITE.facebook} class="hover:text-white" rel="noopener">
+            Facebook
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</footer>

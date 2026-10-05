@@ -1,0 +1,43 @@
+---
+import Icon from '../ui/Icon.astro';
+import type { IconName } from '../../lib/icons';
+import SectionHeading from '../ui/SectionHeading.astro';
+import { getEntries, byOrder } from '../../lib/content';
+
+// "All-in-one" bento (docs/04 §5.4): 12 services as tiles, hover lift + CSS icon micro-animation.
+const services = (await getEntries('services')).sort(byOrder);
+const big = new Set(['flight-tickets', 'ayurveda-packages']);
+---
+
+<section class="container-site py-24" aria-labelledby="bento-heading">
+  <SectionHeading eyebrow="Everything in one place" title="One team for your whole journey." id="bento-heading" />
+  <ul class="mt-12 grid auto-rows-[minmax(150px,auto)] grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4">
+    {services.map((s) => (
+      <li class:list={['reveal', big.has(s.id) && 'col-span-2 md:row-span-2']}>
+        <a
+          href={`/services/${s.id}`}
+          class:list={[
+            'lift group flex h-full flex-col justify-between gap-6 rounded-card p-5 ring-1 ring-line sm:p-6',
+            big.has(s.id) ? 'bg-ocean-900 text-white' : 'bg-surface',
+          ]}
+        >
+          <Icon
+            name={s.data.icon as IconName}
+            class:list={[
+              'size-9 transition-transform duration-300 ease-travel group-hover:-rotate-6 group-hover:scale-110',
+              big.has(s.id) ? 'text-gold-500' : 'text-ocean-500 dark:text-lagoon-300',
+            ]}
+          />
+          <span>
+            <span class:list={['block font-display font-semibold', big.has(s.id) ? 'text-3xl' : 'text-lg']}>
+              {s.data.title}
+            </span>
+            <span class:list={['mt-1 block text-sm', big.has(s.id) ? 'text-white/80' : 'text-muted']}>
+              {s.data.short}
+            </span>
+          </span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</section>

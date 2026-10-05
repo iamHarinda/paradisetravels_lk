@@ -1,0 +1,73 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import PageHero from '../../components/ui/PageHero.astro';
+import Card from '../../components/ui/Card.astro';
+import IslandMap from '../../components/home/IslandMap.astro';
+import CtaBlock from '../../components/ui/CtaBlock.astro';
+import { getEntries, byOrder } from '../../lib/content';
+import { REGIONS, REGION_IDS, monthRange } from '../../lib/seasons';
+import { itemListSchema } from '../../lib/schema-org';
+
+const destinations = (await getEntries('destinations')).sort(byOrder);
+const regions = REGION_IDS.filter((r) => destinations.some((d) => d.data.region === r));
+---
+
+<PageLayout
+  title="Sri Lanka Destinations: Where to Go | Paradise Travels"
+  description="Explore Sri Lanka by region: the Cultural Triangle, hill country, south and east coasts and Colombo. Destination guides, best times to visit and tours."
+  breadcrumbs={[{ name: 'Destinations', href: '/destinations' }]}
+  jsonLd={[itemListSchema(destinations.map((d) => ({ name: d.data.title, path: `/destinations/${d.id}` })))]}
+>
+  <PageHero
+    eyebrow="Destinations"
+    title="Where to go in Sri Lanka"
+    intro="A small island with very different regions — and a different best season for each. Start with the map, or browse by region."
+    media={false}
+  />
+
+  <section class="container-site grid items-start gap-12 pb-16 lg:grid-cols-[1fr_1.4fr]">
+    <div class="rounded-media bg-ocean-900 p-8 text-white lg:sticky lg:top-28">
+      <IslandMap
+        class="mx-auto w-full max-w-xs"
+        places={destinations.map((d) => ({
+          id: d.id,
+          title: d.data.title,
+          region: d.data.region,
+          coords: d.data.coords,
+        }))}
+      />
+    </div>
+    <div class="space-y-16">
+      {regions.map((r) => (
+        <section aria-labelledby={`region-${r}`}>
+          <h2 id={`region-${r}`} class="text-3xl font-semibold">
+            {REGIONS[r].name}
+          </h2>
+          <p class="mt-2 text-muted">
+            {REGIONS[r].blurb} Best roughly {monthRange(REGIONS[r].bestMonths)}.
+          </p>
+          <div class="mt-6 grid gap-6 sm:grid-cols-2">
+            {destinations
+              .filter((d) => d.data.region === r)
+              .map((d) => (
+                <Card
+                  href={`/destinations/${d.id}`}
+                  title={d.data.title}
+                  text={d.data.summary}
+                  meta={`Best: ${monthRange(d.data.bestMonths)}`}
+                  image={d.data.heroImage}
+                  imageAlt={d.data.heroAlt}
+                  tone={d.data.tone}
+                />
+              ))}
+          </div>
+        </section>
+      ))}
+    </div>
+  </section>
+
+  <CtaBlock
+    title="Not sure where to go?"
+    text="Tell us your dates and interests — we will suggest the right regions for your season."
+  />
+</PageLayout>

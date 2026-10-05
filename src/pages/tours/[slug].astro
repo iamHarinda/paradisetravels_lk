@@ -1,0 +1,206 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { render, getEntries as getRefs } from 'astro:content';
+import { getEntries, byOrder } from '../../lib/content';
+import PageLayout from '../../layouts/PageLayout.astro';
+import PageHero from '../../components/ui/PageHero.astro';
+import Card from '../../components/ui/Card.astro';
+import Chip from '../../components/ui/Chip.astro';
+import Icon from '../../components/ui/Icon.astro';
+import MonthBar from '../../components/ui/MonthBar.astro';
+import FaqSection from '../../components/ui/FaqSection.astro';
+import CtaBlock from '../../components/ui/CtaBlock.astro';
+import ItineraryTimeline from '../../components/tours/ItineraryTimeline.astro';
+import RouteMap from '../../components/tours/RouteMap.astro';
+import { faqSchema, touristTripSchema } from '../../lib/schema-org';
+import { STYLE_LABELS, tourPrice } from '../../lib/labels';
+import { whatsappLink } from '../../lib/site';
+
+export const getStaticPaths = (async () => {
+  const tours = await getEntries('tours');
+  return tours.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}) satisfies GetStaticPaths;
+
+const { entry } = Astro.props;
+const t = entry.data;
+const { Content } = await render(entry);
+const destinations = t.destinations.length ? await getRefs(t.destinations) : [];
+const hotels = t.hotels.length ? await getRefs(t.hotels) : [];
+const others = (await getEntries('tours'))
+  .filter((o) => o.id !== entry.id)
+  .sort(
+    (a, b) =>
+      Math.abs(a.data.durationDays - t.durationDays) - Math.abs(b.data.durationDays - t.durationDays) || byOrder(a, b),
+  )
+  .slice(0, 3);
+const path = `/tours/${entry.id}`;
+const page = new URL(path, Astro.site);
+---
+
+<PageLayout
+  title={t.seo.title}
+  description={t.seo.description}
+  breadcrumbs={[
+    { name: 'Tours', href: '/tours' },
+    { name: t.title, href: path },
+  ]}
+  jsonLd={[
+    touristTripSchema({
+      title: t.title,
+      summary: t.summary,
+      path,
+      places: destinations.map((d) => d.data.title),
+      priceFromUSD: t.priceFromUSD,
+    }),
+    faqSchema(t.faqs),
+  ].filter((x) => !!x)}
+>
+  <PageHero
+    eyebrow={`${t.durationDays}-day private tour`}
+    title={t.title}
+    intro={t.summary}
+    image={t.heroImage}
+    imageAlt={t.heroAlt}
+    tone={t.tone}
+  >
+    <div class="mt-6 flex flex-wrap gap-2">
+      {t.styles.map((s) => (
+        <Chip>{STYLE_LABELS[s]}</Chip>
+      ))}
+    </div>
+  </PageHero>
+
+  <section class="container-site grid gap-12 pb-16 lg:grid-cols-[2fr_1fr]">
+    <div>
+      <div class="prose">
+        <Content />
+      </div>
+
+      <section class="mt-14" aria-labelledby="days-heading">
+        <h2 id="days-heading" class="text-h2">
+          Day by day
+        </h2>
+        <div class="mt-8 grid gap-10 md:grid-cols-[1fr_14rem]">
+          <ItineraryTimeline days={t.days} />
+          {destinations.length > 0 && (
+            <RouteMap
+              class="order-first rounded-media bg-ocean-900 p-4 md:order-last md:self-start"
+              stops={destinations.map((d) => ({ title: d.data.title, coords: d.data.coords }))}
+            />
+          )}
+        </div>
+      </section>
+
+      <section class="mt-14 grid gap-8 sm:grid-cols-2" aria-label="What is included">
+        <div>
+          <h2 class="text-2xl font-semibold">Included</h2>
+          <ul class="mt-4 space-y-3 text-sm">
+            {t.inclusions.map((i) => (
+              <li class="flex gap-3">
+                <Icon name="check" class="mt-0.5 size-4 shrink-0 text-tea-600 dark:text-lagoon-300" />
+                {i}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <h2 class="text-2xl font-semibold">Not included</h2>
+          <ul class="mt-4 space-y-3 text-sm">
+            {t.exclusions.map((i) => (
+              <li class="flex gap-3">
+                <Icon name="x" class="mt-0.5 size-4 shrink-0 text-laterite-500" />
+                {i}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <section class="mt-14" aria-labelledby="when-heading">
+        <h2 id="when-heading" class="text-h2">
+          Best time for this route
+        </h2>
+        <MonthBar bestMonths={t.bestMonths} class="mt-6" />
+      </section>
+    </div>
+
+    <aside class="lg:sticky lg:top-28 lg:self-start">
+      <div class="rounded-media bg-surface p-6 ring-1 ring-line">
+        <p class="text-sm text-muted">{t.durationDays} days · private tour</p>
+        <p class="mt-1 text-2xl font-semibold">{tourPrice(t)}</p>
+        {t.priceNote && <p class="mt-2 text-sm text-muted">{t.priceNote}</p>}
+        <a
+          href={`/plan-your-trip?tour=${encodeURIComponent(t.title)}&days=${t.durationDays}`}
+          class="mt-6 flex min-h-12 items-center justify-center rounded-pill bg-cta font-semibold text-cta-text"
+        >
+          Enquire / customise
+        </a>
+        <a
+          href={whatsappLink(`Hello Paradise Travels, I'm interested in the "${t.title}" tour.`, page)}
+          class="mt-3 flex min-h-12 items-center justify-center gap-2 rounded-pill border border-line font-semibold text-tea-600 dark:text-lagoon-300"
+          rel="noopener"
+          data-track="whatsapp"
+        >
+          <Icon name="whatsapp" /> Ask on WhatsApp
+        </a>
+      </div>
+    </aside>
+  </section>
+
+  {hotels.length > 0 && (
+    <section class="container-site pb-16" aria-labelledby="hotels-heading">
+      <h2 id="hotels-heading" class="text-h2">
+        Hotels on this route
+      </h2>
+      <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {hotels.map((h) => (
+          <Card
+            href={`/hotel-deals/${h.id}`}
+            title={h.data.name}
+            eyebrow={h.data.area}
+            tone={h.data.tone}
+            image={h.data.heroImage}
+            imageAlt={h.data.heroAlt}
+          />
+        ))}
+      </div>
+    </section>
+  )}
+
+  <FaqSection faqs={t.faqs} />
+
+  <section class="container-site pb-16" aria-labelledby="more-heading">
+    <h2 id="more-heading" class="text-h2">
+      More tours
+    </h2>
+    <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {others.map((o) => (
+        <Card
+          href={`/tours/${o.id}`}
+          title={o.data.title}
+          text={o.data.summary}
+          badge={`${o.data.durationDays} days`}
+          meta={tourPrice(o.data)}
+          tone={o.data.tone}
+          image={o.data.heroImage}
+          imageAlt={o.data.heroAlt}
+        />
+      ))}
+    </div>
+  </section>
+
+  <CtaBlock tone={t.tone === 'sand' ? 'ocean' : t.tone} />
+
+  <!-- Sticky enquire bar (mobile, above the contact bar) -->
+  <div class="fixed inset-x-3 bottom-[5.25rem] z-30 md:hidden">
+    <a
+      href={`/plan-your-trip?tour=${encodeURIComponent(t.title)}&days=${t.durationDays}`}
+      class="flex min-h-12 items-center justify-between rounded-pill bg-ocean-900 px-5 text-sm font-semibold text-white shadow-xl"
+    >
+      <span>
+        {t.durationDays} days · {tourPrice(t)}
+      </span>
+      <span class="text-gold-300">Enquire →</span>
+    </a>
+  </div>
+</PageLayout>

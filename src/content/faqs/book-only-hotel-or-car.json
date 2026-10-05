@@ -1,0 +1,7 @@
+{
+  "question": "Can I book just a hotel or just a car?",
+  "answer": "Yes. You can book a single service — a hotel, an airport transfer, a car with driver or a flight — or a complete trip.",
+  "category": "booking",
+  "order": 2,
+  "reviewed": false
+}

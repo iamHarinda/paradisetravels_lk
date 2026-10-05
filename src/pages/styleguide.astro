@@ -1,0 +1,175 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import Button from '../components/ui/Button.astro';
+import Badge from '../components/ui/Badge.astro';
+import Chip from '../components/ui/Chip.astro';
+import Card from '../components/ui/Card.astro';
+import Accordion from '../components/ui/Accordion.astro';
+import MonthBar from '../components/ui/MonthBar.astro';
+import Icon from '../components/ui/Icon.astro';
+import { ICONS, type IconName } from '../lib/icons';
+import Breadcrumbs from '../components/layout/Breadcrumbs.astro';
+import RateDisplay from '../components/hotels/RateDisplay.astro';
+import ItineraryTimeline from '../components/tours/ItineraryTimeline.astro';
+
+// Internal component reference (docs/12 Phase 1). noindex, excluded from the sitemap.
+const colours = [
+  'ocean-900',
+  'ocean-700',
+  'ocean-500',
+  'lagoon-300',
+  'tea-600',
+  'gold-500',
+  'gold-300',
+  'laterite-500',
+  'sand-50',
+  'sand-100',
+  'stone-400',
+  'ink-900',
+];
+---
+
+<PageLayout
+  title="Styleguide — Paradise Travels"
+  description="Internal component styleguide for the Paradise Travels website: colour tokens, type scale, buttons, cards, forms and other building blocks. Not for public use."
+  noindex
+>
+  <div class="container-site space-y-20 py-16">
+    <section>
+      <h1 class="text-h1">Styleguide</h1>
+      <p class="mt-4 text-muted">Design tokens and components from docs/04.</p>
+    </section>
+
+    <section>
+      <h2 class="text-h2">Colour</h2>
+      <ul class="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4 lg:grid-cols-6">
+        {colours.map((c) => (
+          <li>
+            <div class="h-20 rounded-card ring-1 ring-line" style={`background: var(--c-${c})`}></div>
+            <p class="mt-2 text-sm">{c}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section>
+      <h2 class="text-h2">Type</h2>
+      <p class="mt-6 text-h1">Heading 1</p>
+      <p class="text-h2 font-display">Heading 2</p>
+      <p class="max-w-[68ch]">
+        Body text — clamp(1rem, 0.3vw + 0.95rem, 1.125rem), line-height 1.6, max 68ch. Sri Lanka is always in season
+        somewhere.
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-h2">Buttons, badges, chips</h2>
+      <div class="mt-6 flex flex-wrap items-center gap-3">
+        <Button>Primary</Button>
+        <Button variant="secondary">Secondary</Button>
+        <Button variant="ghost">Ghost</Button>
+        <Button variant="whatsapp">
+          <Icon name="whatsapp" /> WhatsApp
+        </Button>
+        <span class="rounded-pill bg-ocean-900 p-2">
+          <Button variant="light">Light</Button>
+        </span>
+        <Badge tone="gold">Paradise rate</Badge>
+        <Badge tone="ocean">4-star</Badge>
+        <Chip>Culture</Chip>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="text-h2">Icons</h2>
+      <ul class="mt-6 flex flex-wrap gap-4">
+        {(Object.keys(ICONS) as IconName[]).map((n) => (
+          <li class="flex w-20 flex-col items-center gap-1 text-xs">
+            <Icon name={n} class="size-6" />
+            {n}
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section>
+      <h2 class="text-h2">Cards</h2>
+      <div class="mt-6 grid gap-6 sm:grid-cols-3">
+        <Card
+          href="#"
+          title="Card title"
+          text="Short description of the content."
+          badge="7 days"
+          meta="Price on request"
+          tone="heritage"
+        />
+        <Card href="#" title="Hotel card" eyebrow="Galle Fort" badge="Paradise rate" badgeTone="gold" tone="ocean" />
+        <Card href="#" title="Guide card" eyebrow="Last checked 5 October 2026" tone="tea" aspect="aspect-[16/9]" />
+      </div>
+    </section>
+
+    <section class="grid gap-12 lg:grid-cols-2">
+      <div>
+        <h2 class="text-h2">Accordion</h2>
+        <Accordion
+          class="mt-6"
+          items={[
+            { q: 'Question one?', a: 'Answer one.' },
+            { q: 'Question two?', a: 'Answer two.' },
+          ]}
+        />
+      </div>
+      <div>
+        <h2 class="text-h2">Month bar</h2>
+        <MonthBar class="mt-6" bestMonths={[12, 1, 2, 3, 4]} />
+        <h2 class="mt-12 text-h2">Rate display</h2>
+        <div class="mt-6 space-y-4">
+          <RateDisplay mode="public" priceFromUSD={85} />
+          <RateDisplay mode="package" packageOffer="3 nights + transfers — example only" />
+          <RateDisplay mode="on-request" />
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="text-h2">Breadcrumbs & timeline</h2>
+      <Breadcrumbs
+        class="mt-6"
+        items={[
+          { name: 'Home', href: '/' },
+          { name: 'Tours', href: '/tours' },
+          { name: 'Current', href: '#' },
+        ]}
+      />
+      <div class="mt-8 max-w-xl">
+        <ItineraryTimeline
+          days={[
+            { day: 1, title: 'Day one', body: 'What happens on day one.', overnight: 'Kandy' },
+            { day: 2, title: 'Day two', body: 'What happens on day two.' },
+          ]}
+        />
+      </div>
+    </section>
+
+    <section class="max-w-xl">
+      <h2 class="text-h2">Form controls</h2>
+      <label class="field-label mt-6" for="sg-a">
+        Text input
+      </label>
+      <input class="field-input" id="sg-a" />
+      <label class="field-label mt-4" for="sg-b">
+        Invalid input
+      </label>
+      <input class="field-input" id="sg-b" aria-invalid="true" />
+      <p class="field-error">Error message</p>
+      <div class="mt-4 flex flex-wrap gap-2">
+        <label class="choice">
+          <input type="checkbox" checked /> Selected
+        </label>
+        <label class="choice">
+          <input type="checkbox" /> Option
+        </label>
+      </div>
+    </section>
+  </div>
+</PageLayout>

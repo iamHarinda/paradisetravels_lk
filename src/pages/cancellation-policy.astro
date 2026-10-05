@@ -1,0 +1,23 @@
+---
+import LegalLayout from '../layouts/LegalLayout.astro';
+import { SITE } from '../lib/site';
+---
+
+<LegalLayout
+  title="Cancellation policy"
+  seoTitle="Cancellation Policy | Paradise Travels"
+  description="How cancellations, changes and refunds work for tours, hotels, transport and flights booked through Paradise Travels (Pvt) Ltd in Colombo, Sri Lanka."
+  path="/cancellation-policy"
+  updated={new Date('2026-10-05')}
+  draft
+>
+  <p>
+    {
+      '{{TODO: the owner’s cancellation and refund policy — by service type (tours, hotels, transport, flights) and notice period.}}'
+    }
+  </p>
+  <p>
+    Until this is published, the cancellation terms in your written quote apply. Questions:{' '}
+    <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.
+  </p>
+</LegalLayout>

@@ -1,0 +1,7 @@
+{
+  "question": "How do I pay?",
+  "answer": "After you confirm a quote, we send a secure payment link. We never ask for card details on our website or by message. {{TODO: list accepted payment methods and deposit policy once confirmed by the owner.}}",
+  "category": "payments",
+  "order": 1,
+  "reviewed": false
+}

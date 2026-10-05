@@ -1,0 +1,55 @@
+---
+import { REGIONS, type RegionId } from '../../lib/seasons';
+
+import { OUTLINE as outline, MAP_VIEWBOX, project } from '../../lib/geo';
+
+interface Props {
+  places: { id: string; title: string; region: RegionId; coords: [number, number] }[];
+  class?: string;
+}
+const { places, class: className } = Astro.props;
+---
+
+<svg viewBox={MAP_VIEWBOX} class={className} role="img" aria-labelledby="map-title">
+  <title id="map-title">Map of Sri Lanka showing our destinations</title>
+  <path d={outline} fill="var(--map-land, #0B4A5C)" stroke="#7FD1C7" stroke-width="1.2" stroke-linejoin="round"></path>
+  {places.map((p) => {
+    const [x, y] = project(p.coords);
+    const right = x < 190;
+    return (
+      <a
+        href={`/destinations/${p.id}`}
+        class="map-place"
+        data-region={p.region}
+        aria-label={`${p.title} — ${REGIONS[p.region].name}`}
+      >
+        <circle cx={x} cy={y} r="4.5" />
+        <circle cx={x} cy={y} r="11" fill="transparent" />
+        <text
+          x={right ? x + 8 : x - 8}
+          y={y + 3.5}
+          font-size="10"
+          text-anchor={right ? 'start' : 'end'}
+          fill="currentColor"
+        >
+          {p.title.replace(' National Park', '')}
+        </text>
+      </a>
+    );
+  })}
+</svg>
+
+<style>
+  .map-place {
+    color: rgb(255 255 255 / 0.6);
+    transition: color 200ms;
+  }
+  .map-place circle:first-child {
+    fill: currentColor;
+  }
+  .map-place:hover,
+  .map-place:focus-visible,
+  .map-place.is-active {
+    color: var(--c-gold-300);
+  }
+</style>

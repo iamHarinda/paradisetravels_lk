@@ -1,0 +1,26 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Card from '../ui/Card.astro';
+import { GUIDE_CATEGORIES, dateFmt } from '../../lib/labels';
+
+interface Props {
+  guides: CollectionEntry<'guides'>[];
+}
+const { guides } = Astro.props;
+---
+
+<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+  {guides.map((g) => (
+    <Card
+      href={`/travel-guide/${g.id}`}
+      title={g.data.title}
+      text={g.data.description}
+      eyebrow={GUIDE_CATEGORIES[g.data.category]}
+      meta={`Last checked ${dateFmt.format(g.data.lastChecked)}`}
+      tone={g.data.tone}
+      image={g.data.heroImage}
+      imageAlt={g.data.heroAlt}
+      aspect="aspect-[16/9]"
+    />
+  ))}
+</div>

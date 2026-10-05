@@ -1,0 +1,265 @@
+---
+import Logo from './Logo.astro';
+import Icon from '../ui/Icon.astro';
+import Button from '../ui/Button.astro';
+import { getEntries, byOrder } from '../../lib/content';
+import { SITE, whatsappLink } from '../../lib/site';
+
+interface Props {
+  /** Transparent header over a dark full-bleed hero (home page). */
+  overlay?: boolean;
+}
+const { overlay = false } = Astro.props;
+
+const [destinations, experiences, tours, services] = await Promise.all([
+  getEntries('destinations'),
+  getEntries('experiences'),
+  getEntries('tours'),
+  getEntries('services'),
+]);
+
+type Link = { href: string; label: string; note?: string };
+type Group = { label: string; href: string; links: Link[]; all: string };
+
+const groups: Group[] = [
+  {
+    label: 'Destinations',
+    href: '/destinations',
+    all: 'All destinations & island map',
+    links: destinations
+      .filter((d) => d.data.featured)
+      .sort(byOrder)
+      .map((d) => ({ href: `/destinations/${d.id}`, label: d.data.title })),
+  },
+  {
+    label: 'Experiences',
+    href: '/experiences',
+    all: 'All experiences',
+    links: experiences.sort(byOrder).map((e) => ({ href: `/experiences/${e.id}`, label: e.data.title })),
+  },
+  {
+    label: 'Tours',
+    href: '/tours',
+    all: 'All tours',
+    links: [
+      ...tours
+        .sort((a, b) => a.data.durationDays - b.data.durationDays || byOrder(a, b))
+        .map((t) => ({ href: `/tours/${t.id}`, label: t.data.title, note: `${t.data.durationDays} days` })),
+      { href: '/tours/day-tours', label: 'Day tours & outings' },
+    ],
+  },
+  {
+    label: 'Services',
+    href: '/services',
+    all: 'Everything we do',
+    links: services.sort(byOrder).map((s) => ({ href: `/services/${s.id}`, label: s.data.title })),
+  },
+];
+const simple: Link[] = [
+  { href: '/hotel-deals', label: 'Hotel Deals' },
+  { href: '/travel-guide', label: 'Travel Guide' },
+  { href: '/about', label: 'About' },
+];
+
+const path = Astro.url.pathname.replace(/\.html$/, '');
+const isCurrent = (href: string) => path === href || path.startsWith(`${href}/`);
+---
+
+<header
+  class:list={[
+    'site-header z-40 w-full',
+    overlay ? 'absolute inset-x-0 top-0 text-white' : 'sticky top-0 border-b border-line bg-bg/90 backdrop-blur-md',
+  ]}
+  data-overlay={overlay ? '' : undefined}
+>
+  <div class="container-site flex min-h-20 items-center gap-6">
+    <Logo class="shrink-0" />
+
+    <nav class="ml-auto hidden xl:block" aria-label="Main">
+      <ul class="flex items-center gap-1 text-sm font-medium">
+        {groups.map((g, i) => (
+          <li class="menu relative" data-menu>
+            <div class="flex items-center">
+              <a
+                href={g.href}
+                class:list={[
+                  'rounded-pill py-2 pr-1 pl-3 hover:underline underline-offset-4',
+                  isCurrent(g.href) && 'font-semibold',
+                ]}
+                aria-current={isCurrent(g.href) ? 'page' : undefined}
+              >
+                {g.label}
+              </a>
+              <button
+                type="button"
+                class="grid size-8 place-items-center rounded-pill"
+                aria-expanded="false"
+                aria-controls={`menu-${i}`}
+                data-menu-toggle
+              >
+                <Icon name="chevron" class="size-4 transition-transform" />
+                <span class="sr-only">Show {g.label} menu</span>
+              </button>
+            </div>
+            <div
+              id={`menu-${i}`}
+              class="menu-panel absolute top-full left-0 hidden w-[min(36rem,80vw)] rounded-media bg-surface p-6 text-text shadow-2xl ring-1 ring-line"
+            >
+              <ul class="grid grid-cols-2 gap-x-6 gap-y-1">
+                {g.links.map((l) => (
+                  <li>
+                    <a
+                      href={l.href}
+                      class="flex items-baseline justify-between gap-3 rounded-lg px-3 py-2 hover:bg-sand-100 dark:hover:bg-white/5"
+                    >
+                      <span>{l.label}</span>
+                      {l.note && <span class="text-xs text-muted">{l.note}</span>}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+              <a href={g.href} class="mt-4 inline-flex items-center gap-2 px-3 font-semibold text-primary">
+                {g.all} <Icon name="arrow" class="size-4" />
+              </a>
+            </div>
+          </li>
+        ))}
+        {simple.map((l) => (
+          <li>
+            <a
+              href={l.href}
+              class:list={[
+                'rounded-pill px-3 py-2 hover:underline underline-offset-4',
+                isCurrent(l.href) && 'font-semibold',
+              ]}
+              aria-current={isCurrent(l.href) ? 'page' : undefined}
+            >
+              {l.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <Button href="/plan-your-trip" class="ml-auto hidden sm:inline-flex xl:ml-2">
+      Plan My Trip
+    </Button>
+
+    <button
+      type="button"
+      class="ml-auto grid size-12 place-items-center rounded-pill sm:ml-0 xl:hidden"
+      aria-controls="mobile-menu"
+      data-drawer-open
+    >
+      <Icon name="menu" class="size-6" />
+      <span class="sr-only">Open menu</span>
+    </button>
+  </div>
+</header>
+
+<dialog
+  id="mobile-menu"
+  class="m-0 ml-auto h-dvh max-h-none w-[min(26rem,100vw)] max-w-none overflow-y-auto bg-bg p-0 text-text backdrop:bg-ocean-900/60"
+  aria-label="Menu"
+>
+  <div class="flex items-center justify-between px-5 py-4">
+    <Logo />
+    <button type="button" class="grid size-12 place-items-center rounded-pill" data-drawer-close>
+      <Icon name="close" class="size-6" />
+      <span class="sr-only">Close menu</span>
+    </button>
+  </div>
+  <nav class="px-5 pb-10" aria-label="Mobile">
+    {groups.map((g) => (
+      <details class="border-b border-line">
+        <summary class="flex min-h-14 list-none items-center justify-between font-semibold [&::-webkit-details-marker]:hidden">
+          {g.label}
+          <Icon name="chevron" class="size-5" />
+        </summary>
+        <ul class="pb-4">
+          <li>
+            <a href={g.href} class="block py-2 font-semibold text-primary">
+              {g.all}
+            </a>
+          </li>
+          {g.links.map((l) => (
+            <li>
+              <a href={l.href} class="block py-2 text-muted">
+                {l.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </details>
+    ))}
+    {simple.map((l) => (
+      <a href={l.href} class="flex min-h-14 items-center border-b border-line font-semibold">
+        {l.label}
+      </a>
+    ))}
+    <a href="/contact" class="flex min-h-14 items-center border-b border-line font-semibold">
+      Contact
+    </a>
+    <div class="mt-8 grid gap-3">
+      <Button href="/plan-your-trip" size="lg">
+        Plan My Trip
+      </Button>
+      <Button href={whatsappLink()} variant="whatsapp" size="lg" rel="noopener" data-track="whatsapp">
+        <Icon name="whatsapp" /> WhatsApp us
+      </Button>
+      <Button href={`tel:${SITE.phoneE164}`} variant="secondary" size="lg" data-track="phone">
+        <Icon name="phone" /> {SITE.phone}
+      </Button>
+    </div>
+  </nav>
+</dialog>
+
+<style>
+  .menu.is-open .menu-panel {
+    display: block;
+  }
+  .menu.is-open [data-menu-toggle] :global(svg) {
+    transform: rotate(180deg);
+  }
+  dialog[open] {
+    animation: drawer-in 250ms var(--ease-travel);
+  }
+  @keyframes drawer-in {
+    from {
+      transform: translateX(100%);
+    }
+  }
+</style>
+
+<script>
+  // Desktop dropdowns: hub link always works without JS; the chevron button discloses the panel.
+  const menus = [...document.querySelectorAll<HTMLElement>('[data-menu]')];
+  const close = (except?: HTMLElement) =>
+    menus.forEach((m) => {
+      if (m === except) return;
+      m.classList.remove('is-open');
+      m.querySelector('[data-menu-toggle]')?.setAttribute('aria-expanded', 'false');
+    });
+  menus.forEach((menu) => {
+    const toggle = menu.querySelector<HTMLButtonElement>('[data-menu-toggle]')!;
+    toggle.addEventListener('click', () => {
+      const open = !menu.classList.contains('is-open');
+      close(menu);
+      menu.classList.toggle('is-open', open);
+      toggle.setAttribute('aria-expanded', String(open));
+    });
+    menu.addEventListener('focusout', (e) => {
+      if (!menu.contains(e.relatedTarget as Node)) close();
+    });
+  });
+  document.addEventListener('keydown', (e) => e.key === 'Escape' && close());
+  document.addEventListener('click', (e) => {
+    if (!(e.target as Element).closest('[data-menu]')) close();
+  });
+
+  // Mobile drawer (native <dialog>: focus trap + Escape for free).
+  const drawer = document.getElementById('mobile-menu') as HTMLDialogElement;
+  document.querySelector('[data-drawer-open]')?.addEventListener('click', () => drawer.showModal());
+  drawer.querySelector('[data-drawer-close]')?.addEventListener('click', () => drawer.close());
+  drawer.addEventListener('click', (e) => e.target === drawer && drawer.close());
+</script>

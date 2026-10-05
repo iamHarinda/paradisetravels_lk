@@ -25,6 +25,8 @@
   --c-cta: var(--c-gold-500);
   --c-cta-text: var(--c-ocean-900);
   --c-focus: #1e90ff;
+  --c-line: rgb(20 24 27 / 0.12);
+  --c-eyebrow: var(--c-ocean-500);
 
   /* Motion */
   --ease-travel: cubic-bezier(0.2, 0.7, 0.2, 1);
@@ -40,6 +42,8 @@
     --c-text: #eef2f2;
     --c-text-muted: #a9b6b8;
     --c-primary: var(--c-lagoon-300);
+    --c-line: rgb(238 242 242 / 0.14);
+    --c-eyebrow: var(--c-lagoon-300);
   }
 }
 :root[data-theme='dark'] {
@@ -48,4 +52,6 @@
   --c-text: #eef2f2;
   --c-text-muted: #a9b6b8;
   --c-primary: var(--c-lagoon-300);
+  --c-line: rgb(238 242 242 / 0.14);
+  --c-eyebrow: var(--c-lagoon-300);
 }

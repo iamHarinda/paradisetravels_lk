@@ -1,0 +1,99 @@
+---
+// Name / email / phone with country code / country / preferred contact — shared by all lead forms (docs/04 §7).
+interface Props {
+  idPrefix: string;
+}
+const { idPrefix: p } = Astro.props;
+const codes = [
+  ['+44', 'UK +44'],
+  ['+91', 'India +91'],
+  ['+49', 'Germany +49'],
+  ['+61', 'Australia +61'],
+  ['+86', 'China +86'],
+  ['+7', 'Russia +7'],
+  ['+82', 'Korea +82'],
+  ['+1', 'USA/Canada +1'],
+  ['+33', 'France +33'],
+  ['+31', 'Netherlands +31'],
+  ['+41', 'Switzerland +41'],
+  ['+39', 'Italy +39'],
+  ['+34', 'Spain +34'],
+  ['+971', 'UAE +971'],
+  ['+974', 'Qatar +974'],
+  ['+966', 'Saudi Arabia +966'],
+  ['+65', 'Singapore +65'],
+  ['+60', 'Malaysia +60'],
+  ['+81', 'Japan +81'],
+  ['+960', 'Maldives +960'],
+  ['+94', 'Sri Lanka +94'],
+];
+---
+
+<div class="grid gap-5 sm:grid-cols-2">
+  <div>
+    <label class="field-label" for={`${p}-name`}>
+      Your name
+    </label>
+    <input
+      class="field-input"
+      id={`${p}-name`}
+      name="name"
+      autocomplete="name"
+      required
+      minlength="2"
+      maxlength="120"
+    />
+  </div>
+  <div>
+    <label class="field-label" for={`${p}-email`}>
+      Email
+    </label>
+    <input
+      class="field-input"
+      id={`${p}-email`}
+      name="email"
+      type="email"
+      autocomplete="email"
+      required
+      maxlength="200"
+    />
+  </div>
+  <div>
+    <label class="field-label" for={`${p}-phone`}>
+      WhatsApp / phone <span class="font-normal text-muted">(optional)</span>
+    </label>
+    <div class="flex gap-2">
+      <label class="sr-only" for={`${p}-code`}>
+        Country code
+      </label>
+      <select class="field-input w-32 shrink-0" id={`${p}-code`} name="phoneCode" autocomplete="tel-country-code">
+        <option value="">Code</option>
+        {codes.map(([v, l]) => (
+          <option value={v}>{l}</option>
+        ))}
+      </select>
+      <input class="field-input" id={`${p}-phone`} name="phone" type="tel" autocomplete="tel-national" maxlength="30" />
+    </div>
+  </div>
+  <div>
+    <label class="field-label" for={`${p}-country`}>
+      Country you live in <span class="font-normal text-muted">(optional)</span>
+    </label>
+    <input class="field-input" id={`${p}-country`} name="country" autocomplete="country-name" maxlength="80" />
+  </div>
+  <fieldset class="sm:col-span-2">
+    <legend class="field-label">How should we reply?</legend>
+    <div class="flex flex-wrap gap-2">
+      {[
+        ['email', 'Email'],
+        ['whatsapp', 'WhatsApp'],
+        ['kakao', 'KakaoTalk'],
+        ['phone', 'Phone call'],
+      ].map(([v, l], i) => (
+        <label class="choice">
+          <input type="radio" name="preferredContact" value={v} checked={i === 0} /> {l}
+        </label>
+      ))}
+    </div>
+  </fieldset>
+</div>

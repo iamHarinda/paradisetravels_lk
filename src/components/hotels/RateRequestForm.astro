@@ -1,0 +1,111 @@
+---
+import ContactFields from '../forms/ContactFields.astro';
+import FormFooter from '../forms/FormFooter.astro';
+
+// "Request this rate" (docs/10 §2.3): dates, rooms, guests, meal plan + contact → /api/rate-request.
+interface Props {
+  /** Omit on the hub page: the visitor types the hotel or area instead. */
+  hotel?: string;
+  mealPlans?: string[];
+}
+const { hotel, mealPlans = [] } = Astro.props;
+const MEALS: Record<string, string> = {
+  RO: 'Room only',
+  BB: 'Bed & breakfast',
+  HB: 'Half board',
+  FB: 'Full board',
+  AI: 'All inclusive',
+};
+---
+
+<form action="/api/rate-request" method="post" data-form class="relative" id="rate-form">
+  <div class="grid gap-5 sm:grid-cols-2">
+    {hotel ? (
+      <input type="hidden" name="hotel" value={hotel} />
+    ) : (
+      <div class="sm:col-span-2">
+        <label class="field-label" for="rr-hotel">
+          Which hotel or area?
+        </label>
+        <input
+          class="field-input"
+          id="rr-hotel"
+          name="hotel"
+          required
+          maxlength="150"
+          placeholder="e.g. a boutique hotel in Galle Fort"
+        />
+      </div>
+    )}
+    <div>
+      <label class="field-label" for="rr-in">
+        Check-in
+      </label>
+      <input class="field-input" id="rr-in" name="checkIn" type="date" required />
+    </div>
+    <div>
+      <label class="field-label" for="rr-out">
+        Check-out
+      </label>
+      <input class="field-input" id="rr-out" name="checkOut" type="date" required />
+    </div>
+    <div>
+      <label class="field-label" for="rr-rooms">
+        Rooms
+      </label>
+      <input class="field-input" id="rr-rooms" name="rooms" type="number" min="1" max="50" value="1" required />
+    </div>
+    <div class="grid grid-cols-2 gap-3">
+      <div>
+        <label class="field-label" for="rr-adults">
+          Adults
+        </label>
+        <input class="field-input" id="rr-adults" name="adults" type="number" min="1" max="100" value="2" required />
+      </div>
+      <div>
+        <label class="field-label" for="rr-children">
+          Children
+        </label>
+        <input class="field-input" id="rr-children" name="children" type="number" min="0" max="50" value="0" />
+      </div>
+    </div>
+    {mealPlans.length > 0 && (
+      <div class="sm:col-span-2">
+        <label class="field-label" for="rr-meal">
+          Meal plan
+        </label>
+        <select class="field-input" id="rr-meal" name="mealPlan">
+          <option value="">No preference</option>
+          {mealPlans.map((m) => (
+            <option value={m}>{MEALS[m] ?? m}</option>
+          ))}
+        </select>
+      </div>
+    )}
+  </div>
+  <div class="mt-6">
+    <ContactFields idPrefix="rr" />
+  </div>
+  <div class="mt-5">
+    <label class="field-label" for="rr-notes">
+      Anything else? <span class="font-normal text-muted">(optional)</span>
+    </label>
+    <textarea class="field-input min-h-24" id="rr-notes" name="notes" maxlength="2000"></textarea>
+  </div>
+  <FormFooter submitLabel="Request this rate" />
+</form>
+
+<script>
+  import '../../scripts/forms.ts';
+  // Keep check-out after check-in.
+  const form = document.getElementById('rate-form') as HTMLFormElement | null;
+  if (form) {
+    const inEl = form.elements.namedItem('checkIn') as HTMLInputElement;
+    const outEl = form.elements.namedItem('checkOut') as HTMLInputElement;
+    inEl.min = new Date().toISOString().slice(0, 10);
+    inEl.addEventListener('change', () => {
+      outEl.min = inEl.value;
+      if (outEl.value && outEl.value <= inEl.value) outEl.value = '';
+    });
+  }
+</script>

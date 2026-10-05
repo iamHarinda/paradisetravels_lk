@@ -1,0 +1,27 @@
+---
+// Day-by-day vertical timeline (docs/04 §5.5). Each day is a disclosure so long tours stay scannable.
+interface Props {
+  days: { day: number; title: string; body: string; overnight?: string }[];
+}
+const { days } = Astro.props;
+---
+
+<ol class="relative border-l-2 border-gold-500/60 pl-8">
+  {days.map((d, i) => (
+    <li class="reveal relative pb-8 last:pb-0">
+      <span class="absolute top-1 -left-[2.6rem] grid size-8 place-items-center rounded-full bg-gold-500 text-xs font-bold text-ocean-900">
+        {d.day}
+      </span>
+      <details open={i < 3} class="group">
+        <summary class="flex min-h-10 list-none items-center gap-3 [&::-webkit-details-marker]:hidden">
+          <span class="text-xl font-semibold">
+            <span class="sr-only">Day {d.day}: </span>
+            {d.title}
+          </span>
+        </summary>
+        <p class="mt-2 text-muted">{d.body}</p>
+        {d.overnight && <p class="mt-2 text-sm font-semibold">Overnight: {d.overnight}</p>}
+      </details>
+    </li>
+  ))}
+</ol>

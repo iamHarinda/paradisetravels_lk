@@ -9,4 +9,6 @@ export default [
   ...tseslint.configs.strict,
   ...astro.configs.recommended,
   { languageOptions: { globals: { ...globals.browser, ...globals.node } } },
+  // `el!` after a DOM lookup on markup we render ourselves is idiomatic in small progressive-enhancement scripts.
+  { rules: { '@typescript-eslint/no-non-null-assertion': 'off' } },
 ];

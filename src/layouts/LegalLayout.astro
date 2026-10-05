@@ -1,0 +1,30 @@
+---
+import PageLayout from './PageLayout.astro';
+import { dateFmt } from '../lib/labels';
+
+interface Props {
+  title: string;
+  seoTitle: string;
+  description: string;
+  path: string;
+  updated: Date;
+  /** Legal pages stay out of search until the owner has approved the final wording. */
+  draft?: boolean;
+}
+const { title, seoTitle, description, path, updated, draft = false } = Astro.props;
+---
+
+<PageLayout title={seoTitle} description={description} noindex={draft} breadcrumbs={[{ name: title, href: path }]}>
+  <article class="container-site max-w-4xl pt-8 pb-24 sm:pt-12">
+    <h1 class="text-[clamp(2.5rem,4vw+1rem,4rem)] leading-[1.05]">{title}</h1>
+    <p class="mt-4 text-sm text-muted">Last updated {dateFmt.format(updated)}</p>
+    {draft && (
+      <p class="mt-6 rounded-card bg-gold-300/40 p-4 text-sm text-ink-900 dark:text-text">
+        Draft — this page is awaiting final wording from Paradise Travels. Contact us with any questions.
+      </p>
+    )}
+    <div class="prose mt-10">
+      <slot />
+    </div>
+  </article>
+</PageLayout>

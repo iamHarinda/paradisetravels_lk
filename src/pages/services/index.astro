@@ -1,0 +1,66 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import PageHero from '../../components/ui/PageHero.astro';
+import Icon from '../../components/ui/Icon.astro';
+import type { IconName } from '../../lib/icons';
+import CtaBlock from '../../components/ui/CtaBlock.astro';
+import { getEntries, byOrder } from '../../lib/content';
+import { itemListSchema } from '../../lib/schema-org';
+import { SITE } from '../../lib/site';
+
+const services = (await getEntries('services')).sort(byOrder);
+const groups = [
+  {
+    title: 'For travellers',
+    ids: [
+      'flight-tickets',
+      'visa-assistance',
+      'hotel-reservations',
+      'transport-chauffeur',
+      'tour-guides',
+      'ayurveda-packages',
+      'day-outings',
+    ],
+  },
+  {
+    title: 'For companies & organisations',
+    ids: ['conferences-mice', 'event-management', 'workshops', 'interpreters', 'project-coordination'],
+  },
+];
+---
+
+<PageLayout
+  title="Travel Services in Sri Lanka: All in One Place"
+  description={`Everything for your Sri Lanka journey from one Colombo team since ${SITE.foundingYear}: flights, ETA and visas, hotels, drivers, guides, interpreters, events and Ayurveda.`}
+  breadcrumbs={[{ name: 'Services', href: '/services' }]}
+  jsonLd={[itemListSchema(services.map((s) => ({ name: s.data.title, path: `/services/${s.id}` })))]}
+>
+  <PageHero
+    eyebrow="Services"
+    title="Everything for Sri Lanka, in one place"
+    intro="One team handles the whole journey — so nothing falls between the cracks. Book one service or all of them."
+    media={false}
+  />
+  {groups.map((g) => (
+    <section class="container-site pb-16" aria-label={g.title}>
+      <h2 class="text-3xl font-semibold">{g.title}</h2>
+      <ul class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {g.ids
+          .map((id) => services.find((s) => s.id === id))
+          .filter((s) => !!s)
+          .map((s) => (
+            <li class="reveal">
+              <a href={`/services/${s.id}`} class="lift flex h-full gap-4 rounded-card bg-surface p-6 ring-1 ring-line">
+                <Icon name={s.data.icon as IconName} class="size-8 shrink-0 text-ocean-500 dark:text-lagoon-300" />
+                <span>
+                  <span class="block text-xl font-semibold">{s.data.title}</span>
+                  <span class="mt-1 block text-sm text-muted">{s.data.short}</span>
+                </span>
+              </a>
+            </li>
+          ))}
+      </ul>
+    </section>
+  ))}
+  <CtaBlock title="Need more than one?" text="Most of our clients combine several services. Tell us the whole plan." />
+</PageLayout>

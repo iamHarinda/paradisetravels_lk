@@ -1,0 +1,106 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { render } from 'astro:content';
+import { getEntries, byOrder } from '../../lib/content';
+import PageLayout from '../../layouts/PageLayout.astro';
+import Icon from '../../components/ui/Icon.astro';
+import type { IconName } from '../../lib/icons';
+import FaqSection from '../../components/ui/FaqSection.astro';
+import EnquiryForm from '../../components/forms/EnquiryForm.astro';
+import { faqSchema, serviceSchema } from '../../lib/schema-org';
+import { whatsappLink } from '../../lib/site';
+
+export const getStaticPaths = (async () => {
+  const services = await getEntries('services');
+  return services.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}) satisfies GetStaticPaths;
+
+const { entry } = Astro.props;
+const s = entry.data;
+const { Content } = await render(entry);
+const others = (await getEntries('services')).filter((o) => o.id !== entry.id).sort(byOrder);
+const path = `/services/${entry.id}`;
+---
+
+<PageLayout
+  title={s.seo.title}
+  description={s.seo.description}
+  breadcrumbs={[
+    { name: 'Services', href: '/services' },
+    { name: s.title, href: path },
+  ]}
+  jsonLd={[serviceSchema({ title: s.title, description: s.seo.description, path }), faqSchema(s.faqs)].filter(
+    (x) => !!x,
+  )}
+>
+  <section class="container-site pt-8 pb-12 sm:pt-12">
+    <Icon name={s.icon as IconName} class="size-12 text-ocean-500 dark:text-lagoon-300" />
+    <h1 class="mt-6 max-w-4xl text-h1">{s.title}</h1>
+    <p class="mt-6 max-w-[60ch] text-lg text-muted">{s.short}</p>
+    <p class="mt-3 text-sm">
+      <span class="font-semibold">Who it’s for:</span> {s.audience}
+    </p>
+  </section>
+
+  <section class="container-site grid gap-12 pb-16 lg:grid-cols-[1.4fr_1fr]">
+    <div>
+      <div class="prose">
+        <Content />
+      </div>
+      {s.steps.length > 0 && (
+        <section class="mt-14" aria-labelledby="steps-heading">
+          <h2 id="steps-heading" class="text-h2">
+            How it works
+          </h2>
+          <ol class="mt-8 grid gap-4 sm:grid-cols-2">
+            {s.steps.map((step, i) => (
+              <li class="reveal rounded-card bg-surface p-6 ring-1 ring-line">
+                <span class="grid size-9 place-items-center rounded-full bg-gold-500 text-sm font-bold text-ocean-900">
+                  {i + 1}
+                </span>
+                <h3 class="mt-4 text-xl font-semibold">{step.title}</h3>
+                <p class="mt-2 text-sm text-muted">{step.body}</p>
+              </li>
+            ))}
+          </ol>
+        </section>
+      )}
+    </div>
+    <aside class="lg:sticky lg:top-28 lg:self-start">
+      <div class="rounded-media bg-surface p-6 ring-1 ring-line sm:p-8">
+        <h2 class="text-2xl font-semibold">Ask about {s.title.toLowerCase()}</h2>
+        <a
+          href={whatsappLink(`Hello Paradise Travels, I have a question about ${s.title}.`, new URL(path, Astro.site))}
+          class="mt-4 flex min-h-12 items-center justify-center gap-2 rounded-pill border border-line font-semibold text-tea-600 dark:text-lagoon-300"
+          rel="noopener"
+          data-track="whatsapp"
+        >
+          <Icon name="whatsapp" /> WhatsApp us
+        </a>
+        <p class="my-5 text-center text-sm text-muted">or send a message</p>
+        <EnquiryForm subject={s.title} />
+      </div>
+    </aside>
+  </section>
+
+  <FaqSection faqs={s.faqs} />
+
+  <section class="container-site pb-24" aria-labelledby="more-heading">
+    <h2 id="more-heading" class="text-3xl font-semibold">
+      Combine with
+    </h2>
+    <ul class="mt-6 flex flex-wrap gap-2">
+      {others.map((o) => (
+        <li>
+          <a
+            href={`/services/${o.id}`}
+            class="inline-flex min-h-12 items-center gap-2 rounded-pill border border-line px-4 text-sm hover:border-primary"
+          >
+            <Icon name={o.data.icon as IconName} class="size-4" />
+            {o.data.title}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+</PageLayout>

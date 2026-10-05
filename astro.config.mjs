@@ -34,13 +34,13 @@ const variableFont = (pkg, file, { latinExt = true } = {}) => {
 export default defineConfig({
   site: 'https://paradisetravels.lk',
   trailingSlash: 'never',
-  build: { format: 'file' },
+  build: { format: 'directory' },
 
   adapter: node({
     mode: 'standalone',
   }),
 
-  integrations: [sitemap({ filter: (page) => !page.endsWith('/mockup') }), mdx(), react(), keystatic()],
+  integrations: [sitemap({ filter: (page) => !/\/(thank-you|styleguide)$/.test(page) }), mdx(), react(), keystatic()],
 
   prefetch: { defaultStrategy: 'hover' },
 
@@ -53,6 +53,18 @@ export default defineConfig({
         values: ['production', 'staging'],
         default: 'staging',
       }),
+      // Forms (Phase 3). Everything is optional so local/staging builds work without secrets;
+      // see .env.example and README for what production needs.
+      TURNSTILE_SITE_KEY: envField.string({ context: 'client', access: 'public', optional: true }),
+      TURNSTILE_SECRET: envField.string({ context: 'server', access: 'secret', optional: true }),
+      RESEND_API_KEY: envField.string({ context: 'server', access: 'secret', optional: true }),
+      SMTP_HOST: envField.string({ context: 'server', access: 'secret', optional: true }),
+      SMTP_PORT: envField.number({ context: 'server', access: 'secret', default: 465 }),
+      SMTP_USER: envField.string({ context: 'server', access: 'secret', optional: true }),
+      SMTP_PASS: envField.string({ context: 'server', access: 'secret', optional: true }),
+      MAIL_FROM: envField.string({ context: 'server', access: 'secret', default: 'Paradise Travels <hello@paradisetravels.lk>' }),
+      MAIL_TO: envField.string({ context: 'server', access: 'secret', default: 'hello@paradisetravels.lk' }),
+      LEAD_WEBHOOK_URL: envField.string({ context: 'server', access: 'secret', optional: true }),
     },
   },
 
