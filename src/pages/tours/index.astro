@@ -35,7 +35,10 @@ const durationOf = (n: number) => durations.find((d) => d.test(n))!.id;
   />
 
   <section class="container-site pb-24" data-filters>
-    <form class="flex flex-wrap gap-6 rounded-media bg-surface p-5 ring-1 ring-line" aria-label="Filter tours">
+    <form
+      class="flex flex-wrap gap-6 rounded-media bg-surface p-5 ring-1 ring-line shadow-card"
+      aria-label="Filter tours"
+    >
       <fieldset>
         <legend class="mb-2 text-sm font-semibold">Length</legend>
         <div class="flex flex-wrap gap-2">

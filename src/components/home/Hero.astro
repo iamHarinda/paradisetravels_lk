@@ -18,7 +18,7 @@ const buildMonth = new Date().getMonth() + 1;
 const buildRegions = inSeason(buildMonth);
 ---
 
-<section class="grain relative overflow-hidden pt-10 pb-16 sm:pt-14 lg:pb-24">
+<section class="relative overflow-hidden pt-10 pb-16 sm:pt-14 lg:pb-24">
   <div class="container-site grid items-center gap-12 lg:grid-cols-[1.05fr_1fr]">
     <div>
       <p class="detail flex flex-wrap gap-x-4 gap-y-1 text-muted">
@@ -37,7 +37,7 @@ const buildRegions = inSeason(buildMonth);
         arranged by one Colombo team.
       </p>
       <form
-        class="mt-8 flex max-w-xl items-center gap-2 rounded-pill bg-surface p-2 shadow-[0_20px_50px_-30px_rgb(6_42_53/0.6)] ring-1 ring-line"
+        class="mt-8 flex max-w-xl items-center gap-2 rounded-pill bg-surface p-2 shadow-[0_20px_50px_-30px_rgb(7_26_51/0.6)] ring-1 ring-line shadow-card"
         action="/plan-your-trip"
         method="get"
       >
@@ -77,7 +77,11 @@ const buildRegions = inSeason(buildMonth);
     </div>
 
     <div class="relative grid grid-cols-[1fr_0.55fr] grid-rows-[auto_auto] gap-3 sm:gap-4">
-      <figure class="relative row-span-2 min-h-72 overflow-hidden rounded-media">
+      <div
+        class="pointer-events-none absolute -inset-16 -z-10 rounded-full bg-[radial-gradient(closest-side,rgb(30_99_214/0.18),transparent)]"
+        aria-hidden="true"
+      ></div>
+      <figure class="relative row-span-2 min-h-72 overflow-hidden rounded-media shadow-[var(--shadow-lift)]">
         <div class="absolute inset-0">
           <Media image={main.image} alt={main.alt} priority sizes="(min-width: 1024px) 34vw, 62vw" />
         </div>
@@ -85,7 +89,7 @@ const buildRegions = inSeason(buildMonth);
           Sigiriya · 7.96°N
         </figcaption>
       </figure>
-      <figure class="relative mt-10 overflow-hidden rounded-media">
+      <figure class="relative mt-10 overflow-hidden rounded-media shadow-card">
         <div class="aspect-[3/4]">
           <Media image={second.image} alt={second.alt} sizes="(min-width: 1024px) 18vw, 34vw" />
         </div>
@@ -93,7 +97,7 @@ const buildRegions = inSeason(buildMonth);
           Ella
         </figcaption>
       </figure>
-      <figure class="relative overflow-hidden rounded-media">
+      <figure class="relative overflow-hidden rounded-media shadow-card">
         <div class="aspect-square">
           <Media image={third.image} alt={third.alt} sizes="(min-width: 1024px) 18vw, 34vw" />
         </div>
@@ -102,10 +106,10 @@ const buildRegions = inSeason(buildMonth);
         </figcaption>
       </figure>
       <div
-        class="absolute -bottom-6 -left-4 hidden rotate-[-4deg] rounded-card bg-ocean-900 px-5 py-4 text-white shadow-xl sm:block"
+        class="absolute -bottom-6 -left-6 hidden rounded-card bg-ocean-900/90 px-5 py-4 text-white shadow-[var(--shadow-lift)] ring-1 ring-white/10 backdrop-blur sm:block"
         aria-hidden="true"
       >
-        <p class="detail text-gold-300">Since</p>
+        <p class="detail text-lagoon-300">Since</p>
         <p class="font-display text-4xl leading-none">{SITE.foundingYear}</p>
       </div>
     </div>

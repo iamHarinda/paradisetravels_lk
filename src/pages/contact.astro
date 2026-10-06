@@ -30,7 +30,7 @@ const ways = [
             {w.href ? (
               <a
                 href={w.href}
-                class="lift flex h-full items-start gap-3 rounded-card bg-surface p-5 ring-1 ring-line"
+                class="lift flex h-full items-start gap-3 rounded-card bg-surface p-5 ring-1 ring-line shadow-card"
                 rel="noopener"
                 data-track={w.track}
               >
@@ -41,7 +41,7 @@ const ways = [
                 </span>
               </a>
             ) : (
-              <div class="flex h-full items-start gap-3 rounded-card bg-surface p-5 ring-1 ring-line">
+              <div class="flex h-full items-start gap-3 rounded-card bg-surface p-5 ring-1 ring-line shadow-card">
                 <Icon name={w.icon} class="mt-0.5 size-6 text-primary" />
                 <span>
                   <span class="block text-sm text-muted">{w.label}</span>
@@ -65,7 +65,7 @@ const ways = [
         </a>
       </div>
     </div>
-    <div class="rounded-media bg-surface p-6 ring-1 ring-line sm:p-10">
+    <div class="rounded-media bg-surface p-6 ring-1 ring-line shadow-card sm:p-10">
       <h2 class="text-3xl font-semibold">Send us a message</h2>
       <div class="mt-8">
         <EnquiryForm subject="Contact page" />

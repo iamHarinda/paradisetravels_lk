@@ -82,7 +82,7 @@ const facts = [
     </div>
   </section>
 
-  <section class="grain bg-sky-100 py-24 text-ink-900" aria-labelledby="deals-heading">
+  <section class="bg-sky-100 py-24 text-ink-900" aria-labelledby="deals-heading">
     <div class="container-site grid items-center gap-12 lg:grid-cols-[1fr_1fr]">
       <div class="relative aspect-[4/3] overflow-hidden rounded-media">
         <Media image={dealsPhoto.image} alt={dealsPhoto.alt} sizes="(min-width: 1024px) 45vw, calc(100vw - 2rem)" />
@@ -101,7 +101,7 @@ const facts = [
           class="reveal mt-4 text-h2"
           set:html={accent('Partner rates you *won’t find* on booking sites.')}
         />
-        <p class="reveal mt-5 text-lg text-[#4a4f53]">
+        <p class="reveal mt-5 text-lg text-[#3f4b63]">
           We hold contracted rates with hotels around the island. Tell us where and when — we reply with options and a
           quote. Book just the hotel, or the whole trip.
         </p>
@@ -147,7 +147,7 @@ const facts = [
         {facts.map((f) => (
           <div class="reveal flex flex-col-reverse gap-3 bg-ocean-900 p-8">
             <dt class="text-sm text-white/75">{f.label}</dt>
-            <dd class="font-display text-7xl leading-none font-semibold text-gold-300">{f.value}</dd>
+            <dd class="font-display text-7xl leading-none font-semibold text-lagoon-300">{f.value}</dd>
           </div>
         ))}
       </dl>
@@ -201,7 +201,7 @@ const facts = [
     <section class="container-site pb-24" aria-labelledby="leader-heading">
       <div class="reveal grid gap-10 border-y border-line py-14 md:grid-cols-[auto_1fr] md:items-center">
         <div
-          class="grid size-28 place-items-center rounded-full bg-ocean-900 font-display text-3xl text-gold-300"
+          class="grid size-28 place-items-center rounded-full bg-ocean-900 font-display text-3xl text-lagoon-300"
           aria-hidden="true"
         >
           {leader.data.name

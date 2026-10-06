@@ -38,7 +38,7 @@ const [cx, cy] = projectWorld(CMB);
     inset: 0;
     z-index: -1;
     pointer-events: none;
-    opacity: 0.3;
+    opacity: 0.24;
     /* Strongest around the Colombo hub, dissolving towards the edges where most text sits. */
     mask-image: radial-gradient(ellipse 70% 75% at 56% 52%, #000 0%, rgb(0 0 0 / 0.55) 45%, transparent 85%);
     /* Own compositor layer: scrolling never repaints it. */
@@ -65,7 +65,7 @@ const [cx, cy] = projectWorld(CMB);
     fill: var(--c-ocean-700);
   }
   .hub circle {
-    fill: var(--c-gold-500);
+    fill: var(--c-ocean-500);
   }
   .pulse {
     transform-box: fill-box;

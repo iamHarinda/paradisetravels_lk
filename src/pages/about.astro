@@ -55,9 +55,9 @@ const values = [
     </div>
     <aside class="space-y-4">
       {values.map((v) => (
-        <div class="rounded-card bg-surface p-5 ring-1 ring-line">
+        <div class="rounded-card bg-surface p-5 ring-1 ring-line shadow-card">
           <h3 class="flex items-center gap-2 text-lg font-semibold">
-            <Icon name="check" class="size-4 text-tea-600 dark:text-lagoon-300" /> {v.title}
+            <Icon name="check" class="size-4 text-ocean-500 dark:text-lagoon-300" /> {v.title}
           </h3>
           <p class="mt-1 text-sm text-muted">{v.text}</p>
         </div>
@@ -72,9 +72,9 @@ const values = [
       </h2>
       <ul class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {team.map((m) => (
-          <li class="rounded-media bg-surface p-6 ring-1 ring-line">
+          <li class="rounded-media bg-surface p-6 ring-1 ring-line shadow-card">
             <div
-              class="grid size-20 place-items-center rounded-full bg-ocean-900 font-display text-2xl text-gold-300"
+              class="grid size-20 place-items-center rounded-full bg-ocean-900 font-display text-2xl text-lagoon-300"
               aria-hidden="true"
             >
               {m.data.name

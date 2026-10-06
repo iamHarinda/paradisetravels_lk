@@ -75,7 +75,7 @@ const path = `/travel-guide/${entry.id}`;
 
         {g.sources.length > 0 && (
           <section
-            class="mt-14 max-w-[68ch] rounded-card bg-surface p-6 ring-1 ring-line"
+            class="mt-14 max-w-[68ch] rounded-card bg-surface p-6 ring-1 ring-line shadow-card"
             aria-labelledby="sources-heading"
           >
             <h2 id="sources-heading" class="text-xl font-semibold">
@@ -166,7 +166,7 @@ const path = `/travel-guide/${entry.id}`;
       <h2 id="tours-heading" class="text-h2">
         Related tours
       </h2>
-      <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div class="mt-8 grid gap-6 xl:grid-cols-2">
         {tours.map((t) => (
           <TicketCard tour={t} />
         ))}

@@ -47,6 +47,10 @@
   --radius-pill: 999px;
 
   --container-site: 1440px;
+
+  /* One elevation system for every card (soft navy shadow + hairline). */
+  --shadow-card: 0 1px 2px rgb(11 23 48 / 0.04), 0 14px 36px -18px rgb(11 23 48 / 0.22);
+  --shadow-lift: 0 2px 4px rgb(11 23 48 / 0.05), 0 28px 56px -24px rgb(11 23 48 / 0.32);
   --ease-travel: var(--ease-travel);
 }
 
@@ -94,6 +98,15 @@
   h3 {
     font-family: var(--font-display);
     text-wrap: balance;
+  }
+  /* Display headlines read more refined at a medium weight than the browser's default bold. */
+  h1,
+  h2 {
+    font-weight: 460;
+    letter-spacing: -0.02em;
+  }
+  h3 {
+    font-weight: 560;
   }
 
   p {
@@ -198,7 +211,7 @@
   }
   .lift:hover {
     transform: translateY(-4px);
-    box-shadow: 0 18px 40px -18px rgb(6 42 53 / 0.45);
+    box-shadow: var(--shadow-lift);
   }
   .lift .lift-media {
     transition: transform 400ms var(--ease-travel);
@@ -253,7 +266,7 @@
   .ph-ocean {
     background-image:
       radial-gradient(ellipse at 70% 20%, #f0cf85 0, transparent 35%),
-      linear-gradient(170deg, #7fd1c7 0%, #127a8c 45%, #062a35 100%);
+      linear-gradient(170deg, #93c5fd 0%, #1e63d6 45%, #071a33 100%);
   }
   .ph-tea {
     background-image:
@@ -353,9 +366,15 @@
     font-weight: 380;
     color: var(--c-accent);
   }
+  /* Dark navy sections get two soft blue light sources for depth. */
+  .on-dark {
+    background-image:
+      radial-gradient(60rem 32rem at 85% -10%, rgb(30 99 214 / 0.38), transparent 70%),
+      radial-gradient(44rem 26rem at -5% 110%, rgb(147 197 253 / 0.14), transparent 70%);
+  }
   .on-dark .accent,
   .bg-ocean-900 .accent {
-    color: var(--c-gold-300);
+    color: var(--c-lagoon-300);
   }
 
   /* Chapter label: 01 ── EVERYTHING IN ONE PLACE */

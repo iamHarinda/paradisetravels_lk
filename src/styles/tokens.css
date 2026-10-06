@@ -1,39 +1,39 @@
 /* Design tokens — "Paradise 2030" (docs/04-ui-ux-design-system.md §2). */
 :root {
   /* Brand */
-  --c-ocean-900: #062a35; /* deep Indian Ocean — primary dark */
-  --c-ocean-700: #0b4a5c;
-  --c-ocean-500: #127a8c; /* primary accent */
-  --c-lagoon-300: #7fd1c7; /* fresh highlight */
-  --c-tea-600: #2f6b3f; /* tea-country green */
-  --c-gold-500: #d9a441; /* temple gold — CTAs, highlights */
-  --c-gold-300: #f0cf85;
-  --c-laterite-500: #c2603c; /* earth/spice — sparing accent */
+  --c-ocean-900: #071a33; /* deep Indian Ocean — primary dark */
+  --c-ocean-700: #0e3b7d;
+  --c-ocean-500: #1e63d6; /* primary accent */
+  --c-lagoon-300: #93c5fd; /* fresh highlight */
+  --c-tea-600: #15803d; /* tea-country green */
+  --c-gold-500: #e9a23b; /* temple gold — CTAs, highlights */
+  --c-gold-300: #f6d08a;
+  --c-laterite-500: #c2410c; /* earth/spice — sparing accent */
 
   /* Sky — light airy blues for page backgrounds */
-  --c-sky-50: #f3f8fb;
-  --c-sky-100: #e4eff5;
-  --c-sky-200: #cfe3ec;
+  --c-sky-50: #f5f9fe;
+  --c-sky-100: #e8f0fb;
+  --c-sky-200: #d3e3f8;
 
   /* Neutrals */
   --c-sand-50: #fbf8f2; /* page background (light) */
   --c-sand-100: #f3ede2;
-  --c-stone-400: #9a958c;
-  --c-ink-900: #14181b; /* body text */
+  --c-stone-400: #94a3b8;
+  --c-ink-900: #0b1730; /* body text */
 
   /* Semantic */
   --c-bg: var(--c-sky-50);
   --c-surface: #ffffff;
   --c-text: var(--c-ink-900);
-  --c-text-muted: #5a5f63;
+  --c-text-muted: #51607a;
   --c-primary: var(--c-ocean-700);
-  --c-cta: var(--c-gold-500);
-  --c-cta-text: var(--c-ocean-900);
-  --c-focus: #1e90ff;
-  --c-line: rgb(20 24 27 / 0.12);
+  --c-cta: var(--c-ocean-500);
+  --c-cta-text: #ffffff;
+  --c-focus: #1e63d6;
+  --c-line: rgb(11 23 48 / 0.1);
   --c-eyebrow: var(--c-ocean-500);
-  /* Editorial accent for italic headline words — laterite passes 3:1 on sand for large text. */
-  --c-accent: var(--c-laterite-500);
+  /* Editorial accent for italic headline words. */
+  --c-accent: var(--c-ocean-500);
 
   /* Motion */
   --ease-travel: cubic-bezier(0.2, 0.7, 0.2, 1);
@@ -44,23 +44,23 @@
 /* Optional dark theme for night browsing. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
-    --c-bg: #071c23;
-    --c-surface: #0c2a33;
-    --c-text: #eef2f2;
-    --c-text-muted: #a9b6b8;
+    --c-bg: #06142a;
+    --c-surface: #0b1f3d;
+    --c-text: #e8eef8;
+    --c-text-muted: #a3b3cc;
     --c-primary: var(--c-lagoon-300);
     --c-line: rgb(238 242 242 / 0.14);
     --c-eyebrow: var(--c-lagoon-300);
-    --c-accent: var(--c-gold-300);
+    --c-accent: var(--c-lagoon-300);
   }
 }
 :root[data-theme='dark'] {
-  --c-bg: #071c23;
-  --c-surface: #0c2a33;
-  --c-text: #eef2f2;
-  --c-text-muted: #a9b6b8;
+  --c-bg: #06142a;
+  --c-surface: #0b1f3d;
+  --c-text: #e8eef8;
+  --c-text-muted: #a3b3cc;
   --c-primary: var(--c-lagoon-300);
   --c-line: rgb(238 242 242 / 0.14);
   --c-eyebrow: var(--c-lagoon-300);
-  --c-accent: var(--c-gold-300);
+  --c-accent: var(--c-lagoon-300);
 }

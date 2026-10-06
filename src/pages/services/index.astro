@@ -50,7 +50,10 @@ const groups = [
           .filter((s) => !!s)
           .map((s) => (
             <li class="reveal">
-              <a href={`/services/${s.id}`} class="lift flex h-full gap-4 rounded-card bg-surface p-6 ring-1 ring-line">
+              <a
+                href={`/services/${s.id}`}
+                class="lift flex h-full gap-4 rounded-card bg-surface p-6 ring-1 ring-line shadow-card"
+              >
                 <Icon name={s.data.icon as IconName} class="size-8 shrink-0 text-ocean-500 dark:text-lagoon-300" />
                 <span>
                   <span class="block text-xl font-semibold">{s.data.title}</span>

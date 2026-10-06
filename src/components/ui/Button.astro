@@ -14,7 +14,7 @@ type Props = {
 const { href, variant = 'primary', size = 'md', class: className, type = 'button', ...rest } = Astro.props;
 
 const variants: Record<Variant, string> = {
-  primary: 'bg-cta text-cta-text hover:bg-gold-300',
+  primary: 'bg-cta text-cta-text shadow-[0_8px_20px_-8px_rgb(30_99_214/0.55)] hover:bg-ocean-700',
   secondary: 'border border-current text-primary hover:bg-primary/5',
   ghost: 'text-primary underline-offset-4 hover:underline',
   light: 'border border-white/60 text-white hover:bg-white/10',

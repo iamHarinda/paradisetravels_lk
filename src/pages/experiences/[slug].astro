@@ -66,12 +66,12 @@ const path = `/experiences/${entry.id}`;
     </div>
     <aside class="space-y-4 lg:sticky lg:top-28 lg:self-start">
       {e.highlights.length > 0 && (
-        <div class="rounded-media bg-surface p-6 ring-1 ring-line">
+        <div class="rounded-media bg-surface p-6 ring-1 ring-line shadow-card">
           <h2 class="text-xl font-semibold">Highlights</h2>
           <ul class="mt-4 space-y-3 text-sm">
             {e.highlights.map((h) => (
               <li class="flex gap-3">
-                <Icon name="check" class="mt-0.5 size-4 shrink-0 text-tea-600 dark:text-lagoon-300" />
+                <Icon name="check" class="mt-0.5 size-4 shrink-0 text-ocean-500 dark:text-lagoon-300" />
                 {h}
               </li>
             ))}
@@ -114,7 +114,7 @@ const path = `/experiences/${entry.id}`;
       <h2 id="tours-heading" class="text-h2">
         Tours to match
       </h2>
-      <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div class="mt-8 grid gap-6 xl:grid-cols-2">
         {tours.map((t) => (
           <TicketCard tour={t} />
         ))}

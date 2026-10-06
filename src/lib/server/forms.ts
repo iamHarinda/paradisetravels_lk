@@ -172,18 +172,18 @@ function fieldsTable(data: Record<string, unknown>) {
     .filter(([, v]) => v !== undefined && v !== '' && !(Array.isArray(v) && !v.length))
     .map(
       ([k, v]) =>
-        `<tr><th align="left" style="padding:6px 12px 6px 0;vertical-align:top;color:#5A5F63">${esc(k)}</th><td style="padding:6px 0">${esc(Array.isArray(v) ? v.join(', ') : v)}</td></tr>`,
+        `<tr><th align="left" style="padding:6px 12px 6px 0;vertical-align:top;color:#51607a">${esc(k)}</th><td style="padding:6px 0">${esc(Array.isArray(v) ? v.join(', ') : v)}</td></tr>`,
     )
     .join('');
   return `<table style="border-collapse:collapse;font:14px/1.5 Arial,sans-serif">${rows}</table>`;
 }
 
 function layout(title: string, body: string) {
-  return `<!doctype html><html><body style="margin:0;background:#FBF8F2;padding:24px;font:15px/1.6 Arial,sans-serif;color:#14181B">
+  return `<!doctype html><html><body style="margin:0;background:#F5F9FE;padding:24px;font:15px/1.6 Arial,sans-serif;color:#0b1730">
 <div style="max-width:600px;margin:auto;background:#fff;border-radius:12px;overflow:hidden">
-<div style="background:#062A35;color:#F0CF85;padding:20px 24px;font:700 20px Georgia,serif">${esc(SITE.name)}</div>
+<div style="background:#071a33;color:#FFFFFF;padding:20px 24px;font:700 20px Georgia,serif">${esc(SITE.name)}</div>
 <div style="padding:24px"><h1 style="font:600 22px Georgia,serif;margin:0 0 16px">${esc(title)}</h1>${body}</div>
-<div style="padding:16px 24px;background:#F3EDE2;font-size:12px;color:#5A5F63">${esc(SITE.legalName)} · ${esc(SITE.addressLine)} · ${esc(SITE.phone)}</div>
+<div style="padding:16px 24px;background:#E8F0FB;font-size:12px;color:#51607a">${esc(SITE.legalName)} · ${esc(SITE.addressLine)} · ${esc(SITE.phone)}</div>
 </div></body></html>`;
 }
 
@@ -260,7 +260,7 @@ export async function handleForm<S extends z.ZodType<Record<string, unknown>>>(
       text: JSON.stringify(lead, null, 2),
       html: layout(
         `${LABELS[kind]} from ${data.name}`,
-        `${waDigits ? `<p><a href="https://wa.me/${waDigits}" style="color:#0B4A5C;font-weight:700">Reply on WhatsApp</a></p>` : ''}${fieldsTable(lead)}`,
+        `${waDigits ? `<p><a href="https://wa.me/${waDigits}" style="color:#0e3b7d;font-weight:700">Reply on WhatsApp</a></p>` : ''}${fieldsTable(lead)}`,
       ),
     });
     await sendMail({
@@ -270,7 +270,7 @@ export async function handleForm<S extends z.ZodType<Record<string, unknown>>>(
       html: layout(
         `Thank you, ${data.name}`,
         `<p>We have received your ${esc(LABELS[kind].toLowerCase())} and a member of our Colombo team will reply as soon as possible.</p>
-<p>If it is urgent, <a href="${esc(whatsappLink())}" style="color:#0B4A5C;font-weight:700">message us on WhatsApp</a> (${esc(SITE.phone)}).</p>`,
+<p>If it is urgent, <a href="${esc(whatsappLink())}" style="color:#0e3b7d;font-weight:700">message us on WhatsApp</a> (${esc(SITE.phone)}).</p>`,
       ),
     });
     if (LEAD_WEBHOOK_URL) {

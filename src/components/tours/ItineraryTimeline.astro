@@ -6,10 +6,10 @@ interface Props {
 const { days } = Astro.props;
 ---
 
-<ol class="relative border-l-2 border-gold-500/60 pl-8">
+<ol class="relative border-l-2 border-ocean-500/25 pl-8">
   {days.map((d, i) => (
     <li class="reveal relative pb-8 last:pb-0">
-      <span class="absolute top-1 -left-[2.6rem] grid size-8 place-items-center rounded-full bg-gold-500 text-xs font-bold text-ocean-900">
+      <span class="absolute top-1 -left-[2.6rem] grid size-8 place-items-center rounded-full bg-ocean-500 text-xs font-bold text-white">
         {d.day}
       </span>
       <details open={i < 3} class="group">

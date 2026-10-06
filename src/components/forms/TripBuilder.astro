@@ -350,7 +350,7 @@ const steps = ['When?', 'Who?', 'What?', 'How?', 'You'];
       prev.style.visibility = i === 0 ? 'hidden' : 'visible';
       next.hidden = last;
       form.querySelectorAll<HTMLElement>('[data-progress-step]').forEach((p, j) => {
-        p.firstElementChild!.className = `block h-1.5 rounded-pill transition-colors ${j <= i ? 'bg-gold-500' : 'bg-line'}`;
+        p.firstElementChild!.className = `block h-1.5 rounded-pill transition-colors ${j <= i ? 'bg-ocean-500' : 'bg-line'}`;
       });
       stepLabel.textContent = `Step ${i + 1} of ${steps.length}`;
       if (focus) steps[i]!.querySelector<HTMLElement>('legend')?.setAttribute('tabindex', '-1');

@@ -44,8 +44,8 @@ const steps = [
     </h2>
     <ol class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
       {steps.map((s, i) => (
-        <li class="reveal rounded-card bg-surface p-6 ring-1 ring-line">
-          <span class="grid size-9 place-items-center rounded-full bg-gold-500 text-sm font-bold text-ocean-900">
+        <li class="reveal rounded-card bg-surface p-6 ring-1 ring-line shadow-card">
+          <span class="grid size-9 place-items-center rounded-full bg-ocean-500 text-sm font-bold text-white">
             {i + 1}
           </span>
           <h3 class="mt-4 text-xl font-semibold">{s.title}</h3>
@@ -115,7 +115,7 @@ const steps = [
         quote. Availability is confirmed by our team — prices are not live.
       </p>
     </div>
-    <div class="rounded-media bg-surface p-6 ring-1 ring-line sm:p-8">
+    <div class="rounded-media bg-surface p-6 ring-1 ring-line shadow-card sm:p-8">
       <RateRequestForm />
     </div>
   </section>

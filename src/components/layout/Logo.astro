@@ -7,7 +7,10 @@ const { class: className } = Astro.props;
 ---
 
 <a href="/" class:list={['flex items-center gap-3 font-display text-xl font-semibold', className]}>
-  <span class="grid size-10 place-items-center rounded-xl bg-ocean-900 text-gold-300" aria-hidden="true">
+  <span
+    class="grid size-10 place-items-center rounded-xl bg-[linear-gradient(135deg,var(--c-ocean-500),var(--c-ocean-900))] text-white shadow-[0_6px_16px_-6px_rgb(30_99_214/0.6)]"
+    aria-hidden="true"
+  >
     PT
   </span>
   <span>Paradise Travels</span>

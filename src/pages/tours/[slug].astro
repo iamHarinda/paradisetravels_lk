@@ -33,7 +33,7 @@ const others = (await getEntries('tours'))
     (a, b) =>
       Math.abs(a.data.durationDays - t.durationDays) - Math.abs(b.data.durationDays - t.durationDays) || byOrder(a, b),
   )
-  .slice(0, 3);
+  .slice(0, 4);
 const path = `/tours/${entry.id}`;
 const page = new URL(path, Astro.site);
 ---
@@ -98,7 +98,7 @@ const page = new URL(path, Astro.site);
           <ul class="mt-4 space-y-3 text-sm">
             {t.inclusions.map((i) => (
               <li class="flex gap-3">
-                <Icon name="check" class="mt-0.5 size-4 shrink-0 text-tea-600 dark:text-lagoon-300" />
+                <Icon name="check" class="mt-0.5 size-4 shrink-0 text-ocean-500 dark:text-lagoon-300" />
                 {i}
               </li>
             ))}
@@ -126,7 +126,7 @@ const page = new URL(path, Astro.site);
     </div>
 
     <aside class="lg:sticky lg:top-28 lg:self-start">
-      <div class="rounded-media bg-surface p-6 ring-1 ring-line">
+      <div class="rounded-media bg-surface p-6 ring-1 ring-line shadow-card">
         <p class="text-sm text-muted">{t.durationDays} days · private tour</p>
         <p class="mt-1 text-2xl font-semibold">{tourPrice(t)}</p>
         {t.priceNote && <p class="mt-2 text-sm text-muted">{t.priceNote}</p>}
@@ -174,7 +174,7 @@ const page = new URL(path, Astro.site);
     <h2 id="more-heading" class="text-h2">
       More tours
     </h2>
-    <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <div class="mt-8 grid gap-6 xl:grid-cols-2">
       {others.map((o) => (
         <TicketCard tour={o} />
       ))}
@@ -192,7 +192,7 @@ const page = new URL(path, Astro.site);
       <span>
         {t.durationDays} days · {tourPrice(t)}
       </span>
-      <span class="text-gold-300">Enquire →</span>
+      <span class="text-lagoon-300">Enquire →</span>
     </a>
   </div>
 </PageLayout>

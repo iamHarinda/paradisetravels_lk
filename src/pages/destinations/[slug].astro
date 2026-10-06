@@ -70,7 +70,7 @@ const path = `/destinations/${entry.id}`;
           </h2>
           <ol class="mt-6 grid gap-4 sm:grid-cols-2">
             {d.thingsToDo.map((t, i) => (
-              <li class="rounded-card bg-surface p-5 ring-1 ring-line">
+              <li class="rounded-card bg-surface p-5 ring-1 ring-line shadow-card">
                 <p class="text-sm font-semibold text-muted">{String(i + 1).padStart(2, '0')}</p>
                 <h3 class="mt-1 text-xl font-semibold">{t.title}</h3>
                 <p class="mt-2 text-sm text-muted">Tip: {t.tip}</p>
@@ -102,7 +102,7 @@ const path = `/destinations/${entry.id}`;
     </div>
 
     <aside class="lg:sticky lg:top-28 lg:self-start">
-      <dl class="divide-y divide-line rounded-media bg-surface p-6 ring-1 ring-line">
+      <dl class="divide-y divide-line rounded-media bg-surface p-6 ring-1 ring-line shadow-card">
         <div class="pb-4">
           <dt class="text-xs font-semibold tracking-wider text-muted uppercase">Region</dt>
           <dd class="mt-1">{REGIONS[d.region].name}</dd>
@@ -167,7 +167,7 @@ const path = `/destinations/${entry.id}`;
       <h2 id="tours-heading" class="text-h2">
         Tours that include {d.title}
       </h2>
-      <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div class="mt-8 grid gap-6 xl:grid-cols-2">
         {relatedTours.map((t) => (
           <TicketCard tour={t} />
         ))}

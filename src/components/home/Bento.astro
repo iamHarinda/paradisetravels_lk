@@ -30,7 +30,7 @@ const FEATURE: Record<string, { span: string; photo: PhotoName }> = {
           <a
             href={`/services/${s.id}`}
             class:list={[
-              'lift group relative isolate flex h-full flex-col justify-between gap-6 overflow-hidden rounded-card p-5 ring-1 ring-line sm:p-6',
+              'lift group relative isolate flex h-full flex-col justify-between gap-6 overflow-hidden rounded-card p-5 ring-1 ring-line shadow-card sm:p-6',
               feature ? 'bg-ocean-900 text-white' : 'bg-surface',
             ]}
           >
@@ -42,7 +42,7 @@ const FEATURE: Record<string, { span: string; photo: PhotoName }> = {
                   class="absolute inset-0 -z-20 transition-transform duration-700 ease-travel group-hover:scale-105"
                   sizes="(min-width: 768px) 50vw, 100vw"
                 />
-                <span class="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgb(6_42_53/0.25),rgb(6_42_53/0.9))]" />
+                <span class="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgb(7_26_51/0.25),rgb(7_26_51/0.9))]" />
               </>
             )}
             <span class="flex items-start justify-between">
@@ -50,7 +50,7 @@ const FEATURE: Record<string, { span: string; photo: PhotoName }> = {
                 name={s.data.icon as IconName}
                 class:list={[
                   'size-9 transition-transform duration-300 ease-travel group-hover:-rotate-6 group-hover:scale-110',
-                  feature ? 'text-gold-300' : 'text-ocean-500 dark:text-lagoon-300',
+                  feature ? 'text-lagoon-300' : 'text-ocean-500 dark:text-lagoon-300',
                 ]}
               />
               <span class:list={['font-display text-sm italic', feature ? 'text-white/70' : 'text-muted']}>

@@ -22,7 +22,7 @@ const fmt = new Intl.DateTimeFormat('en-GB', { month: 'long', year: 'numeric' })
   {reviews.length ? (
     <div class="mt-12 columns-1 gap-6 sm:columns-2 lg:columns-3">
       {reviews.map((r) => (
-        <figure class="reveal mb-6 break-inside-avoid rounded-card bg-surface p-6 ring-1 ring-line">
+        <figure class="reveal mb-6 break-inside-avoid rounded-card bg-surface p-6 ring-1 ring-line shadow-card">
           {r.data.rating && (
             <p class="text-gold-500" aria-label={`Rated ${r.data.rating} out of 5`}>
               {'★'.repeat(r.data.rating)}
