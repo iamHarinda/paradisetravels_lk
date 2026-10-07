@@ -1,0 +1,98 @@
+---
+import Media from '../ui/Media.astro';
+import { photo } from '../../lib/photos';
+
+// Scroll-driven "window opens" moment: a framed photo expands to full screen as you scroll, then the line fades in.
+// Pure CSS (animation-timeline: view()); browsers without support / reduced motion get the finished state.
+interface Props {
+  photoName?: Parameters<typeof photo>[0];
+  kicker?: string;
+  line: string;
+  accentWord: string;
+}
+const { photoName = 'sigiriya', kicker = 'Sigiriya · 5th century', line, accentWord } = Astro.props;
+const p = photo(photoName);
+const [before, after] = line.split(accentWord);
+---
+
+<section class="cine relative h-[230vh]" aria-label={line}>
+  <div class="sticky top-0 grid h-svh place-items-center overflow-hidden">
+    <div class="cine-frame absolute inset-0">
+      <Media image={p.image} alt={p.alt} class="cine-img" sizes="100vw" />
+      <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgb(7_26_51/0.15),rgb(7_26_51/0.7))]"></div>
+    </div>
+    <div class="cine-text relative z-10 container-site text-center text-white">
+      <p class="detail text-lagoon-300">{kicker}</p>
+      <p class="mx-auto mt-5 max-w-5xl font-display text-[clamp(2.5rem,6vw+1rem,7rem)] leading-[0.98] tracking-[-0.03em] [text-shadow:0_4px_40px_rgb(7_26_51/0.5)]">
+        {before}
+        <em class="accent gradient-text">{accentWord}</em>
+        {after}
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cine {
+    view-timeline: --cine block;
+  }
+  .gradient-text {
+    background: linear-gradient(100deg, #93c5fd 10%, #ffffff 60%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  /* The timeline lives in separate, more specific rules: CSS minifiers fold animation-timeline into the
+     "animation" shorthand, which browsers reject. */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .cine-frame {
+        animation: cine-open linear both;
+      }
+      .cine .cine-frame {
+        animation-timeline: --cine;
+        animation-range: contain 0% contain 45%;
+      }
+      .cine-frame :global(.cine-img) {
+        animation: cine-zoom linear both;
+      }
+      .cine .cine-frame :global(.cine-img) {
+        animation-timeline: --cine;
+        animation-range: contain 0% contain 70%;
+      }
+      .cine-text {
+        animation: cine-text linear both;
+      }
+      .cine .cine-text {
+        animation-timeline: --cine;
+        animation-range: contain 30% contain 55%;
+      }
+    }
+  }
+  @keyframes cine-open {
+    from {
+      clip-path: inset(22% 26% round 28px);
+    }
+    to {
+      clip-path: inset(0 round 0);
+    }
+  }
+  @keyframes cine-zoom {
+    from {
+      transform: scale(1.25);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+  @keyframes cine-text {
+    from {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>

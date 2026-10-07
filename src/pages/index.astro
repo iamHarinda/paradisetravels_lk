@@ -3,6 +3,7 @@ import PageLayout from '../layouts/PageLayout.astro';
 import Hero from '../components/home/Hero.astro';
 import Marquee from '../components/home/Marquee.astro';
 import Bento from '../components/home/Bento.astro';
+import CinematicReveal from '../components/home/CinematicReveal.astro';
 import IslandExplorer from '../components/home/IslandExplorer.astro';
 import ScrollStory from '../components/home/ScrollStory.astro';
 import ReviewWall from '../components/home/ReviewWall.astro';
@@ -51,6 +52,7 @@ const facts = [
   title="Sri Lanka Tours, Hotels & Travel Agency | Paradise Travels"
   description="Colombo travel agency since 2007: tailor-made Sri Lanka tours, partner hotel rates, flights, ETA and visa help, drivers, guides, events and Ayurveda."
   jsonLd={[travelAgencySchema()]}
+  overlayHeader
 >
   <Hero />
   <section class="container-site pb-14" aria-labelledby="airlines-heading">
@@ -66,6 +68,7 @@ const facts = [
   </section>
   <Marquee />
   <Bento />
+  <CinematicReveal line="Some places you have to see to believe." accentWord="see" />
   <IslandExplorer />
 
   <section class="container-site py-24" aria-labelledby="tours-heading">

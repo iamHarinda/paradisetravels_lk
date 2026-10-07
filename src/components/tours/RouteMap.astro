@@ -58,6 +58,9 @@ const route = points.map(([x, y], i) => `${i ? 'L' : 'M'}${x.toFixed(1)} ${y.toF
       .route-line {
         stroke-dashoffset: 1;
         animation: draw linear forwards;
+      }
+      /* Separate rule so the minifier can't fold the timeline into the shorthand (browsers reject that). */
+      figure .route-line {
         animation-timeline: view();
         animation-range: entry 10% cover 50%;
       }
