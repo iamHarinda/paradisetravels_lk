@@ -60,9 +60,30 @@ const labelPos = (id: string, x: number, y: number) => {
     fill: currentColor;
   }
   .map-place:hover,
-  .map-place:focus-visible,
-  .map-place.is-active {
+  .map-place:focus-visible {
     color: var(--c-ocean-500);
     font-weight: 600;
+  }
+  /* Selected region / in-season places: warm yellow so they pop against the blue map.
+     Label text uses dark amber (≈ 7:1 on white) so it stays readable. */
+  .map-place.is-active {
+    color: #92400e;
+    font-weight: 700;
+  }
+  .map-place.is-active circle:first-child {
+    fill: #facc15;
+    stroke: #b45309;
+    stroke-width: 1.2;
+    transform: scale(1.35);
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+  .map-place.is-active circle:nth-child(2) {
+    fill: rgb(250 204 21 / 0.28);
+  }
+  .map-place circle {
+    transition:
+      transform 250ms var(--ease-travel),
+      fill 250ms var(--ease-travel);
   }
 </style>

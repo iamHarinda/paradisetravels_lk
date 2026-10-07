@@ -29,7 +29,7 @@ const seasons = Object.fromEntries(regionIds.map((r) => [r, REGIONS[r].bestMonth
               type="button"
               data-region={r}
               aria-pressed={i === 0 ? 'true' : 'false'}
-              class="w-full rounded-card border border-line bg-white/70 p-4 text-left transition-[border-color,box-shadow,background-color] hover:border-ocean-500/50 aria-pressed:border-ocean-500 aria-pressed:bg-white aria-pressed:shadow-card"
+              class="w-full rounded-card border border-line bg-white/70 p-4 text-left transition-[border-color,box-shadow,background-color] hover:border-ocean-500/50 aria-pressed:border-[#f5b301] aria-pressed:bg-[#fffbeb] aria-pressed:shadow-card"
             >
               <span class="block font-semibold">{REGIONS[r].name}</span>
               <span class="block text-sm text-muted">{REGIONS[r].blurb}</span>
@@ -73,7 +73,7 @@ const seasons = Object.fromEntries(regionIds.map((r) => [r, REGIONS[r].bestMonth
           data-month={i + 1}
           aria-pressed="false"
           aria-label={MONTHS_LONG[i]}
-          class="min-h-12 min-w-14 rounded-pill border border-line bg-white px-4 text-sm font-semibold transition-colors hover:border-ocean-500 aria-pressed:border-ocean-500 aria-pressed:bg-ocean-500 aria-pressed:text-white"
+          class="min-h-12 min-w-14 rounded-pill border border-line bg-white px-4 text-sm font-semibold transition-colors hover:border-[#f5b301] aria-pressed:border-[#f5b301] aria-pressed:bg-[#facc15] aria-pressed:text-ink-900"
         >
           {m}
         </button>
@@ -96,7 +96,10 @@ const seasons = Object.fromEntries(regionIds.map((r) => [r, REGIONS[r].bestMonth
   import { MONTHS_LONG, REGIONS, type RegionId } from '../../lib/seasons';
 
   const buttons = [...document.querySelectorAll<HTMLButtonElement>('[data-regions] button[data-region]')];
+  const monthButtons = [...document.querySelectorAll<HTMLButtonElement>('[data-season-picker] button[data-month]')];
   const select = (id: string) => {
+    // A region selection replaces any month selection (one highlight story at a time).
+    monthButtons.forEach((b) => b.setAttribute('aria-pressed', 'false'));
     buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.region === id)));
     document
       .querySelectorAll<HTMLElement>('[data-links]')
@@ -122,6 +125,9 @@ const seasons = Object.fromEntries(regionIds.map((r) => [r, REGIONS[r].bestMonth
       document.querySelectorAll('.map-place').forEach((p) => {
         p.classList.toggle('is-active', good.includes((p as HTMLElement).dataset.region as RegionId));
       });
+      // Region cards follow the month: every region in season is highlighted, matching the map.
+      buttons.forEach((b) => b.setAttribute('aria-pressed', String(good.includes(b.dataset.region as RegionId))));
+      document.querySelectorAll<HTMLElement>('[data-links]').forEach((l) => l.classList.remove('is-open'));
     };
     months.forEach((b) => b.addEventListener('click', () => pick(Number(b.dataset.month))));
   }
