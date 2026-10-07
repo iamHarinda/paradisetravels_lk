@@ -41,6 +41,9 @@ Internal pages: `/styleguide` (all components, noindex).
 - `sample: true` entries render in dev/staging only and are **never** built in production.
 - Hotels: set `rateDisplay` only after checking the contract (rate parity, docs/10).
 - Reviews: real only, with `permission: true` — the build fails otherwise.
+- Photo grading: originals live untouched in `assets-src/photos/`; `node scripts/grade-photos.mjs` writes the
+  graded copies (warm, lifted shadows, protected highlights — docs/04 §8) to `src/assets/images/photos/`.
+  `--preview /tmp/out` makes before/after sheets instead. Add new originals to `assets-src/photos/` and re-run.
 - Images: put photos in content via Keystatic (≥ 2400 px wide); they're converted to AVIF/WebP automatically. Until then, labelled colour placeholders are shown.
 
 ## Environment
