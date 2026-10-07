@@ -85,7 +85,7 @@ const page = new URL(path, Astro.site);
           <ItineraryTimeline days={t.days} />
           {destinations.length > 0 && (
             <RouteMap
-              class="order-first rounded-media bg-ocean-900 p-4 md:order-last md:self-start"
+              class="order-first rounded-media bg-white p-4 shadow-card ring-1 ring-line md:order-last md:self-start"
               stops={destinations.map((d) => ({ title: d.data.title, coords: d.data.coords }))}
             />
           )}

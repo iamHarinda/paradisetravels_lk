@@ -1,28 +1,82 @@
 ---
 import { arc, CMB, DESTINATIONS, FLIGHT_MAP, projectWorld } from '../../lib/flights';
 
-// Site-wide faded "flight map" backdrop: dotted world map (cached file, ~5 KB gz) with animated routes from
-// Colombo to the hubs of the airlines we ticket. Decorative only; static with prefers-reduced-motion.
+// Site-wide faded travel backdrop: a dotted world map (cached file, ~5 KB gz) with small aircraft gliding
+// along curved routes to and from Colombo, each trailing a soft contrail. Decorative only.
+// SMIL keeps each plane and its contrail in perfect sync; with prefers-reduced-motion the planes are hidden.
 const [cx, cy] = projectWorld(CMB);
+
+// A handful of flights — some outbound, some inbound — with staggered timings so the sky never looks busy.
+const FLIGHTS = [
+  { code: 'DXB', dur: 34, begin: 0, inbound: false },
+  { code: 'LHR', dur: 52, begin: -18, inbound: true },
+  { code: 'SIN', dur: 30, begin: -9, inbound: false },
+  { code: 'SYD', dur: 48, begin: -30, inbound: true },
+  { code: 'ICN', dur: 44, begin: -5, inbound: false },
+  { code: 'IST', dur: 46, begin: -26, inbound: false },
+  { code: 'DEL', dur: 26, begin: -14, inbound: true },
+  { code: 'HKG', dur: 40, begin: -21, inbound: true },
+].map((f) => {
+  const dest = DESTINATIONS.find((d) => d.code === f.code)!;
+  return { ...f, path: arc(dest.coords), coords: dest.coords };
+});
+
+// Top-view airliner silhouette pointing along +x (animateMotion rotate="auto" aligns it with the route).
+const PLANE =
+  'M14 0 L5 -1.6 L1 -9 L-1.5 -9 L0.5 -1.6 L-6 -1.4 L-8.5 -4.5 L-10 -4.5 L-8.6 0 L-10 4.5 L-8.5 4.5 L-6 1.4 L0.5 1.6 L-1.5 9 L1 9 L5 1.6 Z';
 ---
 
 <div class="flight-backdrop" aria-hidden="true">
   <svg viewBox={`0 0 ${FLIGHT_MAP.width} ${FLIGHT_MAP.height}`} preserveAspectRatio="xMidYMid slice">
+    <defs>
+      {FLIGHTS.map((f, i) => (
+        <path id={`route-${i}`} d={f.path} />
+      ))}
+    </defs>
     <image href="/maps/world-dots.svg" width={FLIGHT_MAP.width} height={FLIGHT_MAP.height} />
-    <g class="routes">
-      {DESTINATIONS.map((d, i) => (
-        <path d={arc(d.coords)} style={`--i:${i}`} />
+
+    <g class="flights">
+      {FLIGHTS.map((f, i) => (
+        <g>
+          {/* Contrail: a short soft dash riding along the route just behind the plane
+                (outbound covers [p−0.16, p], inbound covers [p, p+0.16] of the path).
+                Own <path> so pathLength="1" applies (it doesn't through <use>). */}
+          <path
+            d={f.path}
+            class="contrail"
+            pathLength="1"
+            stroke-dasharray="0.16 1"
+            stroke-dashoffset={f.inbound ? '-1' : '0.16'}
+          >
+            <animate
+              attributeName="stroke-dashoffset"
+              values={f.inbound ? '-1;0' : '0.16;-0.84'}
+              dur={`${f.dur}s`}
+              begin={`${f.begin}s`}
+              repeatCount="indefinite"
+            />
+          </path>
+          <path class="plane" d={PLANE}>
+            <animateMotion
+              dur={`${f.dur}s`}
+              begin={`${f.begin}s`}
+              repeatCount="indefinite"
+              rotate={f.inbound ? 'auto-reverse' : 'auto'}
+              keyPoints={f.inbound ? '1;0' : '0;1'}
+              keyTimes="0;1"
+              calcMode="linear"
+            >
+              <mpath href={`#route-${i}`} />
+            </animateMotion>
+          </path>
+        </g>
       ))}
     </g>
+
     <g class="airports">
-      {DESTINATIONS.map((d, i) => {
-        const [x, y] = projectWorld(d.coords);
-        return (
-          <g style={`--i:${i}`}>
-            <circle class="pulse" cx={x} cy={y} r="5" />
-            <circle cx={x} cy={y} r="3.5" />
-          </g>
-        );
+      {FLIGHTS.map((f) => {
+        const [x, y] = projectWorld(f.coords);
+        return <circle cx={x} cy={y} r="3.5" />;
       })}
     </g>
     <g class="hub">
@@ -38,7 +92,7 @@ const [cx, cy] = projectWorld(CMB);
     inset: 0;
     z-index: -1;
     pointer-events: none;
-    opacity: 0.24;
+    opacity: 0.32;
     /* Strongest around the Colombo hub, dissolving towards the edges where most text sits. */
     mask-image: radial-gradient(ellipse 70% 75% at 56% 52%, #000 0%, rgb(0 0 0 / 0.55) 45%, transparent 85%);
     /* Own compositor layer: scrolling never repaints it. */
@@ -50,19 +104,22 @@ const [cx, cy] = projectWorld(CMB);
     height: 100%;
   }
   .flight-backdrop image {
-    opacity: 0.45;
+    opacity: 0.4;
   }
-  .routes path {
+  .contrail {
     fill: none;
     stroke: var(--c-ocean-500);
-    stroke-width: 2;
+    stroke-width: 2.5;
     stroke-linecap: round;
-    stroke-dasharray: 3 9;
-    animation: route-flow 2.4s linear infinite;
-    animation-delay: calc(var(--i) * -0.37s);
+    opacity: 0.55;
+  }
+  .plane {
+    fill: var(--c-ocean-700);
+    transform-box: fill-box;
   }
   .airports circle {
     fill: var(--c-ocean-700);
+    opacity: 0.6;
   }
   .hub circle {
     fill: var(--c-ocean-500);
@@ -72,12 +129,6 @@ const [cx, cy] = projectWorld(CMB);
     transform-origin: center;
     opacity: 0;
     animation: airport-pulse 3.6s var(--ease-travel) infinite;
-    animation-delay: calc(var(--i, 0) * 0.45s);
-  }
-  @keyframes route-flow {
-    to {
-      stroke-dashoffset: -24;
-    }
   }
   @keyframes airport-pulse {
     0% {
@@ -91,14 +142,19 @@ const [cx, cy] = projectWorld(CMB);
   }
   @media (prefers-color-scheme: dark) {
     .flight-backdrop {
-      opacity: 0.16;
+      opacity: 0.2;
     }
-    .routes path {
+    .contrail {
       stroke: var(--c-lagoon-300);
+    }
+    .plane {
+      fill: var(--c-lagoon-300);
     }
   }
   @media (prefers-reduced-motion: reduce) {
-    .routes path,
+    .flights {
+      display: none;
+    }
     .pulse {
       animation: none;
     }

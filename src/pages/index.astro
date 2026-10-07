@@ -52,7 +52,6 @@ const facts = [
   title="Sri Lanka Tours, Hotels & Travel Agency | Paradise Travels"
   description="Colombo travel agency since 2007: tailor-made Sri Lanka tours, partner hotel rates, flights, ETA and visa help, drivers, guides, events and Ayurveda."
   jsonLd={[travelAgencySchema()]}
-  overlayHeader
 >
   <Hero />
   <section class="container-site pb-14" aria-labelledby="airlines-heading">
@@ -134,9 +133,9 @@ const facts = [
 
   <ScrollStory />
 
-  <section class="on-dark bg-ocean-900 py-24 text-white" aria-labelledby="why-heading">
+  <section class="bg-white py-24" aria-labelledby="why-heading">
     <div class="container-site">
-      <p class="reveal chapter text-lagoon-300!">
+      <p class="reveal chapter">
         <span class="chapter-no">06</span>
         <span class="chapter-rule" aria-hidden="true"></span>
         <span>Why Paradise Travels</span>
@@ -146,29 +145,29 @@ const facts = [
         class="reveal mt-4 max-w-3xl text-h2"
         set:html={accent('A local partner, *not a call centre.*')}
       />
-      <dl class="mt-16 grid gap-px overflow-hidden rounded-media bg-white/10 sm:grid-cols-2 lg:grid-cols-4">
+      <dl class="mt-16 grid gap-px overflow-hidden rounded-media bg-line ring-1 ring-line sm:grid-cols-2 lg:grid-cols-4">
         {facts.map((f) => (
-          <div class="reveal flex flex-col-reverse gap-3 bg-ocean-900 p-8">
-            <dt class="text-sm text-white/75">{f.label}</dt>
-            <dd class="font-display text-7xl leading-none font-semibold text-lagoon-300">{f.value}</dd>
+          <div class="reveal flex flex-col-reverse gap-3 bg-sky-50 p-8">
+            <dt class="text-sm text-muted">{f.label}</dt>
+            <dd class="font-display text-7xl leading-none text-ocean-500">{f.value}</dd>
           </div>
         ))}
       </dl>
-      <ul class="mt-12 grid gap-8 text-sm text-white/80 sm:grid-cols-2 lg:grid-cols-4">
+      <ul class="mt-12 grid gap-8 text-sm text-muted sm:grid-cols-2 lg:grid-cols-4">
         <li class="reveal">
-          <strong class="block text-base text-white">Honest local advice</strong>Seasons, distances and crowds — from
+          <strong class="block text-base text-ink-900">Honest local advice</strong>Seasons, distances and crowds — from
           people who live here.
         </li>
         <li class="reveal">
-          <strong class="block text-base text-white">Real people on WhatsApp</strong>Message the same team before,
+          <strong class="block text-base text-ink-900">Real people on WhatsApp</strong>Message the same team before,
           during and after your trip.
         </li>
         <li class="reveal">
-          <strong class="block text-base text-white">Partner hotel rates</strong>Contracted rates and packages with
+          <strong class="block text-base text-ink-900">Partner hotel rates</strong>Contracted rates and packages with
           hotels around the island.
         </li>
         <li class="reveal">
-          <strong class="block text-base text-white">Everything in one place</strong>Flights, visa, hotels, driver,
+          <strong class="block text-base text-ink-900">Everything in one place</strong>Flights, visa, hotels, driver,
           guides — one point of contact.
         </li>
       </ul>

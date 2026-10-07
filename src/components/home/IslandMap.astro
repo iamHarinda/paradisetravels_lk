@@ -53,7 +53,7 @@ const labelPos = (id: string, x: number, y: number) => {
 
 <style>
   .map-place {
-    color: rgb(255 255 255 / 0.6);
+    color: #51607a;
     transition: color 200ms;
   }
   .map-place circle:first-child {
@@ -62,6 +62,7 @@ const labelPos = (id: string, x: number, y: number) => {
   .map-place:hover,
   .map-place:focus-visible,
   .map-place.is-active {
-    color: #ffffff;
+    color: var(--c-ocean-500);
+    font-weight: 600;
   }
 </style>

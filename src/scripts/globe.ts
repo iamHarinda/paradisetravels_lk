@@ -1,5 +1,5 @@
 // Hero globe: dotted Earth on <canvas> with animated flight arcs from Colombo. ~5 KB, no 3D library.
-// Orthographic projection; auto-sways around South Asia, can be dragged; pauses off-screen / in hidden tabs;
+// Orthographic projection; sways gently around Sri Lanka (always in view); pauses off-screen / in hidden tabs;
 // renders a single static frame when the visitor prefers reduced motion.
 //
 // Performance (docs/09 — keep every frame well under 50 ms on a throttled phone):
@@ -8,6 +8,7 @@
 // capped at 30 fps; animation only starts after the page has loaded and the browser is idle.
 import { LAND } from '../data/land-mask';
 import { CMB, DESTINATIONS } from '../lib/flights';
+import { SRI_LANKA } from '../lib/geo-data';
 
 const RAD = Math.PI / 180;
 type Vec = [number, number, number];
@@ -75,7 +76,7 @@ export function mountGlobe(canvas: HTMLCanvasElement) {
   }
   const bucketStyles = Array.from(
     { length: BUCKETS },
-    (_, b) => `rgba(147,197,253,${(0.2 + ((b + 0.5) / BUCKETS) * 0.7).toFixed(2)})`,
+    (_, b) => `rgba(30,99,214,${(0.12 + ((b + 0.5) / BUCKETS) * 0.55).toFixed(2)})`,
   );
   const arcs = DESTINATIONS.map((d, i) => ({
     path: arcPath(CMB, d.coords),
@@ -83,6 +84,10 @@ export function mountGlobe(canvas: HTMLCanvasElement) {
     speed: 0.00011 + (i % 5) * 0.000012,
   }));
   const hub = toVec(CMB[0], CMB[1]);
+  // Sri Lanka's real coastline (Natural Earth), drawn as a highlighted shape — at 1.5° the dot grid alone
+  // would only give the island 4–5 dots. Main island + Mannar/Jaffna islands.
+  const island = SRI_LANKA.map((poly) => poly.map(([la, lo]) => toVec(la, lo)));
+  const islandCentre = toVec(7.85, 80.7);
 
   let w = 0;
   let h = 0;
@@ -93,16 +98,17 @@ export function mountGlobe(canvas: HTMLCanvasElement) {
   let backdrop: HTMLCanvasElement | null = null;
 
   // View rotation: centre longitude (radians) + fixed tilt so the northern hemisphere leans toward us.
-  let center = 78 * RAD;
-  const tilt = -14 * RAD;
+  let center = 80.7 * RAD;
+  const tilt = -9 * RAD;
   const cosT = Math.cos(tilt);
   const sinT = Math.sin(tilt);
   let cosC = 1;
   let sinC = 0;
 
   const project = (v: Vec): [number, number, number] => {
-    const x = v[0] * cosC - v[2] * sinC;
-    const z0 = v[0] * sinC + v[2] * cosC;
+    // Rotate around Y by −center (cosC/sinC are cos/sin of −center).
+    const x = v[0] * cosC + v[2] * sinC;
+    const z0 = -v[0] * sinC + v[2] * cosC;
     const y = v[1] * cosT - z0 * sinT;
     const z = v[1] * sinT + z0 * cosT;
     return [cx + x * R, cy - y * R, z];
@@ -121,21 +127,21 @@ export function mountGlobe(canvas: HTMLCanvasElement) {
     backdrop.height = canvas.height;
     const b = backdrop.getContext('2d')!;
     b.scale(dpr, dpr);
-    const glow = b.createRadialGradient(cx, cy, R * 0.85, cx, cy, R * 1.35);
-    glow.addColorStop(0, 'rgba(30,99,214,0.35)');
+    const glow = b.createRadialGradient(cx, cy, R * 0.9, cx, cy, R * 1.3);
+    glow.addColorStop(0, 'rgba(30,99,214,0.16)');
     glow.addColorStop(1, 'rgba(30,99,214,0)');
     b.fillStyle = glow;
     b.beginPath();
-    b.arc(cx, cy, R * 1.35, 0, Math.PI * 2);
+    b.arc(cx, cy, R * 1.3, 0, Math.PI * 2);
     b.fill();
     const body = b.createRadialGradient(cx - R * 0.35, cy - R * 0.4, R * 0.1, cx, cy, R);
-    body.addColorStop(0, '#12366d');
-    body.addColorStop(1, '#071a33');
+    body.addColorStop(0, '#ffffff');
+    body.addColorStop(1, '#d6e6fb');
     b.fillStyle = body;
     b.beginPath();
     b.arc(cx, cy, R, 0, Math.PI * 2);
     b.fill();
-    b.strokeStyle = 'rgba(147,197,253,0.35)';
+    b.strokeStyle = 'rgba(30,99,214,0.22)';
     b.lineWidth = 1;
     b.stroke();
   };
@@ -148,7 +154,7 @@ export function mountGlobe(canvas: HTMLCanvasElement) {
     h = rect.height;
     canvas.width = Math.round(w * dpr);
     canvas.height = Math.round(h * dpr);
-    R = Math.min(w, h) * 0.42;
+    R = Math.min(w, h) * 0.37; // glow reaches 1.3R = 0.48 of the canvas: never touches its edges
     cx = w / 2;
     cy = h / 2;
     renderBackdrop();
@@ -173,10 +179,10 @@ export function mountGlobe(canvas: HTMLCanvasElement) {
       const vx = px[i]!;
       const vz = pz[i]!;
       const vy = py[i]!;
-      const z0 = vx * sinC + vz * cosC;
+      const z0 = -vx * sinC + vz * cosC;
       const z = vy * sinT + z0 * cosT;
       if (z <= 0.02) continue;
-      const x = vx * cosC - vz * sinC;
+      const x = vx * cosC + vz * sinC;
       const y = vy * cosT - z0 * sinT;
       const b = Math.min(BUCKETS - 1, (z * BUCKETS) | 0);
       buckets[b]!.rect(cx + x * R - half, cy - y * R - half, size, size);
@@ -190,7 +196,7 @@ export function mountGlobe(canvas: HTMLCanvasElement) {
     ctx!.lineCap = 'round';
     for (const a of arcs) {
       const pts = a.path.map(project);
-      ctx!.strokeStyle = 'rgba(147,197,253,0.16)';
+      ctx!.strokeStyle = 'rgba(30,99,214,0.18)';
       ctx!.lineWidth = 1;
       ctx!.beginPath();
       let pen = false;
@@ -214,8 +220,8 @@ export function mountGlobe(canvas: HTMLCanvasElement) {
         const pTail = pts[i0]!;
         const pHead = pts[i1]!;
         const grad = ctx!.createLinearGradient(pTail[0], pTail[1], pHead[0], pHead[1]);
-        grad.addColorStop(0, 'rgba(191,219,254,0)');
-        grad.addColorStop(1, 'rgba(219,234,254,0.95)');
+        grad.addColorStop(0, 'rgba(30,99,214,0)');
+        grad.addColorStop(1, 'rgba(30,99,214,0.95)');
         ctx!.strokeStyle = grad;
         ctx!.lineWidth = 2;
         ctx!.beginPath();
@@ -232,7 +238,7 @@ export function mountGlobe(canvas: HTMLCanvasElement) {
         }
         ctx!.stroke();
         if (t < 1 && visible(pHead)) {
-          ctx!.fillStyle = '#ffffff';
+          ctx!.fillStyle = '#1e63d6';
           ctx!.beginPath();
           ctx!.arc(pHead[0], pHead[1], 2.2, 0, Math.PI * 2);
           ctx!.fill();
@@ -243,7 +249,7 @@ export function mountGlobe(canvas: HTMLCanvasElement) {
         const end = pts[pts.length - 1]!;
         if (visible(end)) {
           const k = (t - 1) / 0.35;
-          ctx!.strokeStyle = `rgba(191,219,254,${(1 - k).toFixed(2)})`;
+          ctx!.strokeStyle = `rgba(30,99,214,${(1 - k).toFixed(2)})`;
           ctx!.lineWidth = 1.2;
           ctx!.beginPath();
           ctx!.arc(end[0], end[1], 2 + k * 10, 0, Math.PI * 2);
@@ -252,41 +258,79 @@ export function mountGlobe(canvas: HTMLCanvasElement) {
       }
     }
 
-    // Colombo hub.
-    const c = project(hub);
-    if (c[2] > 0) {
-      const pulse = reduced ? 0.5 : (now % 2400) / 2400;
-      ctx!.strokeStyle = `rgba(255,255,255,${(0.8 * (1 - pulse)).toFixed(2)})`;
+    // Sri Lanka: glowing halo, the real island outline filled bright, and a label.
+    const sc = project(islandCentre);
+    if (sc[2] > 0.05) {
+      const pulse = reduced ? 0.4 : (now % 3000) / 3000;
+      const halo = ctx!.createRadialGradient(sc[0], sc[1], 0, sc[0], sc[1], R * 0.16);
+      halo.addColorStop(0, 'rgba(30,99,214,0.28)');
+      halo.addColorStop(1, 'rgba(30,99,214,0)');
+      ctx!.fillStyle = halo;
+      ctx!.beginPath();
+      ctx!.arc(sc[0], sc[1], R * 0.16, 0, Math.PI * 2);
+      ctx!.fill();
+      ctx!.strokeStyle = `rgba(30,99,214,${(0.7 * (1 - pulse)).toFixed(2)})`;
       ctx!.lineWidth = 1.5;
       ctx!.beginPath();
-      ctx!.arc(c[0], c[1], 4 + pulse * 16, 0, Math.PI * 2);
+      ctx!.arc(sc[0], sc[1], R * 0.05 + pulse * R * 0.12, 0, Math.PI * 2);
       ctx!.stroke();
+
+      // Illustrative 2.2× enlargement around the island centre so its shape reads at globe scale.
+      const K = 2.2;
+      const grow = (p: [number, number, number]) => [sc[0] + (p[0] - sc[0]) * K, sc[1] + (p[1] - sc[1]) * K] as const;
+      const shape = new Path2D();
+      for (const poly of island) {
+        poly.forEach((v, i) => {
+          const [x, y] = grow(project(v));
+          if (i) shape.lineTo(x, y);
+          else shape.moveTo(x, y);
+        });
+        shape.closePath();
+      }
+      ctx!.fillStyle = '#1e63d6';
+      ctx!.fill(shape);
+      ctx!.strokeStyle = '#ffffff';
+      ctx!.lineWidth = 1;
+      ctx!.stroke(shape);
+
+      // Colombo on the west coast.
+      const [hx, hy] = grow(project(hub));
       ctx!.fillStyle = '#ffffff';
       ctx!.beginPath();
-      ctx!.arc(c[0], c[1], 4, 0, Math.PI * 2);
+      ctx!.arc(hx, hy, 2.6, 0, Math.PI * 2);
       ctx!.fill();
-      ctx!.font = '600 11px Inter, system-ui, sans-serif';
-      ctx!.fillStyle = 'rgba(255,255,255,0.9)';
-      ctx!.fillText('COLOMBO · CMB', c[0] + 10, c[1] + 4);
+
+      // Label with a leader line, placed to the right of the island.
+      const lx = sc[0] + R * 0.24;
+      const ly = sc[1] - R * 0.14;
+      ctx!.strokeStyle = 'rgba(11,23,48,0.45)';
+      ctx!.lineWidth = 1;
+      ctx!.beginPath();
+      ctx!.moveTo(sc[0] + R * 0.07, sc[1] - R * 0.05);
+      ctx!.lineTo(lx - 4, ly + 4);
+      ctx!.stroke();
+      ctx!.fillStyle = '#0b1730';
+      ctx!.font = `500 ${Math.max(15, R * 0.06).toFixed(0)}px Fraunces, Georgia, serif`;
+      ctx!.fillText('Sri Lanka', lx, ly);
+      ctx!.fillStyle = '#1e63d6';
+      ctx!.font = '600 10px Inter, system-ui, sans-serif';
+      ctx!.fillText('COLOMBO · CMB', lx, ly + 15);
     }
   }
 
-  // Animation loop (30 fps cap) with a gentle sway around South Asia; drag to spin.
+  // Animation loop (30 fps cap) with a gentle sway around Sri Lanka.
   let running = false;
   let ready = false; // becomes true after load + idle
   let inView = false;
-  let dragging = false;
-  let lastX = 0;
   let raf = 0;
   let lastFrame = 0;
   const loop = (now: number) => {
     raf = requestAnimationFrame(loop);
     if (now - lastFrame < 33) return;
     lastFrame = now;
-    if (!dragging) {
-      const target = (78 + 38 * Math.sin(now * 0.00012)) * RAD;
-      center += (target - center) * 0.04;
-    }
+    // Gentle sway that always keeps Sri Lanka in view.
+    const target = (80.7 + 22 * Math.sin(now * 0.00012)) * RAD;
+    center += (target - center) * 0.04;
     draw(now);
   };
   const start = () => {
@@ -298,21 +342,6 @@ export function mountGlobe(canvas: HTMLCanvasElement) {
     running = false;
     cancelAnimationFrame(raf);
   };
-
-  canvas.addEventListener('pointerdown', (e) => {
-    dragging = true;
-    lastX = e.clientX;
-    canvas.setPointerCapture(e.pointerId);
-  });
-  canvas.addEventListener('pointermove', (e) => {
-    if (!dragging) return;
-    center -= ((e.clientX - lastX) / R) * 1.2;
-    lastX = e.clientX;
-    if (!running) draw(performance.now());
-  });
-  const release = () => (dragging = false);
-  canvas.addEventListener('pointerup', release);
-  canvas.addEventListener('pointercancel', release);
 
   new ResizeObserver(resize).observe(canvas);
   new IntersectionObserver(([entry]) => {

@@ -11,10 +11,10 @@ const regionIds = REGION_IDS.filter((r) => byRegion[r]!.length > 0);
 const seasons = Object.fromEntries(regionIds.map((r) => [r, REGIONS[r].bestMonths]));
 ---
 
-<section class="on-dark bg-ocean-900 py-24 text-white" aria-labelledby="explorer-heading">
+<section class="bg-sky-100 py-24" aria-labelledby="explorer-heading">
   <div class="container-site grid items-center gap-12 lg:grid-cols-[1.1fr_1fr]">
     <div>
-      <p class="reveal chapter text-lagoon-300!">
+      <p class="reveal chapter">
         <span class="chapter-no">02</span>
         <span class="chapter-rule" aria-hidden="true"></span>
         <span>Island Explorer</span>
@@ -29,18 +29,20 @@ const seasons = Object.fromEntries(regionIds.map((r) => [r, REGIONS[r].bestMonth
               type="button"
               data-region={r}
               aria-pressed={i === 0 ? 'true' : 'false'}
-              class="w-full rounded-card border border-white/15 p-4 text-left transition-colors hover:border-lagoon-300 aria-pressed:border-lagoon-300 aria-pressed:bg-white/5"
+              class="w-full rounded-card border border-line bg-white/70 p-4 text-left transition-[border-color,box-shadow,background-color] hover:border-ocean-500/50 aria-pressed:border-ocean-500 aria-pressed:bg-white aria-pressed:shadow-card"
             >
               <span class="block font-semibold">{REGIONS[r].name}</span>
-              <span class="block text-sm text-white/70">{REGIONS[r].blurb}</span>
-              <span class="mt-2 block text-xs text-lagoon-300">Best: {monthRange(REGIONS[r].bestMonths)}</span>
+              <span class="block text-sm text-muted">{REGIONS[r].blurb}</span>
+              <span class="mt-2 block text-xs font-semibold text-ocean-500">
+                Best: {monthRange(REGIONS[r].bestMonths)}
+              </span>
             </button>
             <ul class="region-links mt-2 hidden flex-wrap gap-2 px-1" data-links={r}>
               {byRegion[r]!.map((d) => (
                 <li>
                   <a
                     href={`/destinations/${d.id}`}
-                    class="inline-flex min-h-10 items-center gap-1 rounded-pill bg-white/10 px-3 text-sm hover:bg-white/20"
+                    class="inline-flex min-h-10 items-center gap-1 rounded-pill bg-white px-3 text-sm ring-1 ring-line hover:ring-ocean-500"
                   >
                     {d.data.title} <Icon name="arrow" class="size-3.5" />
                   </a>
@@ -52,7 +54,7 @@ const seasons = Object.fromEntries(regionIds.map((r) => [r, REGIONS[r].bestMonth
       </ul>
     </div>
     <IslandMap
-      class="reveal mx-auto w-full max-w-[22rem]"
+      class="reveal mx-auto w-full max-w-[24rem] rounded-media bg-white p-6 shadow-card ring-1 ring-line"
       places={destinations.map((d) => ({
         id: d.id,
         title: d.data.title,
@@ -71,16 +73,16 @@ const seasons = Object.fromEntries(regionIds.map((r) => [r, REGIONS[r].bestMonth
           data-month={i + 1}
           aria-pressed="false"
           aria-label={MONTHS_LONG[i]}
-          class="min-h-12 min-w-14 rounded-pill border border-white/25 px-4 text-sm font-semibold transition-colors hover:border-lagoon-300 aria-pressed:border-lagoon-300 aria-pressed:bg-white aria-pressed:text-ocean-900"
+          class="min-h-12 min-w-14 rounded-pill border border-line bg-white px-4 text-sm font-semibold transition-colors hover:border-ocean-500 aria-pressed:border-ocean-500 aria-pressed:bg-ocean-500 aria-pressed:text-white"
         >
           {m}
         </button>
       ))}
     </div>
-    <p class="mt-6 min-h-[3.5rem] max-w-3xl text-lg text-white/90" aria-live="polite" data-season-result>
+    <p class="mt-6 min-h-[3.5rem] max-w-3xl text-lg text-ink-900" aria-live="polite" data-season-result>
       Pick a month to see which parts of the island are in season.
     </p>
-    <p class="text-xs text-white/60">Seasons are approximate and vary year to year.</p>
+    <p class="text-xs text-muted">Seasons are approximate and vary year to year.</p>
   </div>
 </section>
 
