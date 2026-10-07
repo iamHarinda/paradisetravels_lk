@@ -11,7 +11,7 @@ import { photo, type PhotoName } from '../../lib/photos';
 // flights 2×2 + three 2×1 photo tiles + 2×1 quote tile + eight 1×1 tiles = 20 cells.
 const services = (await getEntries('services')).sort(byOrder);
 const FEATURE: Record<string, { span: string; photo: PhotoName }> = {
-  'flight-tickets': { span: 'col-span-2 md:row-span-2', photo: 'airport' },
+  'flight-tickets': { span: 'col-span-2 md:row-span-2', photo: 'flight' },
   'hotel-reservations': { span: 'col-span-2', photo: 'beach-sunset' },
   'transport-chauffeur': { span: 'col-span-2', photo: 'train-view' },
   'ayurveda-packages': { span: 'col-span-2', photo: 'misty-hills' },
