@@ -234,6 +234,11 @@
   }
 }
 
+/* While someone types in a search box on a phone, the fixed contact bar would cover the suggestions. */
+.is-typing .sticky-contact {
+  display: none;
+}
+
 /* Every effect must have a reduced-motion fallback (CLAUDE.md hard rule 4). */
 @media (prefers-reduced-motion: reduce) {
   *,

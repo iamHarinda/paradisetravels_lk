@@ -1,0 +1,217 @@
+---
+import Button from '../ui/Button.astro';
+import { getEntries, byOrder } from '../../lib/content';
+import { REGIONS } from '../../lib/seasons';
+
+// "Where do you want to go?" with type-ahead suggestions (ARIA 1.2 combobox + listbox).
+// Suggestions link straight to destination / experience / tour pages; free text still submits to the trip planner.
+// Without JS it is a plain form that posts the text to /plan-your-trip.
+interface Props {
+  id?: string;
+  class?: string;
+  style?: string;
+}
+const { id = 'where', class: className, style } = Astro.props;
+
+const [destinations, experiences, tours] = await Promise.all([
+  getEntries('destinations'),
+  getEntries('experiences'),
+  getEntries('tours'),
+]);
+const items = [
+  ...destinations.sort(byOrder).map((d) => ({
+    t: d.data.title,
+    k: 'Destination',
+    m: REGIONS[d.data.region].name,
+    h: `/destinations/${d.id}`,
+    s: `${d.data.summary} ${d.data.thingsToDo.map((x) => x.title).join(' ')}`,
+  })),
+  ...experiences.sort(byOrder).map((e) => ({
+    t: e.data.title,
+    k: 'Experience',
+    m: '',
+    h: `/experiences/${e.id}`,
+    s: `${e.data.summary} ${e.data.highlights.join(' ')}`,
+  })),
+  ...tours.sort(byOrder).map((t) => ({
+    t: t.data.title,
+    k: 'Tour',
+    m: `${t.data.durationDays} days`,
+    h: `/tours/${t.id}`,
+    s: t.data.summary,
+  })),
+];
+const listId = `${id}-suggestions`;
+---
+
+<form
+  class:list={[
+    'scroll-mt-24',
+    'where-search relative flex max-w-xl items-center gap-2 rounded-pill bg-white p-2 shadow-[var(--shadow-lift)] ring-1 ring-line',
+    className,
+  ]}
+  style={style}
+  action="/plan-your-trip"
+  method="get"
+  data-where-search
+  data-items={JSON.stringify(items)}
+>
+  <label class="sr-only" for={id}>
+    Where do you want to go?
+  </label>
+  <input
+    id={id}
+    name="where"
+    class="min-h-12 min-w-0 flex-1 scroll-mt-28 rounded-pill bg-transparent px-4 text-ink-900 outline-none placeholder:text-muted"
+    placeholder="Where do you want to go?"
+    autocomplete="off"
+    role="combobox"
+    aria-autocomplete="list"
+    aria-expanded="false"
+    aria-controls={listId}
+  />
+  <Button type="submit" class="shrink-0">
+    <span class="sm:hidden">Plan</span>
+    <span class="hidden sm:inline">Start planning</span>
+  </Button>
+  <ul
+    id={listId}
+    role="listbox"
+    aria-label="Suggestions"
+    class="absolute inset-x-0 top-[calc(100%+0.5rem)] z-30 hidden max-h-[22rem] overflow-y-auto rounded-media bg-white p-2 shadow-[var(--shadow-lift)] ring-1 ring-line"
+  ></ul>
+  <p class="sr-only" aria-live="polite" data-status></p>
+</form>
+
+<style>
+  .where-search :global([role='option']) {
+    display: flex;
+    min-height: 3rem;
+    cursor: pointer;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    border-radius: 0.75rem;
+    padding: 0.55rem 0.9rem;
+  }
+  .where-search :global([role='option'][aria-selected='true']),
+  .where-search :global([role='option']:hover) {
+    background: var(--c-sky-100);
+  }
+  .where-search :global(mark) {
+    background: transparent;
+    color: var(--c-ocean-500);
+    font-weight: 700;
+  }
+</style>
+
+<script>
+  type Item = { t: string; k: string; m: string; h: string; s: string };
+  const norm = (s: string) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  const esc = (s: string) =>
+    s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
+
+  document.querySelectorAll<HTMLFormElement>('[data-where-search]').forEach((form) => {
+    const items = JSON.parse(form.dataset.items!) as Item[];
+    const input = form.querySelector('input')!;
+    const list = form.querySelector<HTMLUListElement>('[role="listbox"]')!;
+    const status = form.querySelector('[data-status]')!;
+    let results: Item[] = [];
+    let active = -1;
+
+    const score = (it: Item, q: string) => {
+      const t = norm(it.t);
+      if (t.startsWith(q)) return 0;
+      if (t.split(/[\s,&-]+/).some((w) => w.startsWith(q))) return 1;
+      if (t.includes(q)) return 2;
+      if (norm(it.s).includes(q)) return 3;
+      return -1;
+    };
+    const highlight = (title: string, q: string) => {
+      const i = norm(title).indexOf(q);
+      if (i < 0) return esc(title);
+      return `${esc(title.slice(0, i))}<mark>${esc(title.slice(i, i + q.length))}</mark>${esc(title.slice(i + q.length))}`;
+    };
+
+    const close = () => {
+      list.classList.add('hidden');
+      input.setAttribute('aria-expanded', 'false');
+      input.removeAttribute('aria-activedescendant');
+      active = -1;
+    };
+    const setActive = (i: number) => {
+      active = i;
+      list.querySelectorAll('[role="option"]').forEach((o, j) => o.setAttribute('aria-selected', String(j === i)));
+      if (i >= 0) {
+        const opt = list.children[i] as HTMLElement;
+        input.setAttribute('aria-activedescendant', opt.id);
+        opt.scrollIntoView({ block: 'nearest' });
+      } else input.removeAttribute('aria-activedescendant');
+    };
+    const go = (it: Item) => {
+      window.location.href = it.h;
+    };
+
+    const render = () => {
+      const q = norm(input.value.trim());
+      if (!q) return close();
+      results = items
+        .map((it) => ({ it, sc: score(it, q) }))
+        .filter((r) => r.sc >= 0)
+        .sort((a, b) => a.sc - b.sc)
+        .slice(0, 7)
+        .map((r) => r.it);
+      list.innerHTML = results.length
+        ? results
+            .map(
+              (it, i) =>
+                `<li role="option" id="${list.id}-${i}" aria-selected="false"><span class="min-w-0"><span class="block truncate font-semibold text-ink-900">${highlight(it.t, q)}</span>${it.m ? `<span class="block text-xs text-muted">${esc(it.m)}</span>` : ''}</span><span class="shrink-0 rounded-pill bg-sky-100 px-2.5 py-0.5 text-[0.7rem] font-semibold tracking-wide text-ocean-700 uppercase">${it.k}</span></li>`,
+            )
+            .join('')
+        : `<li class="px-4 py-3 text-sm text-muted">No matches — press <strong>Start planning</strong> and we’ll plan “${esc(input.value.trim())}” for you.</li>`;
+      list.classList.remove('hidden');
+      input.setAttribute('aria-expanded', 'true');
+      status.textContent = results.length ? `${results.length} suggestions available` : 'No suggestions';
+      active = -1;
+      list.querySelectorAll<HTMLElement>('[role="option"]').forEach((opt, i) => {
+        opt.addEventListener('mousedown', (e) => {
+          e.preventDefault(); // keep focus in the input
+          go(results[i]!);
+        });
+      });
+    };
+
+    input.addEventListener('input', render);
+    const small = window.matchMedia('(max-width: 767px)');
+    input.addEventListener('focus', () => {
+      if (small.matches) {
+        document.documentElement.classList.add('is-typing');
+        // Give the suggestion list room above the on-screen keyboard.
+        input.scrollIntoView({ block: 'start', behavior: 'smooth' });
+      }
+      if (input.value.trim()) render();
+    });
+    input.addEventListener('blur', () =>
+      setTimeout(() => {
+        close();
+        document.documentElement.classList.remove('is-typing');
+      }, 120),
+    );
+    input.addEventListener('keydown', (e) => {
+      const open = input.getAttribute('aria-expanded') === 'true';
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (!open) render();
+        if (results.length) setActive((active + 1) % results.length);
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (results.length) setActive(active <= 0 ? results.length - 1 : active - 1);
+      } else if (e.key === 'Enter' && open && active >= 0) {
+        e.preventDefault();
+        go(results[active]!);
+      } else if (e.key === 'Escape') {
+        close();
+      }
+    });
+  });
+</script>

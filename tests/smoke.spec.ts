@@ -113,3 +113,18 @@ test('robots, sitemap and llms.txt are served', async ({ request }) => {
   expect(await (await request.get('/llms.txt')).text()).toContain('Paradise Travels (Pvt) Ltd');
   expect((await request.get('/api/health')).status()).toBe(200);
 });
+
+test('hero search suggests destinations as you type and opens the chosen page', async ({ page }) => {
+  await page.goto('/');
+  const input = page.getByRole('combobox', { name: 'Where do you want to go?' });
+  await input.fill('leop');
+  // "leopard" appears in Yala's description / Wildlife highlights.
+  await expect(page.getByRole('option').first()).toBeVisible();
+  await input.fill('ell');
+  const first = page.getByRole('option').first();
+  await expect(first).toContainText('Ella');
+  await input.press('ArrowDown');
+  await expect(first).toHaveAttribute('aria-selected', 'true');
+  await input.press('Enter');
+  await expect(page).toHaveURL(/\/destinations\/ella$/);
+});

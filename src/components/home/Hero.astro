@@ -1,5 +1,5 @@
 ---
-import Button from '../ui/Button.astro';
+import WhereSearch from '../forms/WhereSearch.astro';
 import { SITE } from '../../lib/site';
 import { REGIONS, MONTHS_LONG, type RegionId } from '../../lib/seasons';
 import { AIRLINES } from '../../data/airlines';
@@ -48,27 +48,7 @@ const facts = [
         Flights on {AIRLINES.length} airlines, visas, handpicked hotels at partner rates, private drivers, expert guides
         and Ayurveda retreats — arranged by one Colombo team.
       </p>
-      <form
-        class="fade-up mt-8 flex max-w-xl items-center gap-2 rounded-pill bg-white p-2 shadow-[var(--shadow-lift)] ring-1 ring-line"
-        style="--i:4"
-        action="/plan-your-trip"
-        method="get"
-      >
-        <label class="sr-only" for="hero-where">
-          Where do you want to go?
-        </label>
-        <input
-          id="hero-where"
-          name="where"
-          class="min-h-12 min-w-0 flex-1 rounded-pill bg-transparent px-4 text-ink-900 outline-none placeholder:text-muted"
-          placeholder="Where do you want to go?"
-          autocomplete="off"
-        />
-        <Button type="submit" class="shrink-0">
-          <span class="sm:hidden">Plan</span>
-          <span class="hidden sm:inline">Start planning</span>
-        </Button>
-      </form>
+      <WhereSearch id="hero-where" class="fade-up mt-8" style="--i:4" />
       <p
         class="fade-up mt-6 flex items-start gap-3 text-sm text-muted"
         style="--i:5"
