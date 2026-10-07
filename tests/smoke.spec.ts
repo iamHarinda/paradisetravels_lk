@@ -128,3 +128,15 @@ test('hero search suggests destinations as you type and opens the chosen page', 
   await input.press('Enter');
   await expect(page).toHaveURL(/\/destinations\/ella$/);
 });
+
+test('hero search also suggests any Sri Lankan home town and opens the planner with it', async ({ page }) => {
+  await page.goto('/');
+  const input = page.getByRole('combobox', { name: 'Where do you want to go?' });
+  await input.focus();
+  await input.fill('Mirihana');
+  const town = page.getByRole('option').filter({ hasText: 'Mirihana' }).first();
+  await expect(town).toContainText('Colombo District');
+  await town.dispatchEvent('mousedown');
+  await expect(page).toHaveURL(/\/plan-your-trip\?where=Mirihana$/);
+  await expect(page.getByText('Including: Mirihana')).toBeVisible();
+});

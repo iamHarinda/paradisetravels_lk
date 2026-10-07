@@ -5,6 +5,8 @@ import { REGIONS } from '../../lib/seasons';
 
 // "Where do you want to go?" with type-ahead suggestions (ARIA 1.2 combobox + listbox).
 // Suggestions link straight to destination / experience / tour pages; free text still submits to the trip planner.
+// Every Sri Lankan town and village (GeoNames, CC BY 4.0 — /data/sri-lanka-places.json, ~66 KB brotli) is fetched
+// the first time someone focuses the box, and matching towns are suggested after our own pages.
 // Without JS it is a plain form that posts the text to /plan-your-trip.
 interface Props {
   id?: string;
@@ -111,8 +113,24 @@ const listId = `${id}-suggestions`;
   const esc = (s: string) =>
     s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
 
+  // Towns: loaded once per page, shared by every search box.
+  type Town = { n: string; q: string; d: string };
+  let towns: Town[] | null = null;
+  let townsLoading: Promise<void> | null = null;
+  const loadTowns = () =>
+    (townsLoading ??= fetch('/data/sri-lanka-places.json')
+      .then((r) => r.json())
+      .then((data: { districts: string[]; places: [string, number][] }) => {
+        const label = (d: string) => (!d ? '' : d.includes('Province') ? d : `${d} District`);
+        towns = data.places.map(([n, i]) => ({ n, q: norm(n), d: label(data.districts[i] ?? '') }));
+      })
+      .catch(() => {
+        townsLoading = null; // retry on next focus
+      }));
+
   document.querySelectorAll<HTMLFormElement>('[data-where-search]').forEach((form) => {
     const items = JSON.parse(form.dataset.items!) as Item[];
+    const own = new Set(items.map((it) => norm(it.t)));
     const input = form.querySelector('input')!;
     const list = form.querySelector<HTMLUListElement>('[role="listbox"]')!;
     const status = form.querySelector('[data-status]')!;
@@ -159,8 +177,28 @@ const listId = `${id}-suggestions`;
         .map((it) => ({ it, sc: score(it, q) }))
         .filter((r) => r.sc >= 0)
         .sort((a, b) => a.sc - b.sc)
-        .slice(0, 7)
+        .slice(0, 6)
         .map((r) => r.it);
+      // Then towns (bigger places first — the file is sorted by population), up to 8 suggestions in total.
+      if (towns && q.length >= 2) {
+        const starts: Town[] = [];
+        const words: Town[] = [];
+        for (const t of towns) {
+          if (own.has(t.q)) continue;
+          if (t.q.startsWith(q)) starts.push(t);
+          else if (t.q.includes(` ${q}`) || t.q.includes(`-${q}`)) words.push(t);
+          if (starts.length >= 8) break;
+        }
+        results.push(
+          ...[...starts, ...words].slice(0, 8 - results.length).map((t) => ({
+            t: t.n,
+            k: 'Town',
+            m: t.d,
+            h: `/plan-your-trip?where=${encodeURIComponent(t.n)}`,
+            s: '',
+          })),
+        );
+      }
       list.innerHTML = results.length
         ? results
             .map(
@@ -189,6 +227,7 @@ const listId = `${id}-suggestions`;
         // Give the suggestion list room above the on-screen keyboard.
         input.scrollIntoView({ block: 'start', behavior: 'smooth' });
       }
+      if (!towns) void loadTowns()?.then(() => input.value.trim() && document.activeElement === input && render());
       if (input.value.trim()) render();
     });
     input.addEventListener('blur', () =>
