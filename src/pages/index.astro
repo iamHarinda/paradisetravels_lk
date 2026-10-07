@@ -37,7 +37,7 @@ const [hotels, guides, services, destinations] = await Promise.all([
 ]);
 const latestGuides = guides.sort((a, b) => b.data.published.getTime() - a.data.published.getTime()).slice(0, 3);
 const leader = (await getEntries('team')).find((t) => t.data.order === 1);
-const dealsPhoto = photo('beach');
+const dealsPhoto = photo('tangalle');
 
 // Only verifiable numbers (CLAUDE.md hard rule 1).
 const facts = [

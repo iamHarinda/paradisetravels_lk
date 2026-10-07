@@ -9,7 +9,7 @@ import { REGIONS } from '../../lib/seasons';
 import { itemListSchema } from '../../lib/schema-org';
 import { photo } from '../../lib/photos';
 
-const hero = photo('beach');
+const hero = photo('tangalle');
 
 const hotels = await getEntries('hotels');
 const regions = [...new Set(hotels.map((h) => h.data.region))];

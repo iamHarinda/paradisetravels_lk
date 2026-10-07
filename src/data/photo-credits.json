@@ -65,11 +65,11 @@
   },
   "polonnaruwa": {
     "file": "polonnaruwa.jpg",
-    "alt": "Seated Buddha carved into the rock at Gal Vihara, Polonnaruwa",
-    "title": "LK-polonnaruwa-gal-vihara-01.jpg",
-    "author": "Balou46",
+    "alt": "Seated Buddha carved into the granite at Gal Vihara, Polonnaruwa",
+    "title": "Gal Viharaya 02.jpg",
+    "author": "Bernard Gagnon",
     "license": "CC BY-SA 3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:LK-polonnaruwa-gal-vihara-01.jpg"
+    "source": "https://commons.wikimedia.org/wiki/File:Gal_Viharaya_02.jpg"
   },
   "nuwara-eliya": {
     "file": "nuwara-eliya.jpg",
@@ -113,11 +113,11 @@
   },
   "minneriya": {
     "file": "minneriya.jpg",
-    "alt": "A herd of elephants on the grasslands of Minneriya",
-    "title": "Minneriya National Park, elephants gathering.jpg",
-    "author": "Walter Gehr",
+    "alt": "A wild elephant and her suckling calf on the grasslands of Minneriya National Park",
+    "title": "Elephas maximus maximus - 01.jpg",
+    "author": "Carlos Delgado",
     "license": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Minneriya_National_Park,_elephants_gathering.jpg"
+    "source": "https://commons.wikimedia.org/wiki/File:Elephas_maximus_maximus_-_01.jpg"
   },
   "galle": {
     "file": "galle.jpg",
@@ -222,5 +222,21 @@
     "author": "Adbar",
     "license": "CC BY-SA 3.0",
     "source": "https://commons.wikimedia.org/wiki/File:Colombo_Galle_Face_Roundabout.JPG"
+  },
+  "yala-elephants": {
+    "file": "yala-elephants.jpg",
+    "alt": "Sri Lankan elephants bathing with their young in Yala National Park",
+    "title": "Sri Lankan elephant (Elephas maximus maximus) female and young 6.jpg",
+    "author": "Charles J. Sharp",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Sri_Lankan_elephant_(Elephas_maximus_maximus)_female_and_young_6.jpg"
+  },
+  "tangalle": {
+    "file": "tangalle.jpg",
+    "alt": "Palm-fringed Goyambokka Beach near Tangalle on the south coast",
+    "title": "Goyambokka Beach, Tangalle, Sri Lanka.jpg",
+    "author": "Satdeep Gill",
+    "license": "CC BY 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Goyambokka_Beach,_Tangalle,_Sri_Lanka.jpg"
   }
 }

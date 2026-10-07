@@ -28,8 +28,8 @@ seo:
   description: 'Wildlife safaris in Sri Lanka: leopards in Yala, elephants in Udawalawe and Minneriya. Compare the parks, best times to go and safari tours with local experts.'
   keyword: sri lanka safari
 reviewed: false
-heroImage: ../../assets/images/photos/minneriya.jpg
-heroAlt: A herd of elephants on the grasslands of Minneriya
+heroImage: ../../assets/images/photos/yala-elephants.jpg
+heroAlt: Sri Lankan elephants bathing with their young in Yala National Park
 ---
 
 For a small island, Sri Lanka has remarkable wildlife: leopards, Asian elephants, sloth bears, crocodiles and hundreds of bird species. Jeep safaris in the national parks are the way to see them, ideally early in the morning or late in the afternoon.

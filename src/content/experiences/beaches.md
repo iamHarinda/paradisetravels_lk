@@ -32,8 +32,8 @@ seo:
   description: Which Sri Lanka beach when? South and west coasts roughly December to April, east coast roughly May to September. Beach guides and holidays by local experts.
   keyword: best beaches sri lanka
 reviewed: false
-heroImage: ../../assets/images/photos/beach.jpg
-heroAlt: Palm-lined beach and calm bay at Unawatuna
+heroImage: ../../assets/images/photos/tangalle.jpg
+heroAlt: Palm-fringed Goyambokka Beach near Tangalle on the south coast
 ---
 
 Two monsoons affect Sri Lanka at different times of year, so one coast is usually dry while the other is wet. That makes the island a year-round beach destination — as long as you pick the right side.
