@@ -2,9 +2,9 @@
 import Media from '../ui/Media.astro';
 import { photo } from '../../lib/photos';
 
-// "A journey across the island" — horizontal cinematic panels. Desktop + motion: GSAP pins the section and
-// scrubs the strip sideways as you scroll. Otherwise (mobile, reduced motion, no JS): a native swipeable,
-// scroll-snapping gallery.
+// "A journey across the island" — vertical stacking cards. As you scroll down (the way people scroll Reels/TikTok),
+// each landscape slides up over the previous one and the earlier cards stack at the top with their edges showing.
+// Pure CSS position: sticky — no JS, identical on phone and desktop, works with reduced motion.
 type Chapter = {
   title: string;
   text: string;
@@ -39,51 +39,45 @@ const chapters: Chapter[] = [
 ];
 ---
 
-<section class="journey relative overflow-hidden py-24" aria-labelledby="story-heading" data-journey>
-  <div class="container-site flex flex-wrap items-end justify-between gap-6">
-    <div>
-      <p class="reveal chapter">
-        <span class="chapter-no">05</span>
-        <span class="chapter-rule" aria-hidden="true"></span>
-        <span>A journey across the island</span>
-      </p>
-      <h2 id="story-heading" class="reveal mt-4 max-w-[16ch] text-h2">
-        Four landscapes, <em class="accent">one trip.</em>
-      </h2>
-    </div>
-    <p class="detail text-muted" aria-hidden="true">
-      <span class="journey-hint-pinned">Keep scrolling →</span>
-      <span class="journey-hint-swipe">Swipe →</span>
+<section class="journey relative py-24" aria-labelledby="story-heading">
+  <div class="container-site">
+    <p class="reveal chapter">
+      <span class="chapter-no">05</span>
+      <span class="chapter-rule" aria-hidden="true"></span>
+      <span>A journey across the island</span>
     </p>
-  </div>
+    <h2 id="story-heading" class="reveal mt-4 max-w-[16ch] text-h2">
+      Four landscapes, <em class="accent">one trip.</em>
+    </h2>
 
-  <div class="journey-viewport mt-12" tabindex="0" aria-label="Journey panels, scroll sideways">
-    <ol class="journey-track flex w-max gap-5 sm:gap-8" data-track>
+    <ol class="mt-12">
       {chapters.map((c, i) => (
-        <li class="journey-panel group relative h-[min(70svh,44rem)] w-[min(86vw,62rem)] shrink-0 overflow-hidden rounded-media text-white shadow-[var(--shadow-lift)]">
-          <Media
-            image={c.photo.image}
-            alt={c.photo.alt}
-            class="absolute inset-0 transition-transform duration-[1.2s] ease-travel group-hover:scale-105"
-            sizes="(min-width: 1024px) 62rem, 86vw"
-          />
-          <div class="absolute inset-0 bg-[linear-gradient(180deg,rgb(7_26_51/0.1)_30%,rgb(7_26_51/0.85))]" />
-          <span
-            class="pointer-events-none absolute top-4 right-6 font-display text-[clamp(5rem,12vw,11rem)] leading-none text-transparent italic [-webkit-text-stroke:1.5px_rgb(255_255_255/0.55)]"
-            aria-hidden="true"
-          >
-            {String(i + 1).padStart(2, '0')}
-          </span>
-          <div class="absolute inset-x-0 bottom-0 p-6 sm:p-10">
-            <h3 class="text-[clamp(2.25rem,3vw+1rem,4rem)] leading-none font-medium">{c.title}</h3>
-            <p class="mt-4 max-w-[44ch] text-white/85 sm:text-lg">{c.text}</p>
-            <a
-              href={c.href}
-              class="mt-6 inline-flex min-h-12 items-center gap-2 rounded-pill bg-white/15 px-5 text-sm font-semibold ring-1 ring-white/30 backdrop-blur hover:bg-white/25"
+        <li class="stack-card" style={`--i:${i}`}>
+          <article class="group relative h-full overflow-hidden rounded-media text-white shadow-[var(--shadow-lift)] ring-1 ring-black/5">
+            <Media
+              image={c.photo.image}
+              alt={c.photo.alt}
+              class="absolute inset-0 transition-transform duration-[1.2s] ease-travel group-hover:scale-105"
+              sizes="(min-width: 1440px) 1360px, 100vw"
+            />
+            <div class="absolute inset-0 bg-[linear-gradient(180deg,rgb(7_26_51/0.05)_35%,rgb(7_26_51/0.82))]" />
+            <span
+              class="pointer-events-none absolute top-4 right-6 font-display text-[clamp(4.5rem,11vw,10rem)] leading-none text-transparent italic [-webkit-text-stroke:1.5px_rgb(255_255_255/0.6)]"
+              aria-hidden="true"
             >
-              Explore {c.title.replace('The ', '')} →
-            </a>
-          </div>
+              {String(i + 1).padStart(2, '0')}
+            </span>
+            <div class="absolute inset-x-0 bottom-0 p-6 sm:p-10 lg:p-14">
+              <h3 class="text-[clamp(2.25rem,3.5vw+1rem,4.5rem)] leading-none font-medium">{c.title}</h3>
+              <p class="mt-4 max-w-[46ch] text-white/90 sm:text-lg">{c.text}</p>
+              <a
+                href={c.href}
+                class="mt-6 inline-flex min-h-12 items-center gap-2 rounded-pill bg-white px-5 text-sm font-semibold text-ocean-900 hover:bg-sky-100"
+              >
+                Explore {c.title.replace('The ', '')} →
+              </a>
+            </div>
+          </article>
         </li>
       ))}
     </ol>
@@ -91,67 +85,21 @@ const chapters: Chapter[] = [
 </section>
 
 <style>
-  .journey-track {
-    padding-inline: max(1rem, calc((100vw - var(--container-site)) / 2 + 2.5rem));
+  /* Stacking cards: each card sticks a little lower than the previous one, so the stack shows its edges. */
+  .stack-card {
+    position: sticky;
+    top: calc(6rem + var(--i) * 1.25rem);
+    height: min(72svh, 46rem);
+    margin-bottom: 14svh;
   }
-  .journey-viewport {
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
-    overscroll-behavior-x: contain;
+  .stack-card:last-child {
+    margin-bottom: 0;
   }
-  .journey-viewport::-webkit-scrollbar {
-    display: none;
-  }
-  .journey-panel {
-    scroll-snap-align: center;
-  }
-  .journey-hint-pinned {
-    display: none;
-  }
-  .journey.is-pinned .journey-viewport {
-    overflow: visible;
-  }
-  .journey.is-pinned .journey-hint-pinned {
-    display: inline;
-  }
-  .journey.is-pinned .journey-hint-swipe {
-    display: none;
+  @media (width < 40rem) {
+    .stack-card {
+      top: calc(5.5rem + var(--i) * 0.75rem);
+      height: min(70svh, 36rem);
+      margin-bottom: 10svh;
+    }
   }
 </style>
-
-<script>
-  import { loadGsap, prefersReducedMotion, whenNear } from '../../scripts/gsap';
-
-  const section = document.querySelector<HTMLElement>('[data-journey]');
-  const track = section?.querySelector<HTMLElement>('[data-track]');
-  if (section && track && !prefersReducedMotion() && window.matchMedia('(min-width: 1024px)').matches) {
-    whenNear(section, async () => {
-      const { gsap, ScrollTrigger } = await loadGsap();
-      section.classList.add('is-pinned');
-      const distance = () => Math.max(0, track.scrollWidth - window.innerWidth);
-      const tween = gsap.to(track, {
-        x: () => -distance(),
-        ease: 'none',
-        scrollTrigger: {
-          trigger: section,
-          start: 'top top',
-          end: () => `+=${distance()}`,
-          pin: true,
-          scrub: 0.6,
-          invalidateOnRefresh: true,
-        },
-      });
-      // Keyboard users: focusing a link in an off-screen panel scrolls the page so the panel slides into view.
-      track.querySelectorAll<HTMLElement>('.journey-panel').forEach((panel) => {
-        panel.addEventListener('focusin', () => {
-          const st = tween.scrollTrigger;
-          if (!st) return;
-          const x = Math.min(distance(), Math.max(0, panel.offsetLeft - window.innerWidth * 0.1));
-          window.scrollTo({ top: st.start + x, behavior: 'auto' });
-        });
-      });
-      ScrollTrigger.refresh();
-    });
-  }
-</script>
