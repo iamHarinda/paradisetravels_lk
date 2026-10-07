@@ -6,66 +6,164 @@ import type { IconName } from '../../lib/icons';
 import { getEntries, byOrder } from '../../lib/content';
 import { photo, type PhotoName } from '../../lib/photos';
 
-// "All-in-one" bento (docs/04 §5.4): 12 services as numbered tiles; the two feature tiles carry a photo.
+// "All-in-one" bento (docs/04 §5.4): 12 services + a quote tile. Four photo tiles give the grid rhythm; the rest
+// are icon tiles with a hover state (chip fills, arrow appears top-right, card lifts). 4 columns × 5 rows, no gaps:
+// flights 2×2 + three 2×1 photo tiles + 2×1 quote tile + eight 1×1 tiles = 20 cells.
 const services = (await getEntries('services')).sort(byOrder);
 const FEATURE: Record<string, { span: string; photo: PhotoName }> = {
   'flight-tickets': { span: 'col-span-2 md:row-span-2', photo: 'airport' },
+  'hotel-reservations': { span: 'col-span-2', photo: 'beach-sunset' },
+  'transport-chauffeur': { span: 'col-span-2', photo: 'train-view' },
   'ayurveda-packages': { span: 'col-span-2', photo: 'misty-hills' },
 };
 ---
 
 <section class="container-site py-24" aria-labelledby="bento-heading">
-  <SectionHeading
-    index="01"
-    eyebrow="Everything in one place"
-    title="One team for your *whole journey.*"
-    id="bento-heading"
-  />
-  <ul class="mt-12 grid grid-flow-dense auto-rows-[minmax(160px,auto)] grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4">
-    {services.map((s, i) => {
+  <div class="flex flex-wrap items-end justify-between gap-6">
+    <SectionHeading
+      index="01"
+      eyebrow="Everything in one place"
+      title="One team for your *whole journey.*"
+      id="bento-heading"
+    />
+    <p class="reveal max-w-sm text-muted">
+      Book one service or all {services.length}. The same Colombo team looks after every part of your trip.
+    </p>
+  </div>
+
+  <ul class="mt-12 grid grid-flow-dense auto-rows-[minmax(170px,auto)] grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4">
+    {services.map((s) => {
       const feature = FEATURE[s.id];
       const bg = feature && photo(feature.photo);
-      return (
-        <li class:list={['reveal', feature?.span]}>
+      return feature && bg ? (
+        <li class:list={['reveal', feature.span]}>
           <a
             href={`/services/${s.id}`}
-            class:list={[
-              'lift group relative isolate flex h-full flex-col justify-between gap-6 overflow-hidden rounded-card p-5 ring-1 ring-line shadow-card sm:p-6',
-              feature ? 'bg-ocean-900 text-white' : 'bg-surface',
-            ]}
+            class="tile group relative isolate flex h-full flex-col justify-between overflow-hidden rounded-card p-5 text-white shadow-card sm:p-6"
           >
-            {bg && (
-              <>
-                <Media
-                  image={bg.image}
-                  alt=""
-                  class="absolute inset-0 -z-20 transition-transform duration-700 ease-travel group-hover:scale-105"
-                  sizes="(min-width: 768px) 50vw, 100vw"
-                />
-                <span class="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgb(7_26_51/0.25),rgb(7_26_51/0.9))]" />
-              </>
-            )}
+            <Media
+              image={bg.image}
+              alt=""
+              class="absolute inset-0 -z-20 transition-transform duration-700 ease-travel group-hover:scale-105"
+              sizes="(min-width: 768px) 50vw, 100vw"
+            />
+            <span class="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgb(7_26_51/0.15)_10%,rgb(7_26_51/0.85))]" />
             <span class="flex items-start justify-between">
-              <Icon
-                name={s.data.icon as IconName}
-                class:list={[
-                  'size-9 transition-transform duration-300 ease-travel group-hover:-rotate-6 group-hover:scale-110',
-                  feature ? 'text-lagoon-300' : 'text-ocean-500 dark:text-lagoon-300',
-                ]}
-              />
-              <span class:list={['font-display text-sm italic', feature ? 'text-white/70' : 'text-muted']}>
-                {String(i + 1).padStart(2, '0')}
+              <span class="grid size-11 place-items-center rounded-2xl bg-white/15 ring-1 ring-white/25 backdrop-blur-md">
+                <Icon name={s.data.icon as IconName} class="size-6" />
               </span>
             </span>
-            <span>
-              <span class:list={['block font-display font-semibold', feature ? 'text-3xl sm:text-4xl' : 'text-lg']}>
-                {s.data.title}
+            <span class="flex items-end justify-between gap-4">
+              <span>
+                <span class="block font-display text-3xl leading-tight font-semibold sm:text-4xl">{s.data.title}</span>
+                <span class="mt-1 block max-w-[42ch] text-sm text-white/85">{s.data.short}</span>
               </span>
-              <span class:list={['mt-1 block text-sm', feature ? 'text-white/85' : 'text-muted']}>{s.data.short}</span>
+              <span class="arrow grid size-11 shrink-0 place-items-center rounded-full bg-white text-ocean-900">
+                <Icon name="arrow" class="size-5 -rotate-45" />
+              </span>
+            </span>
+          </a>
+        </li>
+      ) : (
+        <li class="reveal">
+          <a
+            href={`/services/${s.id}`}
+            class="tile tile-light group relative flex h-full flex-col justify-between overflow-hidden rounded-card bg-surface p-5 ring-1 ring-line shadow-card sm:p-6"
+          >
+            <span class="flex items-start justify-between">
+              <span class="chip grid size-12 place-items-center rounded-2xl bg-[linear-gradient(140deg,var(--c-sky-100),#fff)] text-ocean-500 ring-1 ring-line">
+                <Icon name={s.data.icon as IconName} class="size-6" />
+              </span>
+              <span class="arrow grid size-9 place-items-center rounded-full bg-ocean-500 text-white">
+                <Icon name="arrow" class="size-4 -rotate-45" />
+              </span>
+            </span>
+            <span class="mt-6 block">
+              <span class="block font-display text-lg leading-snug font-semibold">{s.data.title}</span>
+              <span class="mt-1 block text-sm text-muted">{s.data.short}</span>
             </span>
           </a>
         </li>
       );
     })}
+    <li class="reveal col-span-2">
+      <a
+        href="/plan-your-trip"
+        class="tile group relative isolate flex h-full flex-col justify-between overflow-hidden rounded-card bg-[linear-gradient(135deg,var(--c-ocean-500),var(--c-ocean-700))] p-6 text-white shadow-card sm:p-8"
+      >
+        <span
+          class="pointer-events-none absolute -top-24 -right-16 -z-10 size-72 rounded-full bg-white/10 blur-2xl"
+          aria-hidden="true"
+        ></span>
+        <span class="detail text-white/75">Need more than one?</span>
+        <span class="flex flex-wrap items-end justify-between gap-4">
+          <span class="max-w-[22ch] font-display text-3xl leading-tight sm:text-4xl">
+            One quote for <em class="text-sky-200 italic">everything.</em>
+          </span>
+          <span class="inline-flex min-h-12 items-center gap-2 rounded-pill bg-white px-6 text-sm font-semibold text-ocean-900 transition-transform group-hover:translate-x-1">
+            Plan my trip <Icon name="arrow" class="size-4" />
+          </span>
+        </span>
+      </a>
+    </li>
   </ul>
 </section>
+
+<style>
+  .tile {
+    transition:
+      transform 300ms var(--ease-travel),
+      box-shadow 300ms var(--ease-travel);
+  }
+  .tile:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lift);
+  }
+  /* Light tiles: soft blue glow from the corner and the icon chip fills royal blue. */
+  .tile-light::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(18rem 12rem at 100% 0%, rgb(30 99 214 / 0.1), transparent 70%);
+    opacity: 0;
+    transition: opacity 300ms var(--ease-travel);
+    pointer-events: none;
+  }
+  .tile-light:hover::before {
+    opacity: 1;
+  }
+  .tile-light:hover {
+    --tw-ring-color: rgb(30 99 214 / 0.35);
+  }
+  .chip {
+    transition:
+      background 300ms var(--ease-travel),
+      color 300ms var(--ease-travel),
+      transform 300ms var(--ease-travel);
+  }
+  .tile-light:hover .chip {
+    background: var(--c-ocean-500);
+    color: #fff;
+    transform: rotate(-6deg);
+  }
+  .arrow {
+    transition:
+      opacity 300ms var(--ease-travel),
+      transform 300ms var(--ease-travel);
+  }
+  .tile-light .arrow {
+    opacity: 0;
+    transform: translate(-6px, 6px);
+  }
+  .tile:hover .arrow,
+  .tile:focus-visible .arrow {
+    opacity: 1;
+    transform: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tile:hover,
+    .tile-light:hover .chip {
+      transform: none;
+    }
+  }
+</style>
