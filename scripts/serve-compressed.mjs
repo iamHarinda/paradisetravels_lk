@@ -39,7 +39,7 @@ http
   .createServer((req, res) =>
     compress(req, res, () => {
       const url = new URL(req.url ?? '/', 'http://localhost');
-      const p = url.pathname === '/sitemap.xml' ? '/sitemap-0.xml' : url.pathname;
+      const p = url.pathname;
       if (PHP_PROXY && p.startsWith('/api/')) {
         const target = new URL(p.endsWith('.php') ? p : `${p}.php`, PHP_PROXY);
         const upstream = http.request(target, { method: req.method, headers: req.headers }, (r) => {

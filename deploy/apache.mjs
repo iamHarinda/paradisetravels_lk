@@ -45,9 +45,6 @@ RewriteEngine On
 RewriteCond %{HTTP_HOST} ^www\\.(.+)$ [NC]
 RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
 
-# Naver Search Advisor and some tools look for /sitemap.xml; Astro writes sitemap-index.xml + sitemap-0.xml.
-RewriteRule ^sitemap\\.xml$ /sitemap-0.xml [L]
-
 # The shared form library is not an endpoint.
 RewriteRule ^api/(_lead|paradise-config)\\.php$ - [F,L]
 

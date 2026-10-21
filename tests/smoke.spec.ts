@@ -115,7 +115,7 @@ test('unknown URLs return a real 404', async ({ page }) => {
 
 test('robots, sitemap and llms.txt are served', async ({ request }) => {
   expect((await request.get('/robots.txt')).status()).toBe(200);
-  expect(await (await request.get('/sitemap-0.xml')).text()).toContain('/tours/sri-lanka-7-day-tour');
+  expect(await (await request.get('/sitemap.xml')).text()).toContain('/tours/sri-lanka-7-day-tour');
   expect(await (await request.get('/llms.txt')).text()).toContain('Paradise Travels (Pvt) Ltd');
   expect((await request.get('/api/health.php')).status()).toBe(200);
   expect(await (await request.get('/sitemap.xml')).text()).toContain('/ko/tours/golf');

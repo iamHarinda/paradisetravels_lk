@@ -25,6 +25,17 @@ const apacheConfig = () => ({
     'astro:build:done': async ({ dir }) => {
       const { writeFile } = await import('node:fs/promises');
       await writeFile(new URL('.htaccess', dir), htaccess());
+      // One sitemap at /sitemap.xml (what Naver Search Advisor and Google expect). @astrojs/sitemap writes
+      // sitemap-index.xml + sitemap-0.xml; while everything fits in one file (< 45,000 URLs), keep just that file.
+      const { rename, rm, access } = await import('node:fs/promises');
+      const split = await access(new URL('sitemap-1.xml', dir)).then(
+        () => true,
+        () => false,
+      );
+      if (!split) {
+        await rename(new URL('sitemap-0.xml', dir), new URL('sitemap.xml', dir));
+        await rm(new URL('sitemap-index.xml', dir));
+      }
       await writeFile(new URL('_astro/.htaccess', dir), astroAssetsHtaccess);
     },
   },

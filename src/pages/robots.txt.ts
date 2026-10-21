@@ -18,7 +18,6 @@ export const GET: APIRoute = ({ site }) => {
           'Disallow: /thank-you',
           'Disallow: /keystatic',
           '',
-          `Sitemap: ${new URL('sitemap-index.xml', site)}`,
           `Sitemap: ${new URL('sitemap.xml', site)}`,
         ].join('\n')
       : 'User-agent: *\nDisallow: /';
