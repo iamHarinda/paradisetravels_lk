@@ -63,6 +63,9 @@ lead webhook) live in `~/paradise-config.php` on the server — copy `paradise-c
    site key (see `.env.example`).
 2. **`npm run deploy`** — builds with `SITE_ENV=production` and uploads only the files that changed to `public_html`
    by FTPS (`-- --dry` to preview, `-- --all` to re-upload everything, e.g. from another computer).
+   After uploading it pings **IndexNow** (Bing, Naver, Yandex, Seznam…) with the pages that changed
+   (`scripts/indexnow.mjs`; key file `public/6bf222665fadcd5523e8c0d3c071fe5e.txt`; `-- --no-indexnow` to skip;
+   `node scripts/indexnow.mjs` re-submits every sitemap URL).
    Manual alternative: `npm run build:production` → `paradisetravels-site.zip` → hPanel File Manager → Extract.
 3. First time only: copy `paradise-config.sample.php` → `paradise-config.php` in the project root (git-ignored;
    `npm run deploy` uploads it **above** `public_html`), and

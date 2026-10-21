@@ -2,6 +2,7 @@
 // Usage:  npm run deploy           (builds first, then uploads)
 //         npm run deploy -- --all  (re-upload everything, e.g. after uploading from another computer)
 //         npm run deploy -- --dry  (show what would be uploaded)
+//         npm run deploy -- --no-indexnow  (skip the IndexNow ping to Bing/Naver)
 // Settings come from .env (never committed): FTP_HOST, FTP_USER, FTP_PASSWORD, optional FTP_PORT (21),
 // FTP_REMOTE_DIR or FTP_SERVER_DIR (public_html), FTP_SECURE (true = FTPS; set false only if the server refuses TLS).
 // Change detection: a manifest of file hashes from the last successful upload, kept in deploy/.last-deploy.json.
@@ -10,6 +11,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import tls from 'node:tls';
 import { Client } from 'basic-ftp';
+import { pagesFromFiles, submitIndexNow } from './indexnow.mjs';
 
 const args = new Set(process.argv.slice(2));
 const ALL = args.has('--all');
@@ -124,6 +126,9 @@ try {
 
   fs.mkdirSync(path.dirname(MANIFEST), { recursive: true });
   fs.writeFileSync(MANIFEST, JSON.stringify(files));
+
+  // Tell Bing, Naver & co. which pages changed (IndexNow). Never fails the deploy.
+  if (!args.has('--no-indexnow')) await submitIndexNow(pagesFromFiles([...changed, ...removed]));
   console.log('Done. Purge the Cloudflare cache if pages look stale.');
 } catch (err) {
   console.error(`\nFTP deploy failed: ${err instanceof Error ? err.message : err}`);

@@ -15,6 +15,7 @@ Naver's own ecosystem (Blog, Cafe), not only on our website.
 | Google ownership tag (same pattern) | `GOOGLE_SITE_VERIFICATION` |
 | `robots.txt` names Naver's crawler **Yeti** explicitly and allows it (production only) | `src/pages/robots.txt.ts` |
 | Sitemap including all `/ko` pages | `/sitemap.xml` |
+| IndexNow ping (Naver, Bing, Yandex…) for every changed page on `npm run deploy` | `scripts/indexnow.mjs` |
 | KakaoTalk shown first on Korean pages; Korean form labels; Korean confirmation email | `KoContactBand.astro`, forms |
 | Language switch (한국어 / EN) in the header, footer link | `Header.astro`, `Footer.astro` |
 
