@@ -34,9 +34,14 @@ for (const path of PAGES) {
     expect(response?.status()).toBe(200);
     await expect(page.locator('h1')).toHaveCount(1);
     await expect(page).toHaveTitle(/.{10,60}/);
-    // Hangul is denser than Latin: Korean snippets are ~50–120 characters (docs/13).
-    const descLength = path.startsWith('/ko') ? /^.{50,120}$/ : /^.{120,165}$/;
-    await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', descLength);
+    // Naver Search Advisor (docs/13): title ≤ 40 and description ≤ 80 characters on Korean pages and on the home
+    // page (the URL registered with Naver). Other English pages keep Google's ~120–165.
+    const naver = path === '/' || path.startsWith('/ko');
+    await expect(page.locator('meta[name="description"]')).toHaveAttribute(
+      'content',
+      naver ? /^.{50,80}$/ : /^.{120,165}$/,
+    );
+    if (naver) expect((await page.title()).length).toBeLessThanOrEqual(40);
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
       'href',
       `https://paradisetravels.lk${path === '/' ? '/' : path}`,
