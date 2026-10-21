@@ -21,7 +21,11 @@ import type { IconName } from '../../lib/icons';
 const years = new Date().getFullYear() - SITE.foundingYear;
 const why = photo('tea-picker');
 const reasons: { icon: IconName; title: string; text: string }[] = [
-  { icon: 'kakao', title: '카카오톡 상담', text: `카카오톡·왓츠앱 ${SITE.phone}로 여행 전, 중, 후 언제든 연락하세요.` },
+  {
+    icon: 'kakao',
+    title: '한국어 상담',
+    text: `대표가 한국어에 능통합니다. 카카오톡·왓츠앱 ${SITE.phone}로 언제든 연락하세요.`,
+  },
   { icon: 'car', title: '전용 차량 · 기사', text: '모든 투어는 전용 차량과 기사가 함께합니다.' },
   {
     icon: 'compass',

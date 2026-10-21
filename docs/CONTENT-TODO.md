@@ -12,8 +12,9 @@ Atlas map, new home page. Removed: hotel-deal rates, day tours and the other nin
 Still needed from the owner:
 - [ ] **[launch] Korean copy review by a native speaker** (or a hired Korean travel writer) — every `/ko` page incl. the six guides in `src/data/ko-guides.ts`, `/ko/itinerary/7-days`, `/ko/private-driver`, `/ko/about`, `nameKo`/`blurbKo` in `src/data/stays.ts`,
       `ko` blocks in `src/data/tour-types.ts` and `src/data/island-highlights.ts`, form labels, confirmation email.
-- [ ] **[launch] Does the team reply in Korean?** The Korean pages make no claim either way. If yes, say so on
-      `/ko/contact` ("한국어 상담 가능"); if not, say replies are in English.
+- [x] Korean spoken: the Chairman has 30+ years of experience with Korea and speaks Korean fluently (owner,
+      2026-10-21) — now on About (EN/KO), the leader card and the Korean contact block.
+- [ ] Still to add on About: company milestones and the 2020 repatriation-flight story (Daily News, 26 May 2020).
 - [ ] **[launch] KakaoTalk ID / Kakao Channel or Open Chat link** — Korean pages currently say "add the phone number as a friend".
 - [ ] **[launch] Naver Search Advisor** verification code → `NAVER_SITE_VERIFICATION` env var (docs/13 §1).
 - [ ] **스리랑카 호텔 할인 page** — only if the owner has real, publishable hotel discounts (rate parity, hard rule 2).

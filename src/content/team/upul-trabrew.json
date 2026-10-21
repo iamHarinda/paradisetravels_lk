@@ -1,9 +1,11 @@
 {
   "name": "Upul Trabrew",
   "role": "Chairman & Managing Director",
-  "languages": [],
+  "languages": [
+    "Korean"
+  ],
   "order": 1,
   "reviewed": false,
-  "bio": "{{TODO: approved short bio and photo — and confirm the spelling of the name with the owner before publishing.}}",
+  "bio": "More than 30 years of experience with Korea, and fluent in Korean. Paradise Travels is run personally — when you plan with us, you plan with the people who answer the phone.",
   "photo": "../../assets/team/upul.jpg"
 }

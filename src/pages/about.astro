@@ -6,6 +6,7 @@ import Icon from '../components/ui/Icon.astro';
 import { SITE } from '../lib/site';
 import { photo } from '../lib/photos';
 import LeaderCard from '../components/ui/LeaderCard.astro';
+import { getEntries } from '../lib/content';
 
 const hero = photo('colombo-fort');
 
@@ -16,7 +17,9 @@ const values = [
   },
   { title: 'One team', text: 'From the flight to the farewell, the same people look after you.' },
   { title: 'Local roots', text: `Based in Nugegoda, Colombo, since ${SITE.foundingYear}.` },
+  { title: 'Korean spoken', text: 'Our Chairman speaks Korean fluently — 30+ years of experience with Korea.' },
 ];
+const leader = (await getEntries('team')).find((t) => t.data.order === 1);
 ---
 
 <PageLayout
@@ -46,10 +49,11 @@ const values = [
         travellers coming to Sri Lanka as well as Sri Lankans travelling abroad — with the same team handling every part
         of the journey.
       </p>
+      <h3>The Korea connection</h3>
       <p>
-        {
-          '{{TODO: owner to add milestones, the Korea connection and the 2020 repatriation flight story (Daily News, 26 May 2020) once the article and details are confirmed.}}'
-        }
+        Our Chairman and Managing Director, {leader?.data.name ?? 'our founder'}, has more than 30 years of experience
+        with Korea and speaks Korean fluently. Korea is our leading market today, and Korean travellers can plan their
+        trip with us in their own language — by KakaoTalk, WhatsApp, phone or email.
       </p>
     </div>
     <aside class="space-y-4">
