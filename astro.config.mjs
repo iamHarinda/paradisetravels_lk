@@ -105,6 +105,7 @@ export default defineConfig({
       // essential for the Korean market (docs/13-korea-naver-plan.md).
       NAVER_SITE_VERIFICATION: envField.string({ context: 'server', access: 'public', optional: true }),
       GOOGLE_SITE_VERIFICATION: envField.string({ context: 'server', access: 'public', optional: true }),
+      BING_SITE_VERIFICATION: envField.string({ context: 'server', access: 'public', optional: true }),
       // Forms: only the Turnstile *site* key is needed at build time. Mail settings and the Turnstile secret live in
       // ~/paradise-config.php on the server (paradise-config.sample.php).
       TURNSTILE_SITE_KEY: envField.string({ context: 'client', access: 'public', optional: true }),

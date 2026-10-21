@@ -1,5 +1,5 @@
 ---
-import { SITE_ENV, NAVER_SITE_VERIFICATION, GOOGLE_SITE_VERIFICATION } from 'astro:env/server';
+import { SITE_ENV, NAVER_SITE_VERIFICATION, GOOGLE_SITE_VERIFICATION, BING_SITE_VERIFICATION } from 'astro:env/server';
 import { alternates, cleanPath, langFromPath } from '../../lib/i18n';
 import { SITE } from '../../lib/site';
 import { siteSchema } from '../../lib/schema-org';
@@ -55,6 +55,7 @@ const schema = [...siteSchema(), ...jsonLd];
 ))}
 {NAVER_SITE_VERIFICATION && <meta name="naver-site-verification" content={NAVER_SITE_VERIFICATION} />}
 {GOOGLE_SITE_VERIFICATION && <meta name="google-site-verification" content={GOOGLE_SITE_VERIFICATION} />}
+{BING_SITE_VERIFICATION && <meta name="msvalidate.01" content={BING_SITE_VERIFICATION} />}
 <meta name="robots" content={robots} />
 
 <meta property="og:type" content={type} />
