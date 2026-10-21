@@ -43,4 +43,4 @@ You are building the new website for **Paradise Travels (Pvt) Ltd**, a Sri Lanka
 - Phone / WhatsApp / KakaoTalk: +94 77 393 9989
 - Email (public on new site): hello@paradisetravels.lk
 - Facebook: https://www.facebook.com/paradisetravelslk
-- Chairman & Managing Director: Upul Trabrew (verify spelling with owner before publishing)
+- Chairman & Managing Director: Upul Thabrew (spelling confirmed by the owner, 21 October 2026)

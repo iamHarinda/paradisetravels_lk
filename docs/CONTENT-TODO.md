@@ -73,7 +73,8 @@ flydubai (FZ), Thai (TG), Turkish (TK), British Airways (BA). List: `src/data/ai
 - [ ] Office map coordinates (for `geo` in schema) — from the Google Business Profile.
 - [ ] Price range for schema (`priceRange`).
 - [x] Chairman/MD photo supplied (2026-10-21) — `src/assets/team/upul.jpg` (original in `assets-src/team/`).
-- [ ] **[launch]** Confirm spelling: site says "Upul Trabrew"; the owner's message wrote "Upul Thabrew". Plus a short approved bio (team entry).
+- [x] Name spelling confirmed: **Upul Thabrew** (2026-10-21).
+- [ ] Owner to approve the short bio on About (team entry).
 - [ ] Company history milestones, the Korea connection, and the 2020 Daily News repatriation article (About page).
 - [ ] SLTDA registration number, IATA/other accreditations (only what can be proven).
 - [ ] KakaoTalk Channel URL (contact links currently show the phone number).
