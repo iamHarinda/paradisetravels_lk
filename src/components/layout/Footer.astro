@@ -3,6 +3,7 @@ import Logo from './Logo.astro';
 import Icon from '../ui/Icon.astro';
 import { SITE, whatsappLink } from '../../lib/site';
 import { TOUR_TYPES } from '../../data/tour-types';
+import { KO_GUIDES } from '../../data/ko-guides';
 import { MARKETS, flagSrc } from '../../data/markets';
 import { langFromPath } from '../../lib/i18n';
 
@@ -16,9 +17,13 @@ const columns = ko
           ['비자 상담', '/ko/visa'],
           ['항공권', '/ko/air-tickets'],
           ['숙소', '/ko/hotels'],
+          ['기사 포함 투어', '/ko/private-driver'],
+          ['7일 여행 코스', '/ko/itinerary/7-days'],
+          ['회사 소개', '/ko/about'],
           ['문의', '/ko/contact'],
         ],
       },
+      { title: '여행지', links: KO_GUIDES.map((g) => [`${g.name} 여행`, `/ko/destinations/${g.slug}`]) },
       {
         title: 'English',
         links: [
@@ -63,7 +68,12 @@ const legal = [
 
 <footer class="on-dark overflow-hidden bg-ocean-950 text-white/80">
   <div class="gold-rule" aria-hidden="true"></div>
-  <div class="container-site grid gap-12 py-16 lg:grid-cols-[1.4fr_repeat(3,1fr)]">
+  <div
+    class:list={[
+      'container-site grid gap-12 py-16 sm:grid-cols-2',
+      ko ? 'lg:grid-cols-[1.4fr_repeat(4,1fr)]' : 'lg:grid-cols-[1.4fr_repeat(3,1fr)]',
+    ]}
+  >
     <div>
       <Logo href={ko ? '/ko' : '/'} />
       <p class="mt-4 max-w-sm text-sm">

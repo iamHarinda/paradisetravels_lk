@@ -10,12 +10,13 @@ stays in six areas, a blue-and-gold look, Jetwing-style imagery and map, airline
 Korean-market / Naver plan (docs/13-korea-naver-plan.md). Built: `/tours/<type>`, `/hotels`, `/ko/…` pages, Island
 Atlas map, new home page. Removed: hotel-deal rates, day tours and the other nine services (old URLs redirect).
 Still needed from the owner:
-- [ ] **[launch] Korean copy review by a native speaker** — every `/ko` page, `nameKo`/`blurbKo` in `src/data/stays.ts`,
+- [ ] **[launch] Korean copy review by a native speaker** (or a hired Korean travel writer) — every `/ko` page incl. the six guides in `src/data/ko-guides.ts`, `/ko/itinerary/7-days`, `/ko/private-driver`, `/ko/about`, `nameKo`/`blurbKo` in `src/data/stays.ts`,
       `ko` blocks in `src/data/tour-types.ts` and `src/data/island-highlights.ts`, form labels, confirmation email.
 - [ ] **[launch] Does the team reply in Korean?** The Korean pages make no claim either way. If yes, say so on
       `/ko/contact` ("한국어 상담 가능"); if not, say replies are in English.
 - [ ] **[launch] KakaoTalk ID / Kakao Channel or Open Chat link** — Korean pages currently say "add the phone number as a friend".
 - [ ] **[launch] Naver Search Advisor** verification code → `NAVER_SITE_VERIFICATION` env var (docs/13 §1).
+- [ ] **스리랑카 호텔 할인 page** — only if the owner has real, publishable hotel discounts (rate parity, hard rule 2).
 - [ ] **Colombo "Marriott"** — which property (Colombo Marriott Hotel / Courtyard by Marriott Colombo)? (`src/content/hotels/marriott.json`)
 - [ ] **Dolphin Hotel** — confirm the town (listed under Negombo).
 - [ ] Confirm hotel names as written (fixed "innamon Citadel" → "Cinnamon Citadel"; "RIU (Ahungalla)" → "RIU Ahungalla";

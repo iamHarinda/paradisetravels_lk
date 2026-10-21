@@ -1,0 +1,65 @@
+---
+import PageLayout from '../../../layouts/PageLayout.astro';
+import PhotoHero from '../../../components/ui/PhotoHero.astro';
+import Media from '../../../components/ui/Media.astro';
+import Icon from '../../../components/ui/Icon.astro';
+import KoContactBand from '../../../components/ko/KoContactBand.astro';
+import { KO_GUIDES } from '../../../data/ko-guides';
+import { photo } from '../../../lib/photos';
+import { ogImage } from '../../../lib/og';
+import { itemListSchema } from '../../../lib/schema-org';
+
+const hero = photo('sigiriya-view');
+const og = await ogImage('sigiriya-view');
+---
+
+<PageLayout
+  title="스리랑카 여행지 가이드 · 여행 코스 | 파라다이스 트래블스"
+  description="시기리야, 캔디, 엘라, 누와라엘리야, 갈레, 미리사까지. 스리랑카 현지 여행사가 정리한 여행지별 추천 코스, 가는 방법, 베스트 시즌과 숙소 정보."
+  image={og.image}
+  imageAlt={og.imageAlt}
+  breadcrumbs={[{ name: '여행지', href: '/ko/destinations' }]}
+  jsonLd={[
+    itemListSchema(KO_GUIDES.map((g) => ({ name: `${g.name} 여행 가이드`, path: `/ko/destinations/${g.slug}` }))),
+  ]}
+>
+  <PhotoHero
+    eyebrow="스리랑카 여행지"
+    title="스리랑카 *여행지 가이드*"
+    intro="현지에서 직접 안내하는 여행지별 추천 코스, 가는 방법, 여행하기 좋은 시기."
+    image={hero.image}
+    imageAlt={hero.alt}
+  />
+  <section class="container-site py-16">
+    <ul class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {KO_GUIDES.map((g) => {
+        const p = photo(g.photo);
+        return (
+          <li>
+            <a
+              href={`/ko/destinations/${g.slug}`}
+              class="lift group block overflow-hidden rounded-media bg-surface shadow-card ring-1 ring-line"
+            >
+              <div class="relative aspect-[4/3] overflow-hidden">
+                <Media
+                  image={p.image}
+                  alt={p.alt}
+                  class="lift-media"
+                  sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 92vw"
+                />
+              </div>
+              <div class="p-5">
+                <h2 class="text-2xl font-semibold">{g.name} 여행 가이드</h2>
+                <p class="mt-2 line-clamp-2 text-sm text-muted">{g.lead}</p>
+                <span class="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-primary">
+                  추천 코스 보기 <Icon name="arrow" class="size-4" />
+                </span>
+              </div>
+            </a>
+          </li>
+        );
+      })}
+    </ul>
+  </section>
+  <KoContactBand />
+</PageLayout>

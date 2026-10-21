@@ -5,6 +5,7 @@ import Button from '../ui/Button.astro';
 import { getEntries, byOrder } from '../../lib/content';
 import { SITE, whatsappLink } from '../../lib/site';
 import { TOUR_TYPES } from '../../data/tour-types';
+import { KO_GUIDES } from '../../data/ko-guides';
 import { alternates, cleanPath, langFromPath, type Lang } from '../../lib/i18n';
 
 interface Props {
@@ -31,7 +32,24 @@ const tourTypeLinks: Link[] = TOUR_TYPES.map((t) => ({
 }));
 
 const groups: Group[] = ko
-  ? [{ label: '투어', href: '/ko/tours', all: '전체 투어', links: tourTypeLinks }]
+  ? [
+      {
+        label: '투어',
+        href: '/ko/tours',
+        all: '전체 투어',
+        links: [
+          ...tourTypeLinks,
+          { href: '/ko/itinerary/7-days', label: '7일 여행 코스', note: '추천 일정' },
+          { href: '/ko/private-driver', label: '기사 포함 투어' },
+        ],
+      },
+      {
+        label: '여행지',
+        href: '/ko/destinations',
+        all: '전체 여행지 가이드',
+        links: KO_GUIDES.map((g) => ({ href: `/ko/destinations/${g.slug}`, label: `${g.name} 여행` })),
+      },
+    ]
   : [
       {
         label: 'Tours',
@@ -66,7 +84,7 @@ const simple: Link[] = ko
       { href: '/ko/hotels', label: '숙소' },
       { href: '/ko/visa', label: '비자 상담' },
       { href: '/ko/air-tickets', label: '항공권' },
-      { href: '/ko/contact', label: '문의' },
+      { href: '/ko/about', label: '회사 소개' },
     ]
   : [
       { href: '/hotels', label: 'Hotels' },

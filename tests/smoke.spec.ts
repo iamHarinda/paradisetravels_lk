@@ -14,6 +14,8 @@ const PAGES = [
   '/ko',
   '/ko/tours/honeymoon',
   '/ko/visa',
+  '/ko/destinations/sigiriya',
+  '/ko/itinerary/7-days',
   '/travel-guide',
   '/travel-guide/sri-lanka-visa-eta',
   '/plan-your-trip',

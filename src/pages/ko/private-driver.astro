@@ -1,0 +1,95 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import PhotoHero from '../../components/ui/PhotoHero.astro';
+import Icon from '../../components/ui/Icon.astro';
+import KoContactBand from '../../components/ko/KoContactBand.astro';
+import TourTypeTiles from '../../components/tours/TourTypeTiles.astro';
+import { photo } from '../../lib/photos';
+import { ogImage } from '../../lib/og';
+import { serviceSchema } from '../../lib/schema-org';
+
+// "스리랑카 기사 포함 투어" landing page. Facts: every tour includes a private car and driver (tour inclusions) and
+// the getting-around guide (src/content/guides/how-to-travel-around-sri-lanka.md). DRAFT Korean for native review.
+const hero = photo('tea-hills');
+const og = await ogImage('tea-hills');
+const why = [
+  {
+    t: '좌측 통행 · 복잡한 도로',
+    d: '스리랑카는 좌측 통행이고 도로가 붐비고 느려서, 대부분의 여행자는 직접 운전하지 않고 기사 포함 차량을 이용합니다.',
+  },
+  { t: '원하는 곳에서 멈추기', d: '전용 차량이라 사진 명소, 과일 가게, 차밭 어디서든 자유롭게 쉬어 갈 수 있습니다.' },
+  {
+    t: '짐 걱정 없는 기차 여행',
+    d: '캔디~엘라 고원 열차를 타는 동안 기사님이 짐을 싣고 차로 이동해 도착역에서 기다립니다.',
+  },
+  { t: '공항부터 공항까지', d: '공항 픽업과 샌딩이 포함되어 있어 도착 순간부터 편하게 여행을 시작합니다.' },
+];
+const facts = [
+  '스리랑카는 작지만 고속도로 외에는 평균 속도가 느려, 일주 여행 중에는 하루 약 3~4시간 운전을 예상하세요.',
+  '반다라나이케 국제공항(CMB)은 콜롬보 북쪽 약 30~35km, 카투나야케에 있습니다. 가장 가까운 해변 마을은 네곰보입니다.',
+];
+---
+
+<PageLayout
+  title="스리랑카 기사 포함 투어 · 전용 차량 여행 | 파라다이스 트래블스"
+  description="스리랑카 기사 포함 투어. 공항 픽업부터 일주 여행 내내 전용 에어컨 차량과 기사가 함께합니다. 콜롬보 현지 여행사가 맞춤 일정으로 준비합니다."
+  image={og.image}
+  imageAlt={og.imageAlt}
+  breadcrumbs={[{ name: '기사 포함 투어', href: '/ko/private-driver' }]}
+  jsonLd={[
+    serviceSchema({
+      title: '스리랑카 기사 포함 투어',
+      description: '전용 차량과 기사가 함께하는 스리랑카 맞춤 투어',
+      path: '/ko/private-driver',
+    }),
+  ]}
+>
+  <PhotoHero
+    eyebrow="기사 포함 투어"
+    title="전용 차량과 기사, *스리랑카를 가장 편하게.*"
+    intro="저희가 준비하는 모든 투어에는 여행 내내 전용 에어컨 차량과 기사가 포함됩니다."
+    image={hero.image}
+    imageAlt={hero.alt}
+  />
+  <section class="container-site py-16">
+    <h2 class="text-h2">왜 기사 포함 투어인가요?</h2>
+    <ul class="mt-8 grid gap-4 sm:grid-cols-2">
+      {why.map((w) => (
+        <li class="flex gap-4 rounded-media bg-surface p-6 shadow-card ring-1 ring-line">
+          <span class="grid size-10 shrink-0 place-items-center rounded-full bg-gold-100 text-gold-700 ring-1 ring-gold-300">
+            <Icon name="car" class="size-5" />
+          </span>
+          <span>
+            <strong class="block text-lg">{w.t}</strong>
+            <span class="mt-1 block text-muted">{w.d}</span>
+          </span>
+        </li>
+      ))}
+    </ul>
+    <h2 class="mt-16 text-h2">알아두면 좋은 정보</h2>
+    <ul class="mt-6 space-y-3">
+      {facts.map((f) => (
+        <li class="flex gap-3">
+          <Icon name="check" class="mt-1 size-5 shrink-0 text-gold-600" />
+          {f}
+        </li>
+      ))}
+    </ul>
+    <div class="mt-10 flex flex-wrap gap-3">
+      <a
+        href="/ko/itinerary/7-days"
+        class="inline-flex min-h-12 items-center gap-2 rounded-pill bg-gold-500 px-6 font-semibold text-ocean-900"
+      >
+        7일 여행 코스 보기 <Icon name="arrow" class="size-4" />
+      </a>
+      <a
+        href="/ko/contact"
+        class="inline-flex min-h-12 items-center rounded-pill border border-line px-6 font-semibold"
+      >
+        상담하기
+      </a>
+    </div>
+  </section>
+  <TourTypeTiles lang="ko" />
+  <KoContactBand />
+</PageLayout>

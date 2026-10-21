@@ -1,0 +1,78 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import PhotoHero from '../../components/ui/PhotoHero.astro';
+import Icon from '../../components/ui/Icon.astro';
+import KoContactBand from '../../components/ko/KoContactBand.astro';
+import AirlineLogos from '../../components/ui/AirlineLogos.astro';
+import { SITE } from '../../lib/site';
+import { photo } from '../../lib/photos';
+import { ogImage } from '../../lib/og';
+import { travelAgencySchema } from '../../lib/schema-org';
+
+// "스리랑카 현지 여행사" landing page — only verified business facts (CLAUDE.md "Business facts").
+const hero = photo('colombo-night');
+const og = await ogImage('colombo-night');
+const years = new Date().getFullYear() - SITE.foundingYear;
+const facts = [
+  { k: '회사명', v: SITE.legalName, en: true },
+  { k: '설립', v: `${SITE.foundingYear}년 (${years}년째)` },
+  { k: '주소', v: SITE.addressLine, en: true },
+  { k: '전화 · 왓츠앱 · 카카오톡', v: SITE.phone },
+  { k: '이메일', v: SITE.email },
+];
+---
+
+<PageLayout
+  title="스리랑카 현지 여행사 · 회사 소개 | 파라다이스 트래블스"
+  description={`${SITE.foundingYear}년 설립된 스리랑카 콜롬보의 현지 여행사 파라다이스 트래블스. 맞춤 투어, 비자 상담, 항공권 발권을 한 팀이 직접 준비합니다.`}
+  image={og.image}
+  imageAlt={og.imageAlt}
+  breadcrumbs={[{ name: '회사 소개', href: '/ko/about' }]}
+  jsonLd={[travelAgencySchema()]}
+>
+  <PhotoHero
+    eyebrow="회사 소개"
+    title="콜롬보의 *스리랑카 현지 여행사*"
+    intro={`파라다이스 트래블스는 ${SITE.foundingYear}년부터 콜롬보 누게고다에서 운영하는 가족 경영 여행사입니다. 항공권 발권으로 시작해 지금은 스리랑카 맞춤 투어, 비자 상담, 항공권을 한 팀이 함께 준비합니다.`}
+    image={hero.image}
+    imageAlt={hero.alt}
+  />
+  <section class="container-site grid gap-12 py-16 lg:grid-cols-2">
+    <div>
+      <h2 class="text-h2">현지 여행사와 함께하면</h2>
+      <ul class="mt-6 space-y-4">
+        <li class="flex gap-3">
+          <Icon name="check" class="mt-1 size-5 shrink-0 text-gold-600" />
+          현지에 사는 사람들이 계절, 이동 거리, 혼잡도까지 솔직하게 안내합니다.
+        </li>
+        <li class="flex gap-3">
+          <Icon name="check" class="mt-1 size-5 shrink-0 text-gold-600" />
+          투어, 비자, 항공권을 한 팀이 준비해 연락할 곳이 하나입니다.
+        </li>
+        <li class="flex gap-3">
+          <Icon name="check" class="mt-1 size-5 shrink-0 text-gold-600" />
+          모든 투어는 전용 차량과 기사가 함께하는 맞춤 일정입니다.
+        </li>
+        <li class="flex gap-3">
+          <Icon name="check" class="mt-1 size-5 shrink-0 text-gold-600" />
+          여행 전, 여행 중, 귀국할 때까지 왓츠앱과 카카오톡으로 연락할 수 있습니다.
+        </li>
+      </ul>
+    </div>
+    <dl class="rounded-media bg-surface p-6 shadow-card ring-1 ring-line sm:p-8">
+      {facts.map((f, i) => (
+        <div class:list={[i > 0 && 'mt-5']}>
+          <dt class="detail text-gold-700 dark:text-gold-400">{f.k}</dt>
+          <dd class="mt-1 font-medium" lang={f.en ? 'en' : undefined}>
+            {f.v}
+          </dd>
+        </div>
+      ))}
+    </dl>
+  </section>
+  <section class="container-site pb-16">
+    <h2 class="text-h2">발권 항공사</h2>
+    <AirlineLogos class="mt-8" />
+  </section>
+  <KoContactBand />
+</PageLayout>

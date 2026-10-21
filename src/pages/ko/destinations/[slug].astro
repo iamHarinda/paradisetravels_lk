@@ -1,0 +1,215 @@
+---
+import type { GetStaticPaths } from 'astro';
+import PageLayout from '../../../layouts/PageLayout.astro';
+import PhotoHero from '../../../components/ui/PhotoHero.astro';
+import Media from '../../../components/ui/Media.astro';
+import Icon from '../../../components/ui/Icon.astro';
+import KoContactBand from '../../../components/ko/KoContactBand.astro';
+import { KO_GUIDES, type KoGuide } from '../../../data/ko-guides';
+import { STAYS } from '../../../data/stays';
+import { getEntries, byOrder } from '../../../lib/content';
+import { photo } from '../../../lib/photos';
+import { ogImage } from '../../../lib/og';
+import { faqSchema, touristDestinationSchema, articleSchema } from '../../../lib/schema-org';
+
+// Korean destination guide — one long-tail Naver keyword per page (docs/13 §2).
+export const getStaticPaths = (() =>
+  KO_GUIDES.map((guide) => ({ params: { slug: guide.slug }, props: { guide } }))) satisfies GetStaticPaths;
+
+const { guide: g } = Astro.props as { guide: KoGuide };
+const path = `/ko/destinations/${g.slug}`;
+const hero = photo(g.photo);
+const gallery = g.gallery.map((p) => photo(p));
+const destination = (await getEntries('destinations')).find((d) => d.id === g.destination);
+const hotels = g.stay
+  ? (await getEntries('hotels'))
+      .filter((h) => h.data.stay === g.stay)
+      .sort((a, b) => a.data.order - b.data.order || byOrder(a, b))
+  : [];
+const others = KO_GUIDES.filter((o) => o.slug !== g.slug);
+const updated = new Date(g.updated);
+const updatedLabel = new Intl.DateTimeFormat('ko-KR', { dateStyle: 'long' }).format(updated);
+const og = await ogImage(g.photo);
+---
+
+<PageLayout
+  title={g.seoTitle}
+  description={g.seoDescription}
+  image={og.image}
+  imageAlt={og.imageAlt}
+  type="article"
+  breadcrumbs={[
+    { name: '여행지', href: '/ko/destinations' },
+    { name: g.name, href: path },
+  ]}
+  jsonLd={[
+    articleSchema({ title: g.seoTitle, description: g.seoDescription, path, published: updated, updated }),
+    ...(destination
+      ? [touristDestinationSchema({ title: g.name, summary: g.lead, path, coords: destination.data.coords })]
+      : []),
+    faqSchema(g.faqs),
+  ].filter((x) => !!x)}
+>
+  <PhotoHero
+    eyebrow="스리랑카 여행지"
+    title={`${g.name} 여행 가이드`}
+    intro={g.lead}
+    image={hero.image}
+    imageAlt={hero.alt}
+  />
+
+  <div class="container-site grid gap-14 py-16 lg:grid-cols-[1.5fr_1fr]">
+    <article class="min-w-0">
+      <p class="text-sm text-muted">
+        최종 업데이트: <time datetime={g.updated}>{updatedLabel}</time>
+      </p>
+
+      <h2 class="mt-10 text-h2">{g.name}에서 꼭 해야 할 것</h2>
+      <ul class="mt-6 grid gap-4 sm:grid-cols-2">
+        {g.highlights.map((h) => (
+          <li class="rounded-card bg-surface p-5 shadow-card ring-1 ring-line">
+            <h3 class="text-xl font-semibold">{h.title}</h3>
+            <p class="mt-2 text-muted">{h.tip}</p>
+          </li>
+        ))}
+      </ul>
+
+      <h2 class="mt-16 text-h2">추천 여행 코스</h2>
+      <ol class="mt-6 space-y-3 border-l-2 border-gold-400 pl-6">
+        {g.course.map((c) => (
+          <li class="relative">
+            <span
+              class="absolute top-2 -left-[1.95rem] size-3 rounded-full bg-gold-500 ring-4 ring-bg"
+              aria-hidden="true"
+            />
+            <strong class="block text-gold-700 dark:text-gold-400">{c.when}</strong>
+            <span>{c.plan}</span>
+          </li>
+        ))}
+      </ol>
+
+      <div class="mt-12 grid grid-cols-2 gap-3">
+        {gallery.map((p, i) => (
+          <div
+            class:list={[
+              'relative overflow-hidden rounded-media',
+              i === 0 ? 'col-span-2 aspect-[16/9]' : 'aspect-square',
+            ]}
+          >
+            <Media image={p.image} alt={p.alt} sizes="(min-width: 1024px) 50vw, 92vw" />
+          </div>
+        ))}
+      </div>
+
+      {g.tips.length > 0 && (
+        <>
+          <h2 class="mt-16 text-h2">여행 팁</h2>
+          <ul class="mt-6 space-y-3">
+            {g.tips.map((t) => (
+              <li class="flex gap-3">
+                <Icon name="check" class="mt-1 size-5 shrink-0 text-gold-600" />
+                <span>{t}</span>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+
+      {hotels.length > 0 && g.stay && (
+        <>
+          <h2 class="mt-16 text-h2">{STAYS[g.stay].nameKo} 추천 숙소</h2>
+          <ul class="mt-6 grid gap-3 sm:grid-cols-2">
+            {hotels.map((h) => (
+              <li class="flex items-start gap-3 rounded-card bg-surface p-4 shadow-card ring-1 ring-line">
+                <Icon name="bed" class="mt-0.5 size-5 shrink-0 text-gold-600" />
+                <span>
+                  <span class="block font-semibold" lang="en">
+                    {h.data.name}
+                  </span>
+                  <span class="block text-sm text-muted" lang="en">
+                    {h.data.town}
+                  </span>
+                </span>
+              </li>
+            ))}
+          </ul>
+          <a href={`/ko/hotels#${g.stay}`} class="mt-4 inline-flex items-center gap-2 font-semibold text-primary">
+            전체 숙소 보기 <Icon name="arrow" class="size-4" />
+          </a>
+        </>
+      )}
+
+      {g.faqs.length > 0 && (
+        <>
+          <h2 class="mt-16 text-h2">자주 묻는 질문</h2>
+          <div class="mt-6 divide-y divide-line border-y border-line">
+            {g.faqs.map((f) => (
+              <details class="group py-4">
+                <summary class="flex min-h-11 list-none items-center justify-between gap-4 font-semibold [&::-webkit-details-marker]:hidden">
+                  {f.q}
+                  <Icon name="chevron" class="size-5 shrink-0 transition-transform group-open:rotate-180" />
+                </summary>
+                <p class="mt-3 text-muted">{f.a}</p>
+              </details>
+            ))}
+          </div>
+        </>
+      )}
+    </article>
+
+    <aside class="space-y-6 lg:sticky lg:top-28 lg:self-start">
+      <dl class="rounded-media bg-surface p-6 shadow-card ring-1 ring-line">
+        <div>
+          <dt class="detail text-gold-700 dark:text-gold-400">추천 일정</dt>
+          <dd class="mt-1">{g.stayLength}</dd>
+        </div>
+        <div class="mt-5">
+          <dt class="detail text-gold-700 dark:text-gold-400">가는 방법</dt>
+          <dd class="mt-1">{g.gettingThere}</dd>
+        </div>
+        <div class="mt-5">
+          <dt class="detail text-gold-700 dark:text-gold-400">여행하기 좋은 시기</dt>
+          <dd class="mt-1">{g.bestTime}</dd>
+        </div>
+      </dl>
+      <div class="on-dark rounded-media bg-ocean-900 p-6 text-white">
+        <p class="font-display text-2xl">{g.name}를 포함한 맞춤 일정</p>
+        <p class="mt-2 text-white/80">전용 차량과 기사가 함께하는 스리랑카 일주 여행으로 {g.name}까지 편하게.</p>
+        <div class="mt-5 flex flex-wrap gap-2">
+          <a
+            href="/ko/itinerary/7-days"
+            class="inline-flex min-h-11 items-center rounded-pill bg-gold-500 px-5 text-sm font-semibold text-ocean-900"
+          >
+            7일 여행 코스
+          </a>
+          <a
+            href="/ko/contact"
+            class="inline-flex min-h-11 items-center rounded-pill border border-white/50 px-5 text-sm font-semibold"
+          >
+            상담하기
+          </a>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <section class="container-site pb-16" aria-labelledby="more-guides">
+    <h2 id="more-guides" class="text-h2">
+      다른 여행지
+    </h2>
+    <ul class="mt-6 flex flex-wrap gap-2">
+      {others.map((o) => (
+        <li>
+          <a
+            href={`/ko/destinations/${o.slug}`}
+            class="inline-flex min-h-11 items-center rounded-pill border border-line px-4 text-sm font-medium hover:border-gold-500"
+          >
+            {o.name} 여행
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <KoContactBand />
+</PageLayout>

@@ -75,4 +75,10 @@ const schema = [...siteSchema(), ...jsonLd];
 <meta name="twitter:image" content={imageUrl} />
 
 <link rel="sitemap" href="/sitemap.xml" />
+<link
+  rel="alternate"
+  type="application/rss+xml"
+  title={lang === 'ko' ? '파라다이스 트래블스 — 스리랑카 여행' : 'Paradise Travels — Sri Lanka Travel Guide'}
+  href={lang === 'ko' ? '/ko/rss.xml' : '/rss.xml'}
+/>
 <script type="application/ld+json" set:html={JSON.stringify(schema)} />

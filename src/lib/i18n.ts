@@ -15,6 +15,15 @@ export const KO_PAGES: Record<string, string> = {
   '/services/visa-consultation': '/ko/visa',
   '/services/air-ticketing': '/ko/air-tickets',
   '/contact': '/ko/contact',
+  '/about': '/ko/about',
+  '/destinations': '/ko/destinations',
+  '/destinations/sigiriya': '/ko/destinations/sigiriya',
+  '/destinations/kandy': '/ko/destinations/kandy',
+  '/destinations/ella': '/ko/destinations/ella',
+  '/destinations/nuwara-eliya': '/ko/destinations/nuwara-eliya',
+  '/destinations/galle': '/ko/destinations/galle',
+  '/destinations/mirissa': '/ko/destinations/mirissa',
+  '/tours/sri-lanka-7-day-tour': '/ko/itinerary/7-days',
 };
 
 const EN_PAGES = Object.fromEntries(Object.entries(KO_PAGES).map(([en, ko]) => [ko, en]));

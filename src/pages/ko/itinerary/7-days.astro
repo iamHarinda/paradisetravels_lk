@@ -1,0 +1,157 @@
+---
+import PageLayout from '../../../layouts/PageLayout.astro';
+import PhotoHero from '../../../components/ui/PhotoHero.astro';
+import Icon from '../../../components/ui/Icon.astro';
+import EnquiryForm from '../../../components/forms/EnquiryForm.astro';
+import KoContactBand from '../../../components/ko/KoContactBand.astro';
+import { photo } from '../../../lib/photos';
+import { ogImage } from '../../../lib/og';
+import { touristTripSchema } from '../../../lib/schema-org';
+
+// "스리랑카 7일 여행 코스" — Korean version of /tours/sri-lanka-7-day-tour (keep the two in sync).
+// DRAFT Korean for native review (docs/CONTENT-TODO.md §0).
+const days = [
+  {
+    title: '공항 → 시기리야',
+    body: '문화 삼각지대로 이동해 숙소에 체크인합니다.',
+    night: '시기리야',
+    guide: 'sigiriya',
+  },
+  {
+    title: '시기리야 · 폴론나루와',
+    body: '이른 아침 시기리야 바위 등반, 오후에는 자전거로 고대 도시 폴론나루와를 둘러봅니다.',
+    night: '시기리야',
+    guide: 'sigiriya',
+  },
+  {
+    title: '담불라 → 캔디',
+    body: '캔디로 가는 길에 담불라 석굴 사원을 방문하고, 저녁에는 불치사를 찾습니다.',
+    night: '캔디',
+    guide: 'kandy',
+  },
+  {
+    title: '차밭 고원으로',
+    body: '누와라엘리야로 가는 길에 차밭과 홍차 공장을 방문합니다.',
+    night: '누와라엘리야',
+    guide: 'nuwara-eliya',
+  },
+  {
+    title: '엘라행 고원 열차',
+    body: '고원 열차를 타고 엘라로 이동합니다. 기사님이 엘라에서 기다립니다.',
+    night: '엘라',
+    guide: 'ella',
+  },
+  {
+    title: '엘라 → 남부 해안',
+    body: '오전에 나인 아치 브리지를 보고, 갈레 근처 해안으로 내려갑니다.',
+    night: '갈레',
+    guide: 'galle',
+  },
+  {
+    title: '갈레 포트 · 출국',
+    body: '갈레 포트 성벽을 산책한 뒤 고속도로를 이용해 공항으로 이동합니다.',
+    night: '',
+    guide: 'galle',
+  },
+];
+const included = [
+  '여행 내내 전용 에어컨 차량과 기사',
+  '공항 픽업 · 샌딩',
+  '원하시는 등급의 숙소',
+  '콜롬보 팀의 일정 기획과 여행 중 지원',
+];
+const excluded = ['국제선 항공권 (발권 가능)', '스리랑카 ETA (공식 사이트에서 신청)'];
+const hero = photo('ella-train');
+const og = await ogImage('ella-train');
+const path = '/ko/itinerary/7-days';
+---
+
+<PageLayout
+  title="스리랑카 7일 여행 코스 · 일주 일정 | 파라다이스 트래블스"
+  description="처음 가는 스리랑카 7일 여행 코스. 시기리야, 폴론나루와, 캔디, 누와라엘리야, 엘라 고원 열차, 갈레까지 전용 차량과 기사가 함께하는 일정입니다."
+  image={og.image}
+  imageAlt={og.imageAlt}
+  breadcrumbs={[
+    { name: '투어', href: '/ko/tours' },
+    { name: '7일 여행 코스', href: path },
+  ]}
+  jsonLd={[
+    touristTripSchema({
+      title: '스리랑카 7일 여행 코스',
+      summary: '시기리야, 캔디, 누와라엘리야, 엘라, 갈레를 잇는 스리랑카 7일 일주',
+      path,
+      places: ['시기리야', '폴론나루와', '담불라', '캔디', '누와라엘리야', '엘라', '갈레'],
+    }),
+  ]}
+  primaryAction={{ href: '#plan', label: '상담' }}
+>
+  <PhotoHero
+    eyebrow="추천 일정"
+    title="스리랑카 *7일 여행 코스*"
+    intro="고대 도시, 고원 열차, 남부 해안까지 — 처음 가는 스리랑카에 가장 많이 추천하는 일정입니다. 모든 일정은 원하시는 대로 바꿀 수 있습니다."
+    image={hero.image}
+    imageAlt={hero.alt}
+  />
+
+  <section class="container-site grid gap-14 py-16 lg:grid-cols-[1.5fr_1fr]">
+    <ol class="space-y-4">
+      {days.map((d, i) => (
+        <li class="flex gap-5 rounded-media bg-surface p-6 shadow-card ring-1 ring-line">
+          <span class="font-display text-4xl leading-none text-gold-600 dark:text-gold-400">{i + 1}</span>
+          <div>
+            <h2 class="text-xl font-semibold">
+              {i + 1}일차 · {d.title}
+            </h2>
+            <p class="mt-2 text-muted">{d.body}</p>
+            <p class="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-sm">
+              {d.night && <span>숙박: {d.night}</span>}
+              <a
+                href={`/ko/destinations/${d.guide}`}
+                class="font-semibold text-primary underline-offset-4 hover:underline"
+              >
+                여행지 가이드 →
+              </a>
+            </p>
+          </div>
+        </li>
+      ))}
+    </ol>
+    <aside class="space-y-6 lg:sticky lg:top-28 lg:self-start">
+      <div class="rounded-media bg-surface p-6 shadow-card ring-1 ring-line">
+        <h2 class="text-xl font-semibold">포함 사항</h2>
+        <ul class="mt-4 space-y-2">
+          {included.map((x) => (
+            <li class="flex gap-2">
+              <Icon name="check" class="mt-1 size-4 shrink-0 text-tea-600" />
+              {x}
+            </li>
+          ))}
+        </ul>
+        <h2 class="mt-6 text-xl font-semibold">불포함</h2>
+        <ul class="mt-4 space-y-2 text-muted">
+          {excluded.map((x) => (
+            <li class="flex gap-2">
+              <Icon name="x" class="mt-1 size-4 shrink-0" />
+              {x}
+            </li>
+          ))}
+        </ul>
+        <p class="mt-6 text-sm text-muted">요금은 숙소 등급, 시기, 인원에 따라 달라집니다 — 견적을 요청해 주세요.</p>
+      </div>
+      <p class="text-sm text-muted">여행하기 좋은 시기: 대체로 12월~4월 (남부 해안 기준).</p>
+    </aside>
+  </section>
+
+  <section id="plan" class="container-site scroll-mt-24 pb-16">
+    <div class="grid gap-10 rounded-media bg-surface p-6 shadow-card ring-1 ring-line sm:p-10 lg:grid-cols-[1fr_1.3fr]">
+      <div>
+        <h2 class="text-h2">이 일정으로 견적 받기</h2>
+        <p class="mt-4 text-muted">
+          여행 날짜와 인원, 원하시는 숙소 등급을 알려주세요. 일정 조정도 자유롭게 요청하세요.
+        </p>
+      </div>
+      <EnquiryForm subject="7-day itinerary (KO)" />
+    </div>
+  </section>
+  <KoContactBand />
+</PageLayout>

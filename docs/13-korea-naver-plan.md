@@ -34,6 +34,7 @@ Naver Search Advisor is Naver's equivalent of Google Search Console.
 5. Click verify in Naver Search Advisor.
 6. 요청 → 사이트맵 제출 (Request → Submit sitemap): submit `https://paradisetravels.lk/sitemap.xml`
    (it lists every English and `/ko` page; `robots.txt` points to it too).
+   Also submit the Korean RSS feed `https://paradisetravels.lk/ko/rss.xml` (요청 → RSS 제출) — Naver uses it to find new pages faster.
 7. Also under 요청: 웹 페이지 수집 (request crawling) for `https://paradisetravels.lk/ko`.
 
 **Cloudflare:** Bot Fight Mode or a WAF rule can block Naver's crawler (Yeti) and make verification fail. In
@@ -41,31 +42,69 @@ Cloudflare → Security → Bots, check it; if needed add a WAF *skip* rule for 
 
 Indexing is not guaranteed and can take time under Naver's policies — check the report weekly.
 
-## 2. Korean pages done properly
+## 2. Keyword map — one Korean page per keyword
 
-- Machine-translated Korean reads unnaturally and Naver users notice. All Korean copy on the site is a **first draft
-  for a native speaker to review** before launch (docs/CONTENT-TODO.md §0).
-- Keep `og:title`, `og:description` and `og:image` accurate — Naver uses them for previews in Blog/Cafe/KakaoTalk links.
-- Do keyword research in Naver's own tools (Naver Search Advisor, Naver DataLab, Naver Ads keyword tool) — Korean
-  search phrasing differs from English.
-- Next Korean pages worth adding: a Korean Sigiriya guide, a "스리랑카 7일 여행 일정" itinerary, Korean FAQ.
+How Naver's results work: a search like "스리랑카 여행" shows sections — 파워링크 (paid ads) at the top, then 블로그 /
+카페 posts (most clicks), 지식iN (Q&A), and 웹사이트 / 웹문서 (normal sites like ours), often low on the page. So the
+website alone will not reach the top for big keywords — the plan works on **every section**, and the website targets
+**long-tail keywords** first, where Korean agencies (Hana Tour, Mode Tour) and big blogs are not competing.
 
-## 3. Naver Blog (best source of Korean traffic)
+| Keyword (Korean) | Meaning | Page | Status |
+|---|---|---|---|
+| 스리랑카 현지 여행사 | Sri Lanka local travel agency | `/ko/about` (+ `/ko`) | built |
+| 스리랑카 기사 포함 투어 | Sri Lanka tour with driver | `/ko/private-driver` | built |
+| 스리랑카 7일 여행 코스 / 일정 | 7-day itinerary | `/ko/itinerary/7-days` | built |
+| 시기리야 여행 (코스) | Sigiriya travel | `/ko/destinations/sigiriya` | built |
+| 캔디 여행 (코스) | Kandy travel | `/ko/destinations/kandy` | built |
+| 엘라 여행 (코스) / 엘라 기차 | Ella travel / train | `/ko/destinations/ella` | built |
+| 누와라엘리야 여행 | Nuwara Eliya travel | `/ko/destinations/nuwara-eliya` | built |
+| 갈레 여행 / 갈레 포트 | Galle travel | `/ko/destinations/galle` | built |
+| 미리사 여행 / 고래 투어 | Mirissa / whale watching | `/ko/destinations/mirissa` | built |
+| 스리랑카 허니문 · 골프 · 실론티 · 아유르베다 | tour types | `/ko/tours/<type>` | built |
+| 스리랑카 비자 / ETA | visa | `/ko/visa` | built |
+| 스리랑카 항공권 / 대한항공 콜롬보 | air tickets | `/ko/air-tickets` | built |
+| 스리랑카 호텔 할인 | Sri Lanka hotel discount | — | **on hold**: we may not publish rates (rate parity, CLAUDE.md rule 2) or promise discounts until the owner confirms which hotel deals are real |
 
-Naver's results mix in Naver Blog, Cafe and News, so the business should exist across that ecosystem.
+Rules for every Korean page: written (or rewritten) by a **native Korean travel writer** — machine translation reads
+unnaturally and Naver users notice (Fiverr / Kmong writers are an option). All current `/ko` copy is a **draft** from
+the English facts, flagged in docs/CONTENT-TODO.md §0. Keep facts in sync with the English page (hreflang twin).
+Every page has: unique Korean title + description, a photo `og:image` for Naver/Kakao previews, hreflang, JSON-LD,
+breadcrumbs, a KakaoTalk contact block, and is in `/sitemap.xml` and `/ko/rss.xml`.
 
-- Open a **Naver Blog** for Paradise Travels and post Sri Lanka travel content in Korean, e.g. "시기리야 여행 가이드",
-  "스리랑카 7일 여행 일정", honeymoon and golf posts — each linking back to the matching `/ko/…` page.
-- Account verification without a Korean phone number: the plan the owner received says Naver added **passport
-  verification for users without a Korean number from 4 June 2026** — confirm this on Naver's help pages when signing up.
-- Consider a KakaoTalk Channel (카카오톡 채널) so Korean pages can link straight to chat; add its URL to the site
-  (docs/CONTENT-TODO.md §0).
+To add a page for a new keyword: add an entry to `src/data/ko-guides.ts` (destinations) or a page under `src/pages/ko/`,
+add its English twin to `KO_PAGES` in `src/lib/i18n.ts`, then `npm run deploy`.
+
+## 3. Naver ecosystem (off-site — the owner's team)
+
+**Naver Blog** — the easiest way to reach the top of the 블로그 section.
+- Open a Naver Blog for Paradise Travels. Account verification without a Korean phone number: the plan the owner
+  received says Naver offers **passport verification from 4 June 2026** — confirm on Naver's help pages at sign-up.
+- Post **2–3 times a week** in natural Korean, with your own photos. Each post targets one keyword from §2 and links
+  to the matching `/ko/…` page (e.g. a Sigiriya post → `/ko/destinations/sigiriya`). Ideas: 시기리야 오르는 팁,
+  엘라 기차 예약 방법, 스리랑카 7일 일정 후기, 스리랑카 허니문 호텔, 스리랑카 골프 여행, 실론티 공장 견학.
+
+**지식iN** — answer real Korean questions about Sri Lanka travel (visa/ETA, best season, transport) helpfully,
+with a link to the relevant `/ko` page. Answers must be genuinely useful, not adverts.
+
+**Reviews & influencers** — invite Korean travel bloggers for a free or discounted tour in exchange for an honest
+review on their Naver Blog (disclosed as sponsored, as Korean advertising rules require). Naver users rely heavily on these.
+
+**파워링크 ads** (searchad.naver.com) — the fastest way to appear at the top. Foreign businesses may need
+business-registration documents; the owner should check whether Paradise Travels (Pvt) Ltd can open an account.
+Start with the long-tail keywords in §2 and a small daily budget.
+
+**Monthly routine** — new sites take weeks, sometimes months, to rank on Naver. Each month: Search Advisor →
+리포트 (clicks, impressions, keywords) → improve the pages and blog posts that get impressions but few clicks, and
+add pages for keywords that are rising.
 
 ## 4. Owner checklist
 
-- [ ] Naver Search Advisor: register, verify (HTML tag → `NAVER_SITE_VERIFICATION`), submit sitemap.
+- [x] Naver Search Advisor: site registered; ownership verified with the HTML file (`public/naverebac4e6bfa964fbfa515b36ab8e02b8b.html`).
+- [ ] Submit `https://paradisetravels.lk/sitemap.xml` and `https://paradisetravels.lk/ko/rss.xml` (요청 → 사이트맵 제출 / RSS 제출).
 - [ ] Native-speaker review of all Korean copy.
 - [ ] Confirm whether enquiries can be answered in Korean.
 - [ ] KakaoTalk Channel / Open Chat link.
-- [ ] Naver Blog account + first 3 posts linking to `/ko` pages.
+- [ ] Naver Blog account + 2–3 posts a week, each linking to a `/ko` page (§3).
+- [ ] 지식iN answers; 1–2 Korean travel bloggers for sponsored reviews; check 파워링크 eligibility.
+- [ ] Monthly: Search Advisor 리포트 review (§3).
 - [ ] Google Search Console too (`GOOGLE_SITE_VERIFICATION`).
