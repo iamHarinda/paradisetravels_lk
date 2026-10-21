@@ -64,10 +64,10 @@ lead webhook) live in `~/paradise-config.php` on the server — copy `paradise-c
 2. **`npm run deploy`** — builds with `SITE_ENV=production` and uploads only the files that changed to `public_html`
    by FTPS (`-- --dry` to preview, `-- --all` to re-upload everything, e.g. from another computer).
    Manual alternative: `npm run build:production` → `paradisetravels-site.zip` → hPanel File Manager → Extract.
-4. First time only: copy `paradise-config.sample.php` → `paradise-config.php` in the project root (git-ignored;
+3. First time only: copy `paradise-config.sample.php` → `paradise-config.php` in the project root (git-ignored;
    `npm run deploy` uploads it **above** `public_html`), and
    create the `hello@paradisetravels.lk` mailbox in hPanel → Emails so PHP mail can send from it.
-5. Cloudflare: purge cache after each upload. SSL Full (strict), cache `/_astro/*` 1 year, bypass `/api/*`,
+4. Cloudflare: purge cache after each upload. SSL Full (strict), cache `/_astro/*` 1 year, bypass `/api/*`,
    don't enable Rocket Loader. Check Security → Bots: Bot Fight Mode / WAF must not block Naver's **Yeti** crawler
    (add a skip rule for user agents containing `Yeti` if needed). Add SPF/DKIM records for Hostinger mail.
 
