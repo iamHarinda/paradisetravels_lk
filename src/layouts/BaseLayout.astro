@@ -10,6 +10,8 @@ export type Props = SEOProps;
 
 const props = Astro.props;
 const lang = langFromPath(Astro.url.pathname);
+// <!--email_off--> … <!--/email_off--> around the body opts every page out of Cloudflare Email Address Obfuscation,
+// which rewrites mailto links to /cdn-cgi/l/email-protection — crawlers report that as a broken link on every page.
 ---
 
 <!doctype html>
@@ -33,6 +35,7 @@ const lang = langFromPath(Astro.url.pathname);
     <slot name="head" />
   </head>
   <body class="min-h-dvh">
+    <Fragment set:html="<!--email_off-->" />
     <a class="skip-link" href="#main">
       {lang === 'ko' ? '본문 바로가기' : 'Skip to content'}
     </a>
@@ -42,5 +45,6 @@ const lang = langFromPath(Astro.url.pathname);
     </main>
     <slot name="footer" />
     <ConsentBanner />
+    <Fragment set:html="<!--/email_off-->" />
   </body>
 </html>

@@ -1,4 +1,5 @@
 // @ts-check
+import { readdirSync, readFileSync } from 'node:fs';
 import { defineConfig, envField, fontProviders } from 'astro/config';
 
 import node from '@astrojs/node';
@@ -14,6 +15,26 @@ import { REDIRECTS, htaccess, astroAssetsHtaccess } from './deploy/apache.mjs';
 // static (`dist/`), forms are handled by PHP in public/api/, and Apache rules come from deploy/apache.mjs.
 // Keystatic (and the Node adapter it needs) only run in `astro dev`, for editing content locally.
 const DEV = process.argv.includes('dev');
+
+// <lastmod> for sitemap.xml: a page's own "updated"/"lastChecked" date from its Markdown frontmatter when it has one,
+// otherwise the date the site was last restructured.
+const SITE_REBUILT = '2026-10-21';
+const DATED = Object.fromEntries(
+  ['guides', 'destinations'].flatMap((collection) => {
+    const dir = new URL(`./src/content/${collection}/`, import.meta.url);
+    return readdirSync(dir)
+      .filter((f) => f.endsWith('.md'))
+      .map((f) => {
+        const fm = readFileSync(new URL(f, dir), 'utf8');
+        const date = fm.match(/^(?:updated|lastChecked|published):\s*'?(\d{4}-\d{2}-\d{2})/m)?.[1];
+        const base = collection === 'guides' ? 'travel-guide' : collection;
+        return [`/${base}/${f.replace(/\.md$/, '')}`, date];
+      })
+      .filter(([, d]) => d && d > SITE_REBUILT);
+  }),
+);
+/** @param {string} url */
+const lastmod = (url) => DATED[new URL(url).pathname] ?? SITE_REBUILT;
 
 /**
  * Writes dist/.htaccess (clean URLs, 301 redirects, caching, security headers) + dist/_astro/.htaccess.
@@ -80,7 +101,11 @@ export default defineConfig({
   ...(DEV ? { adapter: node({ mode: 'standalone' }) } : {}),
 
   integrations: [
-    sitemap({ filter: (page) => !/\/(thank-you|styleguide)\/?$/.test(page) }),
+    sitemap({
+      // Only indexable pages: noindex pages (thank-you, styleguide, draft legal pages) stay out of the sitemap.
+      filter: (page) => !/\/(thank-you|styleguide|terms|privacy|cancellation-policy)\/?$/.test(page),
+      serialize: (item) => ({ ...item, lastmod: lastmod(item.url) }),
+    }),
     mdx(),
     react(),
     ...(DEV ? [keystatic()] : []),

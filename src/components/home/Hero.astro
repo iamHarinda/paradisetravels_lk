@@ -71,6 +71,9 @@ const T = ko
           src={lead.image}
           alt={lead.alt}
           formats={['avif', 'webp']}
+          fallbackFormat="webp"
+          width={1280}
+          height={Math.round((1280 * lead.image.height) / lead.image.width)}
           quality={42}
           widths={widths.filter((w) => w <= lead.image.width)}
           sizes={sizes}
@@ -88,6 +91,9 @@ const T = ko
             src={s.image}
             alt={s.alt}
             formats={['avif', 'webp']}
+            fallbackFormat="webp"
+            width={1280}
+            height={Math.round((1280 * s.image.height) / s.image.width)}
             quality={42}
             widths={widths.filter((w) => w <= s.image.width)}
             sizes={sizes}

@@ -127,9 +127,27 @@ try {
   fs.mkdirSync(path.dirname(MANIFEST), { recursive: true });
   fs.writeFileSync(MANIFEST, JSON.stringify(files));
 
+  // Cloudflare caches HTML at the edge (Cache Rule, docs/CONTENT-TODO.md) — purge it so visitors get the new pages.
+  // Needs CF_ZONE_ID + CF_API_TOKEN (token permission: Zone → Cache Purge → Purge) in .env; skipped otherwise.
+  if (process.env.CF_ZONE_ID && process.env.CF_API_TOKEN && (changed.length || removed.length)) {
+    try {
+      const res = await fetch(`https://api.cloudflare.com/client/v4/zones/${process.env.CF_ZONE_ID}/purge_cache`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${process.env.CF_API_TOKEN}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ purge_everything: true }),
+      });
+      const data = await res.json();
+      console.log(`  Cloudflare cache purge: ${data.success ? 'done' : `failed ${JSON.stringify(data.errors)}`}`);
+    } catch (err) {
+      console.log(
+        `  Cloudflare cache purge failed (${err instanceof Error ? err.message : err}) — purge it in the dashboard.`,
+      );
+    }
+  }
+
   // Tell Bing, Naver & co. which pages changed (IndexNow). Never fails the deploy.
   if (!args.has('--no-indexnow')) await submitIndexNow(pagesFromFiles([...changed, ...removed]));
-  console.log('Done. Purge the Cloudflare cache if pages look stale.');
+  console.log(process.env.CF_API_TOKEN ? 'Done.' : 'Done. Purge the Cloudflare cache if pages look stale.');
 } catch (err) {
   console.error(`\nFTP deploy failed: ${err instanceof Error ? err.message : err}`);
   console.error('Nothing is marked as uploaded — run `npm run deploy` again to retry.');

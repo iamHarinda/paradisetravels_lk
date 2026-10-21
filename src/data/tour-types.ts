@@ -47,7 +47,7 @@ export const TOUR_TYPES: TourType[] = [
       ],
       seoTitle: 'Sri Lanka Round Trips & Tour Packages',
       seoDescription:
-        'Sri Lanka round trips from 3 to 14 days with a private car and driver: Sigiriya, Kandy, the tea hills, safaris and the south coast. Tailor-made by a Colombo agency.',
+        'Sri Lanka round trips of 3 to 14 days with a private car and driver: Sigiriya, Kandy, the tea hills, safaris and the south coast, tailor-made for you.',
     },
     ko: {
       name: '스리랑카 일주 여행',
@@ -161,7 +161,7 @@ export const TOUR_TYPES: TourType[] = [
       ],
       seoTitle: 'Sri Lanka Tea Tours: Ceylon Tea Country',
       seoDescription:
-        'Sri Lanka tea tours through Ceylon tea country: factory visits and tastings, the hill-country train, Nuwara Eliya stays and estate walks. Tailor-made itineraries.',
+        'Sri Lanka tea tours through Ceylon tea country: factory visits and tastings, the hill-country train, Nuwara Eliya stays and walks among the estates.',
     },
     ko: {
       name: '실론티 투어',
@@ -199,7 +199,7 @@ export const TOUR_TYPES: TourType[] = [
       ],
       seoTitle: 'Sri Lanka Ayurveda Tours & Retreats',
       seoDescription:
-        'Sri Lanka Ayurveda tours: resort programmes with herbal treatments and nourishing food, plus gentle sightseeing. We match you to the right resort and length of stay.',
+        'Sri Lanka Ayurveda tours: resort programmes with herbal treatments and nourishing food, plus gentle sightseeing. We match you to the right resort.',
     },
     ko: {
       name: '아유르베다 힐링 여행',

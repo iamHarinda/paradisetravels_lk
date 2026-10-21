@@ -29,7 +29,7 @@ faqs:
     a: Travelling between roughly December and April, go west or south. Between roughly May and September, head to the east coast — Trincomalee, Nilaveli or Arugam Bay.
 seo:
   title: 'Sri Lanka Beaches: Best Coast by Month | Paradise'
-  description: Which Sri Lanka beach when? South and west coasts roughly December to April, east coast roughly May to September. Beach guides and holidays by local experts.
+  description: Which Sri Lanka beach when? South and west coasts roughly December to April, east coast roughly May to September. Beach guides from local experts.
   keyword: best beaches sri lanka
 reviewed: false
 heroImage: ../../assets/images/photos/tangalle.jpg

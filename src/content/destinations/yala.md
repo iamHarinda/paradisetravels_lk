@@ -30,7 +30,7 @@ faqs:
     a: Yala is one of the best places in the world to see leopards, but sightings are never guaranteed. Two safaris improve your chances.
 seo:
   title: Yala National Park Safari Guide | Paradise Travels
-  description: 'Yala National Park, Sri Lanka: leopard and elephant safaris, best time to visit, where to stay and wildlife tours. Plan your Yala safari with local experts.'
+  description: 'Yala National Park, Sri Lanka: leopard and elephant safaris, the best time to visit, where to stay and wildlife tours planned by local experts.'
   keyword: yala safari
 reviewed: false
 heroImage: ../../assets/images/photos/yala.jpg

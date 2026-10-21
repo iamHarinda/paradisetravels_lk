@@ -31,7 +31,7 @@ tips:
 faqs: []
 seo:
   title: Anuradhapura Travel Guide | Ancient Capital
-  description: 'Anuradhapura, Sri Lanka’s ancient capital and UNESCO site: Sri Maha Bodhi, great stupas and reservoirs. How to visit and Cultural Triangle tours that include it.'
+  description: 'Anuradhapura, Sri Lanka’s ancient capital and UNESCO site: Sri Maha Bodhi, great stupas and reservoirs. How to visit, and tours that include it.'
   keyword: anuradhapura
 reviewed: false
 heroImage: ../../assets/images/photos/anuradhapura.jpg

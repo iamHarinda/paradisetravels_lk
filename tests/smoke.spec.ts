@@ -35,11 +35,11 @@ for (const path of PAGES) {
     await expect(page.locator('h1')).toHaveCount(1);
     await expect(page).toHaveTitle(/.{10,60}/);
     // Naver Search Advisor (docs/13): title ≤ 40 and description ≤ 80 characters on Korean pages and on the home
-    // page (the URL registered with Naver). Other English pages keep Google's ~120–165.
+    // page (the URL registered with Naver). Other English pages use 110–155 (Ahrefs/Google snippet length).
     const naver = path === '/' || path.startsWith('/ko');
     await expect(page.locator('meta[name="description"]')).toHaveAttribute(
       'content',
-      naver ? /^.{50,80}$/ : /^.{120,165}$/,
+      naver ? /^.{50,80}$/ : /^.{110,155}$/,
     );
     if (naver) expect((await page.title()).length).toBeLessThanOrEqual(40);
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(

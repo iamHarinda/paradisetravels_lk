@@ -43,7 +43,13 @@ const hreflang =
       ]
     : [];
 const imageUrl = new URL(image, Astro.site);
-const robots = noindex || SITE_ENV !== 'production' ? 'noindex, nofollow' : 'index, follow, max-image-preview:large';
+// Staging: block everything. Production noindex pages (legal drafts, thank-you): `follow`, so links on them still count.
+const robots =
+  SITE_ENV !== 'production'
+    ? 'noindex, nofollow'
+    : noindex
+      ? 'noindex, follow'
+      : 'index, follow, max-image-preview:large';
 const schema = [...siteSchema(), ...jsonLd];
 ---
 

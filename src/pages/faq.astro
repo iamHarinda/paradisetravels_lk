@@ -19,7 +19,7 @@ const items = (cat: string) =>
 
 <PageLayout
   title="FAQ: Booking a Sri Lanka Trip | Paradise Travels"
-  description="Answers to common questions about booking with Paradise Travels: how it works, payments, the Sri Lanka ETA, best time to visit and getting around the island."
+  description="Answers to common questions about booking with Paradise Travels: how it works, payments, the Sri Lanka ETA, the best time to visit and getting around."
   breadcrumbs={[{ name: 'FAQ', href: '/faq' }]}
   jsonLd={[faqSchema(faqs.map((f) => ({ q: f.data.question, a: f.data.answer })))].filter((x) => !!x)}
 >

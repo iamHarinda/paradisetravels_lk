@@ -25,7 +25,7 @@ faqs:
     a: Yala for leopards, Udawalawe for reliable elephant sightings year-round, and Minneriya for large elephant gatherings in the dry season. Each suits a different route.
 seo:
   title: 'Sri Lanka Wildlife Safaris: Yala, Udawalawe & More'
-  description: 'Wildlife safaris in Sri Lanka: leopards in Yala, elephants in Udawalawe and Minneriya. Compare the parks, best times to go and safari tours with local experts.'
+  description: 'Wildlife safaris in Sri Lanka: leopards in Yala, elephants in Udawalawe and Minneriya. Compare the parks and the best times to go, with local experts.'
   keyword: sri lanka safari
 reviewed: false
 heroImage: ../../assets/images/photos/yala-elephants.jpg

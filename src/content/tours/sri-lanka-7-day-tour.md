@@ -58,7 +58,7 @@ days:
     body: Walk Galle Fort’s ramparts, then drive to the airport via the expressway.
 seo:
   title: Sri Lanka 7 Day Tour Itinerary | Paradise Travels
-  description: 'A classic 7-day Sri Lanka itinerary: Sigiriya, Polonnaruwa, Kandy, the train to Ella and Galle Fort. Private driver, flexible hotels, planned by local experts.'
+  description: 'A classic 7-day Sri Lanka itinerary: Sigiriya, Polonnaruwa, Kandy, the train to Ella and Galle Fort, with a private driver and hotels you choose.'
   keyword: sri lanka 7 day itinerary
 inclusions:
   - Private air-conditioned vehicle with driver for the whole trip

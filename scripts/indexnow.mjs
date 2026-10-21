@@ -8,7 +8,13 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const SITE = 'https://paradisetravels.lk';
-const ENDPOINT = 'https://api.indexnow.org/indexnow';
+// The shared endpoint forwards to every participating engine, but Bing's dashboard and Naver are more reliable when
+// pinged directly, so we notify all three (each response is logged; a failure never fails a deploy).
+const ENDPOINTS = [
+  'https://api.indexnow.org/indexnow',
+  'https://www.bing.com/indexnow',
+  'https://searchadvisor.naver.com/indexnow',
+];
 
 export function indexNowKey() {
   const file = fs.readdirSync('public').find((f) => /^[a-f0-9]{32}\.txt$/.test(f));
@@ -36,18 +42,20 @@ export async function submitIndexNow(paths) {
   if (!key) return console.log('  IndexNow: no key file in public/ — skipped.');
   if (!paths.length) return console.log('  IndexNow: no page changes to report.');
   const urlList = paths.map((p) => new URL(p, SITE).toString()).slice(0, 10_000);
-  try {
-    const res = await fetch(ENDPOINT, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json; charset=utf-8' },
-      body: JSON.stringify({ host: new URL(SITE).host, key, keyLocation: `${SITE}/${key}.txt`, urlList }),
-    });
-    // 200 = accepted, 202 = accepted (key validation pending); anything else is reported but never fails a deploy.
-    console.log(`  IndexNow: ${urlList.length} URL(s) → HTTP ${res.status}${res.ok ? '' : ` ${await res.text()}`}`);
-  } catch (err) {
-    console.log(
-      `  IndexNow: request failed (${err instanceof Error ? err.message : err}) — the sitemap still covers it.`,
-    );
+  const body = JSON.stringify({ host: new URL(SITE).host, key, keyLocation: `${SITE}/${key}.txt`, urlList });
+  for (const endpoint of ENDPOINTS) {
+    try {
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json; charset=utf-8' },
+        body,
+      });
+      // 200/202 = accepted. 400 bad request, 403 key not valid, 422 URLs don't match host, 429 too many requests.
+      const detail = res.ok ? '' : ` ${(await res.text()).slice(0, 200)}`;
+      console.log(`  IndexNow ${new URL(endpoint).host}: ${urlList.length} URL(s) → HTTP ${res.status}${detail}`);
+    } catch (err) {
+      console.log(`  IndexNow ${new URL(endpoint).host}: request failed (${err instanceof Error ? err.message : err})`);
+    }
   }
 }
 

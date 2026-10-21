@@ -31,6 +31,9 @@ const {
     src={image}
     alt={alt ?? ''}
     formats={['avif', 'webp']}
+    fallbackFormat="webp"
+    width={Math.min(image.width, 1280)}
+    height={Math.round((Math.min(image.width, 1280) * image.height) / image.width)}
     quality={45}
     widths={[400, 640, 800, 960, 1280, 1600, 2000].filter((w) => w <= image.width)}
     sizes={sizes}
