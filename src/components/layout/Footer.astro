@@ -97,7 +97,8 @@ const legal = [
             <BrandBadge name="whatsapp" class="size-5" />
             <BrandBadge name="kakao" class="size-5" />
           </span>
-          {ko ? '왓츠앱 · 카카오톡' : 'WhatsApp & KakaoTalk'}: {SITE.phone}
+          <span class="sr-only">{ko ? '왓츠앱 · 카카오톡' : 'WhatsApp & KakaoTalk'}:</span>
+          {SITE.phone}
         </a>
         <a href={`mailto:${SITE.email}`} class="flex gap-2 hover:text-white" data-track="email">
           <Icon name="mail" class="mt-0.5 size-4 shrink-0" />

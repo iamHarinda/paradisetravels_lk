@@ -92,6 +92,35 @@ const variableFont = (pkg, file, { latinExt = true, italic = false } = {}) => {
   return { variants };
 };
 
+/**
+ * Every link that leaves the site (WhatsApp, Facebook, Google Maps, official sources, photo credits…) opens in a new
+ * tab, so visitors keep their place on our site. Done once on the built HTML rather than in every component.
+ * @returns {import('astro').AstroIntegration}
+ */
+const externalLinksInNewTab = () => ({
+  name: 'paradise-external-links',
+  hooks: {
+    'astro:build:done': async ({ dir }) => {
+      const { readdir, readFile, writeFile } = await import('node:fs/promises');
+      const files = (await readdir(dir, { recursive: true })).filter((f) => f.endsWith('.html'));
+      const external = /\shref="(?:https?:)?\/\/(?!(?:www\.)?paradisetravels\.lk[/"?#])[^"]+"/;
+      for (const f of files) {
+        const file = new URL(f, dir);
+        const html = await readFile(file, 'utf8');
+        const out = html.replace(/<a\b[^>]*>/g, (tag) => {
+          if (!external.test(tag) || /\starget=/.test(tag)) return tag;
+          let t = tag.replace(/<a\b/, '<a target="_blank"');
+          if (/\srel="/.test(t))
+            t = t.replace(/\srel="([^"]*)"/, (_, r) => ` rel="${/noopener/.test(r) ? r : `${r} noopener`.trim()}"`);
+          else t = t.replace(/<a\b/, '<a rel="noopener"');
+          return t;
+        });
+        if (out !== html) await writeFile(file, out);
+      }
+    },
+  },
+});
+
 // https://astro.build/config
 export default defineConfig({
   site: 'https://paradisetravels.lk',
@@ -110,6 +139,7 @@ export default defineConfig({
     react(),
     ...(DEV ? [keystatic()] : []),
     apacheConfig(),
+    externalLinksInNewTab(),
   ],
 
   prefetch: { defaultStrategy: 'hover' },
