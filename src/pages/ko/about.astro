@@ -5,6 +5,7 @@ import Icon from '../../components/ui/Icon.astro';
 import KoContactBand from '../../components/ko/KoContactBand.astro';
 import AirlineLogos from '../../components/ui/AirlineLogos.astro';
 import { SITE } from '../../lib/site';
+import LeaderCard from '../../components/ui/LeaderCard.astro';
 import { photo } from '../../lib/photos';
 import { ogImage } from '../../lib/og';
 import { travelAgencySchema } from '../../lib/schema-org';
@@ -69,6 +70,9 @@ const facts = [
         </div>
       ))}
     </dl>
+  </section>
+  <section class="container-site pb-16">
+    <LeaderCard lang="ko" class="max-w-3xl" />
   </section>
   <section class="container-site pb-16">
     <h2 class="text-h2">발권 항공사</h2>

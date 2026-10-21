@@ -1,4 +1,5 @@
 import type { PhotoName } from '../lib/photos';
+import type { PlaceIcon } from '../lib/place-icons';
 
 // "Island Atlas" — highlights marked on the home-page map (inspired by Jetwing Travels' "Our Island" map, which the
 // owner liked; ours is an original illustrated design). Coordinates are approximate [lat, lon] for map placement only.
@@ -17,6 +18,8 @@ export const CATEGORY_META: Record<HighlightCategory, { en: string; ko: string }
 export interface Highlight {
   id: string;
   category: HighlightCategory;
+  /** Landmark icon shown on the map pin (src/lib/place-icons.ts). */
+  icon: PlaceIcon;
   coords: [number, number];
   photo?: PhotoName;
   /** Destination page, when we have one. */
@@ -31,6 +34,7 @@ export const HIGHLIGHTS: Highlight[] = [
   // Beaches & coast
   {
     id: 'mirissa',
+    icon: 'palmSun',
     category: 'beaches',
     coords: [5.948, 80.457],
     photo: 'coconut-hill',
@@ -40,6 +44,7 @@ export const HIGHLIGHTS: Highlight[] = [
   },
   {
     id: 'hikkaduwa',
+    icon: 'turtle',
     category: 'beaches',
     coords: [6.14, 80.104],
     photo: 'hikkaduwa',
@@ -48,6 +53,7 @@ export const HIGHLIGHTS: Highlight[] = [
   },
   {
     id: 'koggala',
+    icon: 'stiltFisher',
     category: 'beaches',
     coords: [5.99, 80.33],
     photo: 'stilt-fishermen',
@@ -56,6 +62,7 @@ export const HIGHLIGHTS: Highlight[] = [
   },
   {
     id: 'tangalle',
+    icon: 'palmSun',
     category: 'beaches',
     coords: [6.024, 80.794],
     photo: 'tangalle',
@@ -64,6 +71,7 @@ export const HIGHLIGHTS: Highlight[] = [
   },
   {
     id: 'arugam-bay',
+    icon: 'surf',
     category: 'beaches',
     coords: [6.84, 81.837],
     photo: 'arugam-aerial',
@@ -73,6 +81,7 @@ export const HIGHLIGHTS: Highlight[] = [
   },
   {
     id: 'trincomalee',
+    icon: 'fish',
     category: 'beaches',
     coords: [8.587, 81.215],
     photo: 'trincomalee',
@@ -82,6 +91,7 @@ export const HIGHLIGHTS: Highlight[] = [
   },
   {
     id: 'negombo',
+    icon: 'boat',
     category: 'beaches',
     coords: [7.209, 79.836],
     photo: 'negombo',
@@ -93,6 +103,7 @@ export const HIGHLIGHTS: Highlight[] = [
   // History & culture
   {
     id: 'sigiriya',
+    icon: 'lionRock',
     category: 'heritage',
     coords: [7.957, 80.76],
     photo: 'sigiriya',
@@ -102,6 +113,7 @@ export const HIGHLIGHTS: Highlight[] = [
   },
   {
     id: 'dambulla',
+    icon: 'caveBuddha',
     category: 'heritage',
     coords: [7.857, 80.649],
     photo: 'dambulla',
@@ -111,6 +123,7 @@ export const HIGHLIGHTS: Highlight[] = [
   },
   {
     id: 'polonnaruwa',
+    icon: 'buddha',
     category: 'heritage',
     coords: [7.94, 81.0],
     photo: 'polonnaruwa',
@@ -120,6 +133,7 @@ export const HIGHLIGHTS: Highlight[] = [
   },
   {
     id: 'anuradhapura',
+    icon: 'stupa',
     category: 'heritage',
     coords: [8.335, 80.395],
     photo: 'anuradhapura',
@@ -129,6 +143,7 @@ export const HIGHLIGHTS: Highlight[] = [
   },
   {
     id: 'kandy',
+    icon: 'tooth',
     category: 'heritage',
     coords: [7.294, 80.641],
     photo: 'perahera',
@@ -138,6 +153,7 @@ export const HIGHLIGHTS: Highlight[] = [
   },
   {
     id: 'galle',
+    icon: 'lighthouse',
     category: 'heritage',
     coords: [6.027, 80.217],
     photo: 'galle-lighthouse',
@@ -147,6 +163,7 @@ export const HIGHLIGHTS: Highlight[] = [
   },
   {
     id: 'colombo',
+    icon: 'lotusTower',
     category: 'heritage',
     coords: [6.927, 79.861],
     photo: 'colombo-night',
@@ -158,6 +175,7 @@ export const HIGHLIGHTS: Highlight[] = [
   // Wildlife & nature
   {
     id: 'yala',
+    icon: 'leopard',
     category: 'wildlife',
     coords: [6.37, 81.4],
     photo: 'yala',
@@ -167,6 +185,7 @@ export const HIGHLIGHTS: Highlight[] = [
   },
   {
     id: 'udawalawe',
+    icon: 'elephant',
     category: 'wildlife',
     coords: [6.47, 80.89],
     photo: 'udawalawe',
@@ -176,6 +195,7 @@ export const HIGHLIGHTS: Highlight[] = [
   },
   {
     id: 'minneriya',
+    icon: 'elephant',
     category: 'wildlife',
     coords: [8.04, 80.86],
     photo: 'minneriya',
@@ -184,6 +204,7 @@ export const HIGHLIGHTS: Highlight[] = [
   },
   {
     id: 'whales',
+    icon: 'whaleTail',
     category: 'wildlife',
     coords: [5.82, 80.6],
     photo: 'whale',
@@ -191,18 +212,11 @@ export const HIGHLIGHTS: Highlight[] = [
     en: { name: 'Blue whales', text: 'Whale-watching trips from Mirissa in the south-coast season.' },
     ko: { name: '흰긴수염고래', text: '남부 해안 시즌에 미리사에서 출발하는 고래 관찰.' },
   },
-  {
-    id: 'kandalama',
-    category: 'wildlife',
-    coords: [7.88, 80.7],
-    photo: 'kandalama-sunset',
-    en: { name: 'Kandalama', text: 'A forest-fringed lake near Dambulla — sunsets and birdlife.' },
-    ko: { name: '칸달라마', text: '담불라 인근 숲속 호수의 노을과 새들.' },
-  },
 
   // Tea country & hills
   {
     id: 'nuwara-eliya',
+    icon: 'teaCup',
     category: 'hills',
     coords: [6.95, 80.789],
     photo: 'tea-pluckers',
@@ -213,6 +227,7 @@ export const HIGHLIGHTS: Highlight[] = [
   },
   {
     id: 'ella',
+    icon: 'bridge',
     category: 'hills',
     coords: [6.876, 81.061],
     photo: 'ella',
@@ -222,6 +237,7 @@ export const HIGHLIGHTS: Highlight[] = [
   },
   {
     id: 'train',
+    icon: 'train',
     category: 'hills',
     coords: [6.77, 80.95],
     photo: 'ella-train',
@@ -231,6 +247,7 @@ export const HIGHLIGHTS: Highlight[] = [
   },
   {
     id: 'adams-peak',
+    icon: 'peak',
     category: 'hills',
     coords: [6.81, 80.5],
     photo: 'adams-peak',
@@ -239,6 +256,7 @@ export const HIGHLIGHTS: Highlight[] = [
   },
   {
     id: 'horton-plains',
+    icon: 'cliff',
     category: 'hills',
     coords: [6.8, 80.81],
     photo: 'misty-hills',
@@ -249,6 +267,7 @@ export const HIGHLIGHTS: Highlight[] = [
   // Golf & wellness
   {
     id: 'golf-nuwara-eliya',
+    icon: 'golf',
     category: 'golf-wellness',
     coords: [6.97, 80.765],
     photo: 'golf',
@@ -257,30 +276,13 @@ export const HIGHLIGHTS: Highlight[] = [
     ko: { name: '고원 골프', text: '서늘한 누와라엘리야의 숲길 페어웨이.' },
   },
   {
-    id: 'golf-colombo',
-    category: 'golf-wellness',
-    coords: [6.9, 79.88],
-    photo: 'colombo-night',
-    tourType: 'golf',
-    en: { name: 'Golf in Colombo', text: 'A round in the capital before or after your tour.' },
-    ko: { name: '콜롬보 골프', text: '여행 전후, 수도에서 즐기는 라운딩.' },
-  },
-  {
     id: 'ayurveda',
+    icon: 'ayurveda',
     category: 'golf-wellness',
     coords: [6.42, 79.998],
     photo: 'spices',
     tourType: 'ayurveda',
     en: { name: 'Ayurveda retreats', text: 'Herbal treatments and slow days at a resort on the west coast.' },
     ko: { name: '아유르베다 리트리트', text: '서부 해안 리조트에서의 허브 트리트먼트와 휴식.' },
-  },
-  {
-    id: 'kandy-wellness',
-    category: 'golf-wellness',
-    coords: [7.25, 80.75],
-    photo: 'frangipani',
-    tourType: 'ayurveda',
-    en: { name: 'Spice & herb gardens', text: 'See the herbs and spices behind Ayurveda around Kandy and Matale.' },
-    ko: { name: '향신료 · 허브 정원', text: '캔디와 마탈레 주변에서 아유르베다의 허브와 향신료를.' },
   },
 ];

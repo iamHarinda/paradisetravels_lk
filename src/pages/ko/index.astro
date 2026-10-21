@@ -7,6 +7,7 @@ import IslandAtlas from '../../components/home/IslandAtlas.astro';
 import StaysShowcase from '../../components/home/StaysShowcase.astro';
 import WorldConnections from '../../components/home/WorldConnections.astro';
 import KoContactBand from '../../components/ko/KoContactBand.astro';
+import LeaderCard from '../../components/ui/LeaderCard.astro';
 import Media from '../../components/ui/Media.astro';
 import Icon from '../../components/ui/Icon.astro';
 import CtaBlock from '../../components/ui/CtaBlock.astro';
@@ -85,6 +86,9 @@ const reasons: { icon: IconName; title: string; text: string }[] = [
     </div>
   </section>
 
+  <section class="container-site pb-24" aria-label="대표 소개">
+    <LeaderCard lang="ko" class="reveal mx-auto max-w-4xl" />
+  </section>
   <KoContactBand />
   <CtaBlock photoName="kandalama-pool" />
 </PageLayout>

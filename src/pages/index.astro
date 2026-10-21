@@ -13,6 +13,7 @@ import Icon from '../components/ui/Icon.astro';
 import Media from '../components/ui/Media.astro';
 import CtaBlock from '../components/ui/CtaBlock.astro';
 import TicketCard from '../components/tours/TicketCard.astro';
+import LeaderCard from '../components/ui/LeaderCard.astro';
 import { getEntries, byOrder } from '../lib/content';
 import { travelAgencySchema } from '../lib/schema-org';
 import { dateFmt } from '../lib/labels';
@@ -28,7 +29,6 @@ const featured = [
 ].slice(0, 4);
 const guides = await getEntries('guides');
 const latestGuides = guides.sort((a, b) => b.data.published.getTime() - a.data.published.getTime()).slice(0, 3);
-const leader = (await getEntries('team')).find((t) => t.data.order === 1);
 
 // Only verifiable numbers (CLAUDE.md hard rule 1): years are derived from the founding year at build time.
 const yearsTrading = new Date().getFullYear() - SITE.foundingYear;
@@ -108,7 +108,6 @@ const reasons: { icon: IconName; title: string; text: string }[] = [
         <p class="reveal mt-5 max-w-[56ch] text-lg text-muted">
           One Colombo team plans your tour, sorts your visa and books your flights — and stays on WhatsApp and KakaoTalk
           until you fly home.
-          {leader && ` Led by ${leader.data.name}, ${leader.data.role}.`}
         </p>
         <ul class="mt-10 grid gap-x-8 gap-y-8 sm:grid-cols-2">
           {reasons.map((r) => (
@@ -133,6 +132,10 @@ const reasons: { icon: IconName; title: string; text: string }[] = [
         </div>
       </div>
     </div>
+  </section>
+
+  <section class="container-site pb-24" aria-label="Leadership">
+    <LeaderCard class="reveal mx-auto max-w-4xl" />
   </section>
 
   <section class="container-site pb-24" aria-labelledby="guides-heading">

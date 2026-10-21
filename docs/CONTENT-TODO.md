@@ -71,7 +71,8 @@ flydubai (FZ), Thai (TG), Turkish (TK), British Airways (BA). List: `src/data/ai
 - [ ] **[launch]** Office opening hours and WhatsApp reply hours → contact page, `TravelAgency` schema, and the "we reply within X" promise on the thank-you page.
 - [ ] Office map coordinates (for `geo` in schema) — from the Google Business Profile.
 - [ ] Price range for schema (`priceRange`).
-- [ ] **[launch]** Confirm spelling of Chairman/MD "Upul Trabrew" + approved photo and short bio (team entry).
+- [x] Chairman/MD photo supplied (2026-10-21) — `src/assets/team/upul.jpg` (original in `assets-src/team/`).
+- [ ] **[launch]** Confirm spelling: site says "Upul Trabrew"; the owner's message wrote "Upul Thabrew". Plus a short approved bio (team entry).
 - [ ] Company history milestones, the Korea connection, and the 2020 Daily News repatriation article (About page).
 - [ ] SLTDA registration number, IATA/other accreditations (only what can be proven).
 - [ ] KakaoTalk Channel URL (contact links currently show the phone number).

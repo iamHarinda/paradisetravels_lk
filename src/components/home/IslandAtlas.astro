@@ -6,9 +6,11 @@ import { OUTLINE, project, AIRPORT } from '../../lib/geo';
 import { photo } from '../../lib/photos';
 import { HIGHLIGHTS, HIGHLIGHT_CATEGORIES, CATEGORY_META, type HighlightCategory } from '../../data/island-highlights';
 import type { Lang } from '../../lib/i18n';
+import { PLACE_ICONS } from '../../lib/place-icons';
 
-// "Island Atlas" — an original illustrated map of Sri Lanka (navy ocean, ivory land, gold topography) with the
-// island's highlights pinned by theme. Pick a theme, tap a pin, and a postcard with a photo opens alongside.
+// "Island Atlas" — an original illustrated map of Sri Lanka (navy ocean, ivory land, gold topography) with every
+// highlight pinned at once, each with its own landmark icon (owner: "show everything so a tourist gets the idea at a
+// glance"). Themes dim the rest; tap a pin and a postcard with a photo opens alongside.
 // Without JS every postcard is listed and the pins link to them. Pins are real <button>s laid over the SVG;
 // the same places are also listed as large buttons under the map (WCAG 2.5.8 target-size alternative).
 interface Props {
@@ -21,7 +23,8 @@ const T = {
   en: {
     eyebrow: 'Our Island',
     title: 'Small island. <em class="accent">Endless discoveries.</em>',
-    intro: 'Pick a theme, then tap a pin. Every place on this map can be part of your trip.',
+    intro: 'The whole island at a glance. Tap any landmark — every place on this map can be part of your trip.',
+    all: 'Everything',
     themes: 'Map themes',
     places: 'Places on the map',
     explore: 'Explore',
@@ -32,7 +35,8 @@ const T = {
   ko: {
     eyebrow: '스리랑카 지도',
     title: '작은 섬, <em class="accent">끝없는 발견.</em>',
-    intro: '테마를 고른 뒤 핀을 눌러 보세요. 지도 위 모든 곳을 여행 일정에 넣을 수 있습니다.',
+    intro: '섬 전체를 한눈에. 명소를 눌러 보세요 — 지도 위 모든 곳을 여행 일정에 넣을 수 있습니다.',
+    all: '전체',
     themes: '지도 테마',
     places: '지도 위 장소',
     explore: '자세히 보기',
@@ -51,17 +55,69 @@ const CAT_ICON: Record<HighlightCategory, IconName> = {
 };
 
 // Map frame (SVG user units) — the island spans roughly x 5…226, y 0…396 (src/lib/geo.ts).
-const VB = { x: -34, y: -24, w: 310, h: 470 };
-const pct = (coords: [number, number]) => {
-  const [x, y] = project(coords);
-  return { left: ((x - VB.x) / VB.w) * 100, top: ((y - VB.y) / VB.h) * 100 };
-};
+const VB = { x: -34, y: -24, w: 310, h: 492 };
+const pctOf = ([x, y]: readonly [number, number]) => ({
+  left: ((x - VB.x) / VB.w) * 100,
+  top: ((y - VB.y) / VB.h) * 100,
+});
 
 const prefix = lang === 'ko' ? '/ko' : '';
-const items = HIGHLIGHTS.map((h) => {
+// Every pin is shown at once, so neighbours (Sigiriya/Dambulla, the hill towns, the south coast) would overlap.
+// Lay them out at build time: each pin + its name label is a box; overlapping boxes are pushed apart while a weak
+// spring keeps them near their true place, and a thin leader line joins a moved pin to its real location.
+// Units are SVG units; at the desktop map width 1 unit ≈ 1.75 px.
+const PIN = 20;
+const LABEL_H = 10;
+const labelW = (name: string) => (name.length * (lang === 'ko' ? 9.5 : 5.6) + 12) / 1.75;
+const boxes = HIGHLIGHTS.map((h) => {
+  const [x, y] = project(h.coords);
+  const w = Math.max(PIN, labelW(h[lang].name));
+  return { ax: x, ay: y, x, y, w, h: PIN + LABEL_H };
+});
+for (let iter = 0; iter < 400; iter++) {
+  for (let i = 0; i < boxes.length; i++) {
+    for (let j = i + 1; j < boxes.length; j++) {
+      const a = boxes[i]!;
+      const b = boxes[j]!;
+      // Boxes are anchored at the pin centre: the pin sits at the top, the label hangs below.
+      const ox = (a.w + b.w) / 2 + 1.5 - Math.abs(a.x - b.x);
+      const oy = PIN / 2 + 1.5 + (a.y < b.y ? a.h - PIN / 2 : b.h - PIN / 2) - Math.abs(a.y - b.y);
+      if (ox <= 0 || oy <= 0) continue;
+      if (ox < oy) {
+        const d = (ox / 2) * (a.x < b.x ? -1 : 1);
+        a.x += d;
+        b.x -= d;
+      } else {
+        const d = (oy / 2) * (a.y < b.y ? -1 : 1);
+        a.y += d;
+        b.y -= d;
+      }
+    }
+  }
+  for (const box of boxes) {
+    box.x += (box.ax - box.x) * 0.02;
+    box.y += (box.ay - box.y) * 0.02;
+    // Keep every pin and label inside the map frame (above the "Indian Ocean" lettering).
+    box.x = Math.min(Math.max(box.x, VB.x + box.w / 2 + 2), VB.x + VB.w - box.w / 2 - 2);
+    box.y = Math.min(Math.max(box.y, VB.y + PIN / 2 + 2), VB.y + VB.h - 34 - (box.h - PIN / 2));
+  }
+}
+
+const items = HIGHLIGHTS.map((h, i) => {
   const copy = h[lang];
   const href = h.tourType ? `${prefix}/tours/${h.tourType}` : h.destination && `/destinations/${h.destination}`;
-  return { ...h, copy, href, pos: pct(h.coords), img: h.photo ? photo(h.photo) : undefined };
+  const box = boxes[i]!;
+  const moved = Math.hypot(box.x - box.ax, box.y - box.ay) > 4;
+  return {
+    ...h,
+    copy,
+    href,
+    pos: pctOf([box.x, box.y]),
+    pin: [box.x, box.y] as const,
+    anchor: [box.ax, box.ay] as const,
+    moved,
+    img: h.photo ? photo(h.photo) : undefined,
+  };
 });
 
 // Graticule, topographic rings around the central highlands, and the classic round-trip route.
@@ -94,13 +150,14 @@ const route = routePts
   })
   .join('');
 const [ax, ay] = project(AIRPORT);
-const first = HIGHLIGHT_CATEGORIES[0];
+const DEFAULT_CARD = 'sigiriya';
 ---
 
 <section
   class="atlas on-dark relative overflow-hidden bg-ocean-900 py-24 text-white"
   aria-labelledby="atlas-heading"
   data-atlas
+  data-default={DEFAULT_CARD}
 >
   <div class="atlas-grid container-site grid items-start gap-x-16 gap-y-8">
     <!-- Map -->
@@ -164,7 +221,7 @@ const first = HIGHLIGHT_CATEGORIES[0];
 
           <text
             x="150"
-            y="436"
+            y="460"
             text-anchor="middle"
             class="sea-label"
             fill="#ffffff"
@@ -244,6 +301,26 @@ const first = HIGHLIGHT_CATEGORIES[0];
             stroke-linecap="round"
           ></path>
 
+          <!-- Leader lines from moved pins to their true location -->
+          <g class="leaders">
+            {items.map((h) => (
+              <g data-cat={h.category} class="leader">
+                {h.moved && (
+                  <line
+                    x1={h.anchor[0]}
+                    y1={h.anchor[1]}
+                    x2={h.pin[0]}
+                    y2={h.pin[1]}
+                    stroke="#0a1f44"
+                    stroke-opacity="0.45"
+                    stroke-width="0.7"
+                  />
+                )}
+                <circle cx={h.anchor[0]} cy={h.anchor[1]} r="1.8" fill="#0a1f44" />
+              </g>
+            ))}
+          </g>
+
           <!-- Airport -->
           <g transform={`translate(${ax} ${ay})`} class="airport">
             <circle r="6.5" fill="#0a1f44"></circle>
@@ -284,7 +361,18 @@ const first = HIGHLIGHT_CATEGORIES[0];
                 data-cat={h.category}
                 aria-label={`${h.copy.name} — ${CATEGORY_META[h.category][lang]}`}
               >
-                <Icon name={CAT_ICON[h.category]} class="size-3.5 sm:size-4" />
+                <svg
+                  viewBox="0 0 24 24"
+                  class="size-4 sm:size-[1.15rem]"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d={PLACE_ICONS[h.icon]} />
+                </svg>
                 <span class="pin-label" aria-hidden="true">
                   {h.copy.name}
                 </span>
@@ -310,8 +398,12 @@ const first = HIGHLIGHT_CATEGORIES[0];
       <p class="reveal mt-5 max-w-[48ch] text-lg text-white/75">{T.intro}</p>
 
       <div class="mt-8 flex flex-wrap gap-2" role="group" aria-label={T.themes}>
+        <button type="button" class="theme-chip" data-theme-btn="all" aria-pressed="true">
+          <Icon name="globe" class="size-4" />
+          {T.all}
+        </button>
         {HIGHLIGHT_CATEGORIES.map((c) => (
-          <button type="button" class="theme-chip" data-theme-btn={c} aria-pressed={c === first ? 'true' : 'false'}>
+          <button type="button" class="theme-chip" data-theme-btn={c} aria-pressed="false">
             <Icon name={CAT_ICON[c]} class="size-4" />
             {CATEGORY_META[c][lang]}
           </button>
@@ -338,7 +430,18 @@ const first = HIGHLIGHT_CATEGORIES[0];
             <div class="relative aspect-[16/10] overflow-hidden rounded-t-[1.25rem] bg-ocean-700">
               {h.img && <Media image={h.img.image} alt={h.img.alt} sizes="(min-width: 1024px) 40vw, 92vw" />}
               <span class="absolute top-3 left-3 inline-flex items-center gap-1.5 rounded-pill bg-ocean-900/80 px-3 py-1 text-xs font-semibold text-gold-300 backdrop-blur">
-                <Icon name={CAT_ICON[h.category]} class="size-3.5" />
+                <svg
+                  viewBox="0 0 24 24"
+                  class="size-3.5"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d={PLACE_ICONS[h.icon]} />
+                </svg>
                 {CATEGORY_META[h.category][lang]}
               </span>
             </div>
@@ -431,6 +534,25 @@ const first = HIGHLIGHT_CATEGORIES[0];
   .pin[aria-current='true'] .pin-label {
     opacity: 1;
   }
+  /* Desktop: every name is visible under its icon (the layout reserves room for it). */
+  @media (width >= 64rem) {
+    .pin-label {
+      bottom: auto;
+      top: calc(100% + 0.2rem);
+      padding: 0.05rem 0.45rem;
+      font-size: 0.68rem;
+      opacity: 1;
+      background: rgb(255 255 255 / 0.92);
+    }
+  }
+  /* A theme dims the other pins instead of hiding them, so the whole island stays readable. */
+  .pin-wrap.is-dim,
+  .leader.is-dim {
+    opacity: 0.18;
+  }
+  .pin-wrap {
+    transition: opacity 300ms var(--ease-travel);
+  }
   .pin[aria-current='true'] {
     background: var(--c-gold-500);
     color: var(--c-ocean-900);
@@ -508,7 +630,6 @@ const first = HIGHLIGHT_CATEGORIES[0];
     display: grid;
     gap: 1.5rem;
   }
-  .pin-wrap.is-hidden,
   .place-list li.is-hidden {
     display: none;
   }
@@ -579,7 +700,8 @@ const first = HIGHLIGHT_CATEGORIES[0];
     const pins = [...root.querySelectorAll<HTMLAnchorElement>('[data-pin]')];
     const cards = [...root.querySelectorAll<HTMLElement>('[data-card]')];
     const themes = [...root.querySelectorAll<HTMLButtonElement>('[data-theme-btn]')];
-    const filterables = [...root.querySelectorAll<HTMLElement>('.pin-wrap, .place-list li')];
+    const wraps = [...root.querySelectorAll<HTMLElement>('.pin-wrap, .leader')];
+    const listItems = [...root.querySelectorAll<HTMLElement>('.place-list li')];
 
     const show = (id: string) => {
       pins.forEach((p) => p.setAttribute('aria-current', String(p.dataset.pin === id)));
@@ -587,8 +709,9 @@ const first = HIGHLIGHT_CATEGORIES[0];
     };
     const theme = (cat: string) => {
       themes.forEach((t) => t.setAttribute('aria-pressed', String(t.dataset.themeBtn === cat)));
-      filterables.forEach((el) => el.classList.toggle('is-hidden', el.dataset.cat !== cat));
-      const firstCard = cards.find((c) => c.dataset.cat === cat);
+      wraps.forEach((el) => el.classList.toggle('is-dim', cat !== 'all' && el.dataset.cat !== cat));
+      listItems.forEach((el) => el.classList.toggle('is-hidden', cat !== 'all' && el.dataset.cat !== cat));
+      const firstCard = cat === 'all' ? null : cards.find((c) => c.dataset.cat === cat);
       if (firstCard) show(firstCard.dataset.card!);
     };
 
@@ -596,14 +719,14 @@ const first = HIGHLIGHT_CATEGORIES[0];
       p.addEventListener('click', (e) => {
         e.preventDefault(); // stay on the map; the postcard opens alongside
         show(p.dataset.pin!);
-        // On phones the postcard sits above the map — bring it into view.
+        // On phones the postcard sits below the map — bring it into view.
         if (window.matchMedia('(max-width: 1023px)').matches) {
           root.querySelector('.postcards')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
       }),
     );
     themes.forEach((t) => t.addEventListener('click', () => theme(t.dataset.themeBtn!)));
-    theme(themes[0]!.dataset.themeBtn!);
+    show(root.dataset.default!);
 
     new IntersectionObserver(
       (entries, io) => {
