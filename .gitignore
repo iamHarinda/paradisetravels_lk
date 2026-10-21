@@ -31,3 +31,4 @@ test-results/
 # Hostinger upload package (npm run build:production)
 paradisetravels-site.zip
 paradise-config.php
+deploy/.last-deploy.json
