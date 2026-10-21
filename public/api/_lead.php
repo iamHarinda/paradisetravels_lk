@@ -1,7 +1,7 @@
 <?php
 // Lead pipeline for the static site on Hostinger shared hosting (no Node): replaces the old Astro API routes.
 // validate → spam checks (honeypot, rate limit, Turnstile) → staff email → traveller confirmation → optional webhook.
-// Secrets live OUTSIDE the web root in ~/paradise-config.php (copy of paradise-config.sample.php) — never upload them.
+// Secrets live OUTSIDE the web root in paradise-config.php (copy of paradise-config.sample.php), next to public_html.
 // Responses mirror what src/scripts/forms.ts expects: JSON {ok, redirect} / {ok:false, message, fieldErrors}.
 
 declare(strict_types=1);
@@ -24,8 +24,15 @@ function pt_config(): array
         'turnstile_secret' => '',
         'lead_webhook_url' => '',
     ];
-    $file = dirname(__DIR__, 2) . '/paradise-config.php';
-    $cfg = is_file($file) ? array_merge($defaults, (array) require $file) : $defaults;
+    // Preferred: one level above public_html. Fallback for hosts whose open_basedir stops PHP reading there:
+    // public_html/api/paradise-config.php (blocked from the web by .htaccess, and it prints nothing if run).
+    $cfg = $defaults;
+    foreach ([dirname(__DIR__, 2) . '/paradise-config.php', __DIR__ . '/paradise-config.php'] as $file) {
+        if (@is_file($file)) {
+            $cfg = array_merge($defaults, (array) require $file);
+            break;
+        }
+    }
     return $cfg;
 }
 

@@ -3,11 +3,12 @@
 //         npm run deploy -- --all  (re-upload everything, e.g. after uploading from another computer)
 //         npm run deploy -- --dry  (show what would be uploaded)
 // Settings come from .env (never committed): FTP_HOST, FTP_USER, FTP_PASSWORD, optional FTP_PORT (21),
-// FTP_REMOTE_DIR (public_html), FTP_SECURE (true = FTPS; set false only if the server refuses TLS).
+// FTP_REMOTE_DIR or FTP_SERVER_DIR (public_html), FTP_SECURE (true = FTPS; set false only if the server refuses TLS).
 // Change detection: a manifest of file hashes from the last successful upload, kept in deploy/.last-deploy.json.
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import tls from 'node:tls';
 import { Client } from 'basic-ftp';
 
 const args = new Set(process.argv.slice(2));
@@ -19,10 +20,20 @@ for (const line of fs.existsSync('.env') ? fs.readFileSync('.env', 'utf8').split
   const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*?)\s*$/);
   if (m && process.env[m[1]] === undefined) process.env[m[1]] = m[2].replace(/^(['"])(.*)\1$/, '$2');
 }
-const { FTP_HOST, FTP_USER, FTP_PASSWORD } = process.env;
+const { FTP_USER, FTP_PASSWORD } = process.env;
+// Accept "ftp://1.2.3.4/" as well as "1.2.3.4".
+const FTP_HOST = process.env.FTP_HOST?.replace(/^s?ftps?:\/\//i, '').replace(/\/.*$/, '');
 const PORT = Number(process.env.FTP_PORT ?? 21);
-const REMOTE = (process.env.FTP_REMOTE_DIR ?? 'public_html').replace(/\/$/, '');
+// Web root on the server. "/public_html" (absolute) or "public_html" (relative to the login folder); if unset, the
+// login folder itself when it already is public_html (Hostinger FTP accounts land there), else ./public_html.
+const REMOTE_SETTING = (process.env.FTP_REMOTE_DIR || process.env.FTP_SERVER_DIR || '').trim();
 const SECURE = process.env.FTP_SECURE !== 'false';
+// Hostinger's FTP certificate is issued to *.hstgr.io, not to the server IP. When FTP_HOST is an IP, still verify
+// the certificate chain, but check its name against FTP_TLS_NAME (default hstgr.io) instead of the IP.
+const TLS_NAME = process.env.FTP_TLS_NAME || (/^[\d.]+$/.test(FTP_HOST ?? '') ? 'hstgr.io' : undefined);
+const secureOptions = TLS_NAME
+  ? { checkServerIdentity: (_host, cert) => tls.checkServerIdentity(TLS_NAME, cert) }
+  : undefined;
 if (!FTP_HOST || !FTP_USER || !FTP_PASSWORD) {
   console.error('Missing FTP_HOST / FTP_USER / FTP_PASSWORD in .env (see .env.example).');
   process.exit(1);
@@ -58,7 +69,7 @@ const removed = Object.keys(previous).filter((f) => !(f in files));
 
 const configFile = path.resolve('paradise-config.php');
 console.log(
-  `${changed.length} file(s) to upload, ${removed.length} to delete, to ${FTP_USER}@${FTP_HOST}:${REMOTE}${DRY ? ' (dry run)' : ''}`,
+  `${changed.length} file(s) to upload, ${removed.length} to delete, to ${FTP_USER}@${FTP_HOST}:${REMOTE_SETTING || 'public_html'}${DRY ? ' (dry run)' : ''}`,
 );
 if (DRY) {
   changed.slice(0, 50).forEach((f) => console.log('  +', f));
@@ -68,12 +79,27 @@ if (DRY) {
 
 const client = new Client(30_000);
 try {
-  await client.access({ host: FTP_HOST, port: PORT, user: FTP_USER, password: FTP_PASSWORD, secure: SECURE });
-  const root = await client.pwd();
+  await client.access({
+    host: FTP_HOST,
+    port: PORT,
+    user: FTP_USER,
+    password: FTP_PASSWORD,
+    secure: SECURE,
+    secureOptions,
+  });
+  const login = await client.pwd();
+  const webroot = REMOTE_SETTING.startsWith('/')
+    ? path.posix.normalize(REMOTE_SETTING).replace(/\/$/, '') || '/'
+    : REMOTE_SETTING
+      ? path.posix.join(login, REMOTE_SETTING)
+      : /\/public_html\/?$/.test(login)
+        ? login
+        : path.posix.join(login, 'public_html');
+  console.log(`  web root: ${webroot}`);
 
   // Server-only settings (Turnstile secret, mail addresses) go one level ABOVE the web root, never inside it.
   if (fs.existsSync(configFile)) {
-    await client.cd(path.posix.join(root, REMOTE, '..'));
+    await client.cd(path.posix.dirname(webroot));
     await client.uploadFrom(configFile, 'paradise-config.php');
     console.log('  uploaded paradise-config.php (outside the web root)');
   }
@@ -83,8 +109,7 @@ try {
   for (const f of changed) {
     const d = path.posix.dirname(f);
     if (d !== dir) {
-      await client.cd(root);
-      await client.ensureDir(path.posix.join(REMOTE, d === '.' ? '' : d));
+      await client.ensureDir(path.posix.join(webroot, d === '.' ? '' : d));
       dir = d;
     }
     await client.uploadFrom(path.join(DIST, f), path.posix.basename(f));
@@ -93,7 +118,7 @@ try {
   if (changed.length) process.stdout.write('\n');
 
   for (const f of removed) {
-    await client.remove(path.posix.join(root, REMOTE, f), true);
+    await client.remove(path.posix.join(webroot, f), true);
   }
   if (removed.length) console.log(`  deleted ${removed.length} old file(s)`);
 
