@@ -1,0 +1,117 @@
+---
+import Media from '../ui/Media.astro';
+import Icon from '../ui/Icon.astro';
+import { photo, type PhotoName } from '../../lib/photos';
+import { AIRLINES } from '../../data/airlines';
+import type { IconName } from '../../lib/icons';
+import type { Lang } from '../../lib/i18n';
+
+// The three services the owner confirmed (October 2026): Tours, Visa consultation, Air ticketing.
+// Tall photo cards; the photo slowly zooms and a gold rule grows on hover.
+interface Props {
+  lang?: Lang;
+  index?: string;
+}
+const { lang = 'en', index = '01' } = Astro.props;
+
+type Item = { href: string; icon: IconName; photo: PhotoName; title: string; text: string; cta: string };
+const items: Item[] =
+  lang === 'ko'
+    ? [
+        {
+          href: '/ko/tours',
+          icon: 'compass',
+          photo: 'sigiriya-view',
+          title: '투어',
+          text: '일주 여행, 허니문, 골프, 실론티, 아유르베다 — 전용 차량과 기사가 함께하는 맞춤 일정.',
+          cta: '투어 보기',
+        },
+        {
+          href: '/ko/visa',
+          icon: 'doc',
+          photo: 'airport',
+          title: '비자 상담',
+          text: '스리랑카 ETA 안내부터 해외 비자 서류 준비까지, 처음부터 정확하게.',
+          cta: '비자 상담',
+        },
+        {
+          href: '/ko/air-tickets',
+          icon: 'plane',
+          photo: 'flight',
+          title: '항공권',
+          text: `대한항공, 스리랑칸 항공, 싱가포르 항공 등 ${AIRLINES.length}개 항공사 발권.`,
+          cta: '항공권 문의',
+        },
+      ]
+    : [
+        {
+          href: '/tours',
+          icon: 'compass',
+          photo: 'sigiriya-view',
+          title: 'Tours',
+          text: 'Round trips, honeymoons, golf, tea and Ayurveda — tailor-made, with a private car and driver.',
+          cta: 'Explore tours',
+        },
+        {
+          href: '/services/visa-consultation',
+          icon: 'doc',
+          photo: 'airport',
+          title: 'Visa consultation',
+          text: 'Sri Lanka ETA guidance for visitors, and visa help for your next destination.',
+          cta: 'Visa help',
+        },
+        {
+          href: '/services/air-ticketing',
+          icon: 'plane',
+          photo: 'flight',
+          title: 'Air ticketing',
+          text: `Tickets on ${AIRLINES.length} airlines including SriLankan, Korean Air, Singapore Airlines and Emirates.`,
+          cta: 'Book flights',
+        },
+      ];
+const T =
+  lang === 'ko'
+    ? { eyebrow: '서비스', title: '여행에 필요한 모든 것, <em class="accent">한 팀이.</em>' }
+    : { eyebrow: 'What we do', title: 'Three services. <em class="accent">One trusted team.</em>' };
+---
+
+<section class="container-site py-24" aria-labelledby="trio-heading">
+  <div class="max-w-3xl">
+    <p class="reveal chapter">
+      {index && <span class="chapter-no">{index}</span>}
+      <span class="chapter-rule" aria-hidden="true"></span>
+      <span>{T.eyebrow}</span>
+    </p>
+    <h2 id="trio-heading" class="reveal mt-4 text-h2" set:html={T.title} />
+  </div>
+  <ul class="mt-12 grid gap-4 md:grid-cols-3 md:gap-5">
+    {items.map((it, i) => {
+      const p = photo(it.photo);
+      return (
+        <li class="reveal" style={`transition-delay:${i * 90}ms`}>
+          <a
+            href={it.href}
+            class="trio group relative isolate flex aspect-[4/5] flex-col justify-end overflow-hidden rounded-media p-6 text-white shadow-card sm:p-8 md:aspect-[3/4]"
+          >
+            <Media
+              image={p.image}
+              alt=""
+              class="absolute inset-0 -z-20 transition-transform duration-[1.4s] ease-travel group-hover:scale-110"
+              sizes="(min-width: 768px) 32vw, 100vw"
+            />
+            <span class="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgb(5_15_36/0)_30%,rgb(5_15_36/0.88)_100%)]" />
+            <span class="absolute top-6 left-6 grid size-12 place-items-center rounded-2xl bg-ocean-900/55 text-gold-300 ring-1 ring-white/30 backdrop-blur-md sm:top-8 sm:left-8">
+              <Icon name={it.icon} class="size-6" />
+            </span>
+            <span class="font-display text-4xl leading-none font-medium sm:text-5xl">{it.title}</span>
+            <span class="rule mt-4 block h-px w-12 bg-gold-400 transition-[width] duration-500 ease-travel group-hover:w-24" />
+            <span class="mt-4 block max-w-[34ch] text-white/85">{it.text}</span>
+            <span class="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-gold-300">
+              {it.cta} <Icon name="arrow" class="size-4 transition-transform group-hover:translate-x-1" />
+            </span>
+          </a>
+        </li>
+      );
+    })}
+  </ul>
+</section>

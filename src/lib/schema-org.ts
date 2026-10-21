@@ -14,6 +14,7 @@ export function siteSchema(): JsonLd[] {
       name: SITE.legalName,
       alternateName: SITE.name,
       url: SITE.url,
+      logo: `${SITE.url}/logo.png`,
       foundingDate: String(SITE.foundingYear),
       email: SITE.email,
       telephone: SITE.phoneE164,

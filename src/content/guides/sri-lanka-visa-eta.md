@@ -17,7 +17,7 @@ sources:
   - title: VisasNews
     url: https://visasnews.com/en/sri-lanka-makes-tourist-eta-free-for-40-nationalities-from-may-25/
 relatedServices:
-  - visa-assistance
+  - visa-consultation
 relatedTours:
   - sri-lanka-7-day-tour
   - sri-lanka-10-day-tour
@@ -70,4 +70,4 @@ Several commercial websites look official and charge a "service fee" for an ETA 
 
 ## Need help?
 
-Our team can check what applies to your passport and help if anything goes wrong. See [Visa & ETA assistance](/services/visa-assistance) or [ask us on WhatsApp](https://wa.me/94773939989).
+Our team can check what applies to your passport and help if anything goes wrong. See [visa consultation](/services/visa-consultation) or [ask us on WhatsApp](https://wa.me/94773939989).

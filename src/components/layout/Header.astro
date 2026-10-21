@@ -4,65 +4,86 @@ import Icon from '../ui/Icon.astro';
 import Button from '../ui/Button.astro';
 import { getEntries, byOrder } from '../../lib/content';
 import { SITE, whatsappLink } from '../../lib/site';
+import { TOUR_TYPES } from '../../data/tour-types';
+import { alternates, cleanPath, langFromPath, type Lang } from '../../lib/i18n';
 
 interface Props {
   /** Transparent with white text over a dark full-bleed hero (home); turns into frosted glass on scroll. */
   overlay?: boolean;
+  lang?: Lang;
 }
-const { overlay = false } = Astro.props;
+const { overlay = false, lang = langFromPath(Astro.url.pathname) } = Astro.props;
+const ko = lang === 'ko';
 
-const [destinations, experiences, tours, services] = await Promise.all([
+const [destinations, experiences, tours] = await Promise.all([
   getEntries('destinations'),
   getEntries('experiences'),
   getEntries('tours'),
-  getEntries('services'),
 ]);
 
 type Link = { href: string; label: string; note?: string };
 type Group = { label: string; href: string; links: Link[]; all: string };
 
-const groups: Group[] = [
-  {
-    label: 'Destinations',
-    href: '/destinations',
-    all: 'All destinations & island map',
-    links: destinations
-      .filter((d) => d.data.featured)
-      .sort(byOrder)
-      .map((d) => ({ href: `/destinations/${d.id}`, label: d.data.title })),
-  },
-  {
-    label: 'Experiences',
-    href: '/experiences',
-    all: 'All experiences',
-    links: experiences.sort(byOrder).map((e) => ({ href: `/experiences/${e.id}`, label: e.data.title })),
-  },
-  {
-    label: 'Tours',
-    href: '/tours',
-    all: 'All tours',
-    links: [
-      ...tours
-        .sort((a, b) => a.data.durationDays - b.data.durationDays || byOrder(a, b))
-        .map((t) => ({ href: `/tours/${t.id}`, label: t.data.title, note: `${t.data.durationDays} days` })),
-      { href: '/tours/day-tours', label: 'Day tours & outings' },
-    ],
-  },
-  {
-    label: 'Services',
-    href: '/services',
-    all: 'Everything we do',
-    links: services.sort(byOrder).map((s) => ({ href: `/services/${s.id}`, label: s.data.title })),
-  },
-];
-const simple: Link[] = [
-  { href: '/hotel-deals', label: 'Hotel Deals' },
-  { href: '/travel-guide', label: 'Travel Guide' },
-  { href: '/about', label: 'About' },
-];
+const tourTypeLinks: Link[] = TOUR_TYPES.map((t) => ({
+  href: `${ko ? '/ko' : ''}/tours/${t.id}`,
+  label: t[lang].name,
+  note: t[lang].mood,
+}));
 
-const path = Astro.url.pathname.replace(/\.html$/, '');
+const groups: Group[] = ko
+  ? [{ label: '투어', href: '/ko/tours', all: '전체 투어', links: tourTypeLinks }]
+  : [
+      {
+        label: 'Tours',
+        href: '/tours',
+        all: 'All tours & itineraries',
+        links: [
+          ...tourTypeLinks,
+          ...tours
+            .filter((t) => t.data.featured)
+            .sort((a, b) => a.data.durationDays - b.data.durationDays || byOrder(a, b))
+            .map((t) => ({ href: `/tours/${t.id}`, label: t.data.title, note: `${t.data.durationDays} days` })),
+        ],
+      },
+      {
+        label: 'Destinations',
+        href: '/destinations',
+        all: 'All destinations & island map',
+        links: [
+          ...destinations
+            .filter((d) => d.data.featured)
+            .sort(byOrder)
+            .map((d) => ({ href: `/destinations/${d.id}`, label: d.data.title })),
+          ...experiences
+            .sort(byOrder)
+            .map((e) => ({ href: `/experiences/${e.id}`, label: e.data.title, note: 'Experience' })),
+          { href: '/travel-guide', label: 'Travel guide', note: 'Guides' },
+        ],
+      },
+    ];
+const simple: Link[] = ko
+  ? [
+      { href: '/ko/hotels', label: '숙소' },
+      { href: '/ko/visa', label: '비자 상담' },
+      { href: '/ko/air-tickets', label: '항공권' },
+      { href: '/ko/contact', label: '문의' },
+    ]
+  : [
+      { href: '/hotels', label: 'Hotels' },
+      { href: '/services/visa-consultation', label: 'Visa' },
+      { href: '/services/air-ticketing', label: 'Air Tickets' },
+      { href: '/about', label: 'About' },
+    ];
+
+const path = cleanPath(Astro.url.pathname);
 const isCurrent = (href: string) => path === href || path.startsWith(`${href}/`);
+// Language switch: the twin page when one exists, otherwise the other language's home page.
+const alt = alternates(path);
+const switchTo = ko
+  ? { href: alt.en ?? '/', label: 'English', short: 'EN', lang: 'en' }
+  : { href: alt.ko ?? '/ko', label: '한국어', short: '한국어', lang: 'ko' };
+const planHref = ko ? '/ko/contact' : '/plan-your-trip';
+const planLabel = ko ? '여행 상담' : 'Plan My Trip';
 ---
 
 <header
@@ -74,9 +95,9 @@ const isCurrent = (href: string) => path === href || path.startsWith(`${href}/`)
   data-overlay={overlay ? '' : undefined}
 >
   <div class="container-site flex min-h-20 items-center gap-6">
-    <Logo class="shrink-0" />
+    <Logo href={ko ? '/ko' : '/'} />
 
-    <nav class="ml-auto hidden xl:block" aria-label="Main">
+    <nav class="ml-auto hidden xl:block" aria-label={ko ? '메인 메뉴' : 'Main'}>
       <ul class="flex items-center gap-1 text-sm font-medium">
         {groups.map((g, i) => (
           <li class="menu relative" data-menu>
@@ -99,7 +120,7 @@ const isCurrent = (href: string) => path === href || path.startsWith(`${href}/`)
                 data-menu-toggle
               >
                 <Icon name="chevron" class="size-4 transition-transform" />
-                <span class="sr-only">Show {g.label} menu</span>
+                <span class="sr-only">{ko ? `${g.label} 메뉴 열기` : `Show ${g.label} menu`}</span>
               </button>
             </div>
             <div
@@ -142,18 +163,28 @@ const isCurrent = (href: string) => path === href || path.startsWith(`${href}/`)
       </ul>
     </nav>
 
-    <div class="ml-auto hidden sm:block xl:ml-2">
-      <Button href="/plan-your-trip">Plan My Trip</Button>
+    <a
+      href={switchTo.href}
+      hreflang={switchTo.lang}
+      lang={switchTo.lang}
+      class="lang-switch ml-auto inline-flex min-h-11 items-center gap-2 rounded-pill px-3 text-sm font-semibold ring-1 ring-current/25 hover:ring-current/60 xl:ml-2"
+    >
+      {!ko && <img src="/flags/kr.svg" alt="" width="20" height="15" class="h-[15px] w-5 rounded-[2px] object-cover" />}
+      <span>{switchTo.short}</span>
+      <span class="sr-only">— {ko ? 'English version' : 'Korean version'}</span>
+    </a>
+    <div class="hidden sm:block">
+      <Button href={planHref}>{planLabel}</Button>
     </div>
 
     <button
       type="button"
-      class="ml-auto grid size-12 place-items-center rounded-pill sm:ml-0 xl:hidden"
+      class="grid size-12 place-items-center rounded-pill xl:hidden"
       aria-controls="mobile-menu"
       data-drawer-open
     >
       <Icon name="menu" class="size-6" />
-      <span class="sr-only">Open menu</span>
+      <span class="sr-only">{ko ? '메뉴 열기' : 'Open menu'}</span>
     </button>
   </div>
 </header>
@@ -161,16 +192,16 @@ const isCurrent = (href: string) => path === href || path.startsWith(`${href}/`)
 <dialog
   id="mobile-menu"
   class="m-0 ml-auto h-dvh max-h-none w-[min(26rem,100vw)] max-w-none overflow-y-auto bg-bg p-0 text-text backdrop:bg-ocean-900/60"
-  aria-label="Menu"
+  aria-label={ko ? '메뉴' : 'Menu'}
 >
   <div class="flex items-center justify-between px-5 py-4">
-    <Logo />
+    <Logo href={ko ? '/ko' : '/'} />
     <button type="button" class="grid size-12 place-items-center rounded-pill" data-drawer-close>
       <Icon name="close" class="size-6" />
-      <span class="sr-only">Close menu</span>
+      <span class="sr-only">{ko ? '메뉴 닫기' : 'Close menu'}</span>
     </button>
   </div>
-  <nav class="px-5 pb-10" aria-label="Mobile">
+  <nav class="px-5 pb-10" aria-label={ko ? '모바일 메뉴' : 'Mobile'}>
     {groups.map((g) => (
       <details class="border-b border-line">
         <summary class="flex min-h-14 list-none items-center justify-between font-semibold [&::-webkit-details-marker]:hidden">
@@ -198,15 +229,31 @@ const isCurrent = (href: string) => path === href || path.startsWith(`${href}/`)
         {l.label}
       </a>
     ))}
-    <a href="/contact" class="flex min-h-14 items-center border-b border-line font-semibold">
-      Contact
+    {!ko && (
+      <a href="/contact" class="flex min-h-14 items-center border-b border-line font-semibold">
+        Contact
+      </a>
+    )}
+    <a
+      href={switchTo.href}
+      hreflang={switchTo.lang}
+      lang={switchTo.lang}
+      class="flex min-h-14 items-center gap-2 border-b border-line font-semibold"
+    >
+      <Icon name="globe" class="size-5" /> {switchTo.label}
     </a>
     <div class="mt-8 grid gap-3">
-      <Button href="/plan-your-trip" size="lg">
-        Plan My Trip
+      <Button href={planHref} size="lg">
+        {planLabel}
       </Button>
-      <Button href={whatsappLink()} variant="whatsapp" size="lg" rel="noopener" data-track="whatsapp">
-        <Icon name="whatsapp" /> WhatsApp us
+      <Button
+        href={whatsappLink(ko ? '안녕하세요, 스리랑카 여행 상담을 받고 싶습니다.' : undefined)}
+        variant="whatsapp"
+        size="lg"
+        rel="noopener"
+        data-track="whatsapp"
+      >
+        <Icon name="whatsapp" /> {ko ? '왓츠앱 상담' : 'WhatsApp us'}
       </Button>
       <Button href={`tel:${SITE.phoneE164}`} variant="secondary" size="lg" data-track="phone">
         <Icon name="phone" /> {SITE.phone}

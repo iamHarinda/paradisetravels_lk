@@ -1,4 +1,5 @@
 ---
+import { STAYS, STAY_IDS } from '../../data/stays';
 import type { GetStaticPaths } from 'astro';
 import { render } from 'astro:content';
 import { getEntries, byOrder } from '../../lib/content';
@@ -6,7 +7,7 @@ import PageLayout from '../../layouts/PageLayout.astro';
 import TicketCard from '../../components/tours/TicketCard.astro';
 import PageHero from '../../components/ui/PageHero.astro';
 import MonthBar from '../../components/ui/MonthBar.astro';
-import Card from '../../components/ui/Card.astro';
+import Icon from '../../components/ui/Icon.astro';
 import FaqSection from '../../components/ui/FaqSection.astro';
 import CtaBlock from '../../components/ui/CtaBlock.astro';
 import { REGIONS } from '../../lib/seasons';
@@ -31,7 +32,10 @@ const relatedTours = tours
   .sort(byOrder)
   .slice(0, 3);
 const relatedExperiences = experiences.filter((e) => e.data.destinations.some((r) => r.id === entry.id));
-const relatedHotels = hotels.filter((h) => h.data.destination?.id === entry.id);
+const stay = STAY_IDS.find((id) => STAYS[id].destination === entry.id);
+const relatedHotels = stay
+  ? hotels.filter((h) => h.data.stay === stay).sort((a, b) => a.data.order - b.data.order)
+  : [];
 const path = `/destinations/${entry.id}`;
 ---
 
@@ -143,22 +147,25 @@ const path = `/destinations/${entry.id}`;
   {relatedHotels.length > 0 && (
     <section class="container-site pb-16" aria-labelledby="stay-heading">
       <h2 id="stay-heading" class="text-h2">
-        Where to stay
+        Hotels we book here
       </h2>
-      <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <ul class="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {relatedHotels.map((h) => (
-          <Card
-            href={`/hotel-deals/${h.id}`}
-            title={h.data.name}
-            eyebrow={h.data.area}
-            badge="Paradise rate"
-            badgeTone="gold"
-            tone={h.data.tone}
-            image={h.data.heroImage}
-            imageAlt={h.data.heroAlt}
-          />
+          <li class="flex items-start gap-3 rounded-card bg-surface p-4 shadow-card ring-1 ring-line">
+            <Icon name="bed" class="mt-0.5 size-5 shrink-0 text-gold-600 dark:text-gold-400" />
+            <span>
+              <span class="block font-semibold">{h.data.name}</span>
+              <span class="block text-sm text-muted">{h.data.town}</span>
+            </span>
+          </li>
         ))}
-      </div>
+      </ul>
+      <a
+        href={`/hotels#${stay}`}
+        class="mt-6 inline-flex items-center gap-2 font-semibold text-primary underline-offset-4 hover:underline"
+      >
+        All hotels we use <Icon name="arrow" class="size-4" />
+      </a>
     </section>
   )}
 

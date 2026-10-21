@@ -1,5 +1,6 @@
 ---
 title: The Whole Island in 14 Days
+type: round-trips
 durationDays: 14
 order: 5
 tone: ocean

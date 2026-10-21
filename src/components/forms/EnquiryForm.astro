@@ -2,18 +2,22 @@
 import ContactFields from './ContactFields.astro';
 import FormFooter from './FormFooter.astro';
 
+import { langFromPath } from '../../lib/i18n';
+
 interface Props {
   subject?: string;
 }
 const { subject } = Astro.props;
+const ko = langFromPath(Astro.url.pathname) === 'ko';
 ---
 
 <form action="/api/enquiry" method="post" data-form class="relative" id="enquiry-form">
   {subject && <input type="hidden" name="subject" value={subject} />}
+  {ko && <input type="hidden" name="language" value="ko" />}
   <ContactFields idPrefix="enq" />
   <div class="mt-5">
     <label class="field-label" for="enq-message">
-      How can we help?
+      {ko ? '문의 내용 (여행 시기, 인원, 원하시는 일정 등)' : 'How can we help?'}
     </label>
     <textarea
       class="field-input min-h-36"
@@ -24,7 +28,7 @@ const { subject } = Astro.props;
       maxlength="5000"
     ></textarea>
   </div>
-  <FormFooter submitLabel="Send message" />
+  <FormFooter submitLabel={ko ? '문의 보내기' : 'Send message'} />
 </form>
 
 <script>

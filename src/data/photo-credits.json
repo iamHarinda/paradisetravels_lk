@@ -246,5 +246,141 @@
     "author": "Gyrostat",
     "license": "CC BY-SA 4.0",
     "source": "https://commons.wikimedia.org/wiki/File:ALK_A330_F-WWYF!1689_22dec15_LFBO-1.jpg"
+  },
+  "golf": {
+    "file": "golf.jpg",
+    "alt": "Fairway lined with tall trees at the Nuwara Eliya golf course",
+    "title": "LK-nuwara-eliya-golf.jpg",
+    "author": "Balou46",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:LK-nuwara-eliya-golf.jpg"
+  },
+  "tea-pluckers": {
+    "file": "tea-pluckers.jpg",
+    "alt": "Tea pluckers at work among the bushes of a hill-country tea estate",
+    "title": "20160127 Sri Lanka 4060 crop sRGB (25674524341).jpg",
+    "author": "Dan Lundberg",
+    "license": "CC BY-SA 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:20160127_Sri_Lanka_4060_crop_sRGB_(25674524341).jpg"
+  },
+  "tea-picker": {
+    "file": "tea-picker.jpg",
+    "alt": "A tea picker in a bright sari on a green tea estate",
+    "title": "Tea picking lady.jpg",
+    "author": "Peter Addor",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Tea_picking_lady.jpg"
+  },
+  "stilt-fishermen": {
+    "file": "stilt-fishermen.jpg",
+    "alt": "Stilt fishermen perched on poles in the surf near Galle",
+    "title": "Fishermen practicing traditional stilt fishing near Galle, southern Sri Lanka, 20260207 1420 9467.jpg",
+    "author": "Jakub Hałun",
+    "license": "CC BY 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Fishermen_practicing_traditional_stilt_fishing_near_Galle,_southern_Sri_Lanka,_20260207_1420_9467.jpg"
+  },
+  "colombo-night": {
+    "file": "colombo-night.jpg",
+    "alt": "Colombo's skyline lit up at night, seen from the Lotus Tower",
+    "title": "A view of Colombo's skyline from the Lotus Tower.jpg",
+    "author": "Thilina Alagiyawanna",
+    "license": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:A_view_of_Colombo%27s_skyline_from_the_Lotus_Tower.jpg"
+  },
+  "perahera": {
+    "file": "perahera.jpg",
+    "alt": "Elephants in illuminated costumes at the Kandy Esala Perahera",
+    "title": "Elephants of Kandy Esala Perahera.jpg",
+    "author": "Daniel Liabeuf",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Elephants_of_Kandy_Esala_Perahera.jpg"
+  },
+  "galle-lighthouse": {
+    "file": "galle-lighthouse.jpg",
+    "alt": "The white lighthouse on the ramparts of Galle Fort",
+    "title": "Lighthouse, Galle Fort 0735.jpg",
+    "author": "Michael Gunther",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Lighthouse,_Galle_Fort_0735.jpg"
+  },
+  "hikkaduwa": {
+    "file": "hikkaduwa.jpg",
+    "alt": "Golden sand and palm trees on Hikkaduwa beach",
+    "title": "Hikkaduwa beach beauty.jpg",
+    "author": "Dinusha Chathuranga",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Hikkaduwa_beach_beauty.jpg"
+  },
+  "kandalama-pool": {
+    "file": "kandalama-pool.jpg",
+    "alt": "An infinity pool overlooking Kandalama lake and forest",
+    "title": "Pool-over-Kandalama(js).jpg",
+    "author": "Jerzy Strzelecki",
+    "license": "CC BY 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Pool-over-Kandalama(js).jpg"
+  },
+  "kandalama-sunset": {
+    "file": "kandalama-sunset.jpg",
+    "alt": "The sun setting over Kandalama lake near Dambulla",
+    "title": "Sunset-Kandalama(js).jpg",
+    "author": "Jerzy Strzelecki",
+    "license": "CC BY 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Sunset-Kandalama(js).jpg"
+  },
+  "coconut-hill": {
+    "file": "coconut-hill.jpg",
+    "alt": "Aerial view of Coconut Tree Hill in Mirissa, a palm-covered headland in turquoise sea",
+    "title": "Amazing Coconut Tree Hill.jpg",
+    "author": "Sachin Kaveesha Fernando",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Amazing_Coconut_Tree_Hill.jpg"
+  },
+  "mirissa-palms": {
+    "file": "mirissa-palms.jpg",
+    "alt": "Coconut palms leaning over the ocean at Mirissa",
+    "title": "Breathtaking view of mirissa.jpg",
+    "author": "Swanthika",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Breathtaking_view_of_mirissa.jpg"
+  },
+  "spices": {
+    "file": "spices.jpg",
+    "alt": "Cinnamon, herbs and spices hanging in a Kandy market stall",
+    "title": "Spice shop in Kandy Market, Sri Lanka.jpg",
+    "author": "McKay Savage",
+    "license": "CC BY 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Spice_shop_in_Kandy_Market,_Sri_Lanka.jpg"
+  },
+  "frangipani": {
+    "file": "frangipani.jpg",
+    "alt": "White frangipani (temple tree) flowers",
+    "title": "Temple Tree (323892060).jpg",
+    "author": "Dinesh Valke from Thane, India",
+    "license": "CC BY-SA 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Temple_Tree_(323892060).jpg"
+  },
+  "mirissa-aerial": {
+    "file": "mirissa-aerial.jpg",
+    "alt": "Aerial view of the Mirissa coastline and bay",
+    "title": "Mirissa Beach Aerial (175658363).jpeg",
+    "author": "Dronepicr",
+    "license": "CC BY 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Mirissa_Beach_Aerial_(175658363).jpeg"
+  },
+  "arugam-aerial": {
+    "file": "arugam-aerial.jpg",
+    "alt": "Fishing boats on the beach at Arugam Bay seen from above",
+    "title": "Arugam Waves (238816201).jpeg",
+    "author": "Etienne Boulanger",
+    "license": "CC BY 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Arugam_Waves_(238816201).jpeg"
+  },
+  "adams-peak": {
+    "file": "adams-peak.jpg",
+    "alt": "Sunrise light over the ridges seen from Adam’s Peak (Sri Pada)",
+    "title": "Sunrise at Adams speak6.jpg",
+    "author": "Dhanushka Meegaswatte",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Sunrise_at_Adams_speak6.jpg"
   }
 }

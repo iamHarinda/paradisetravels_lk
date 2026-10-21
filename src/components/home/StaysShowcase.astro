@@ -1,0 +1,180 @@
+---
+import Media from '../ui/Media.astro';
+import Icon from '../ui/Icon.astro';
+import { photo } from '../../lib/photos';
+import { STAYS, STAY_IDS } from '../../data/stays';
+import { getEntries, byOrder } from '../../lib/content';
+import type { Lang } from '../../lib/i18n';
+
+// "Where you'll stay" — the hotels the owner books for tours, by area (ARIA tabs). Names only: no rates are shown
+// (CLAUDE.md hard rule 2) and no hotel photos until the hotels' own image rights are cleared — each area is
+// illustrated with a landscape of the place instead.
+interface Props {
+  lang?: Lang;
+  index?: string;
+}
+const { lang = 'en', index = '05' } = Astro.props;
+const ko = lang === 'ko';
+const hotels = (await getEntries('hotels')).sort((a, b) => a.data.order - b.data.order || byOrder(a, b));
+const areas = STAY_IDS.map((id) => ({ ...STAYS[id], hotels: hotels.filter((h) => h.data.stay === id) })).filter(
+  (a) => a.hotels.length,
+);
+const T = ko
+  ? {
+      eyebrow: '숙소',
+      title: '머무는 곳까지 <em class="accent">아름답게.</em>',
+      intro: '투어 일정에 맞춰 지역별로 검증된 호텔을 예약해 드립니다. 원하시는 등급과 스타일을 알려주세요.',
+      all: '전체 호텔 보기',
+      areas: '지역',
+    }
+  : {
+      eyebrow: 'Where you’ll stay',
+      title: 'Hotels as memorable <em class="accent">as the journey.</em>',
+      intro:
+        'We book stays our travellers love, area by area along your route. Tell us the style you like and we match the hotels to it.',
+      all: 'All hotels',
+      areas: 'Areas',
+    };
+---
+
+<section class="bg-band py-24" aria-labelledby="stays-heading" data-stays>
+  <div class="container-site">
+    <div class="flex flex-wrap items-end justify-between gap-6">
+      <div class="max-w-3xl">
+        <p class="reveal chapter">
+          {index && <span class="chapter-no">{index}</span>}
+          <span class="chapter-rule" aria-hidden="true"></span>
+          <span>{T.eyebrow}</span>
+        </p>
+        <h2 id="stays-heading" class="reveal mt-4 text-h2" set:html={T.title} />
+        <p class="reveal mt-5 max-w-[56ch] text-lg text-muted">{T.intro}</p>
+      </div>
+      <a
+        href={ko ? '/ko/hotels' : '/hotels'}
+        class="reveal inline-flex min-h-12 items-center gap-2 font-semibold text-primary underline-offset-4 hover:underline"
+      >
+        {T.all} <Icon name="arrow" class="size-4" />
+      </a>
+    </div>
+
+    <div class="mt-10 -mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0" role="tablist" aria-label={T.areas}>
+      <div class="flex w-max gap-2">
+        {areas.map((a, i) => (
+          <button
+            type="button"
+            role="tab"
+            id={`stay-tab-${a.id}`}
+            aria-controls={`stay-panel-${a.id}`}
+            aria-selected={i === 0 ? 'true' : 'false'}
+            tabindex={i === 0 ? 0 : -1}
+            class="stay-tab"
+            data-stay-tab={a.id}
+          >
+            {ko ? a.nameKo : a.name}
+          </button>
+        ))}
+      </div>
+    </div>
+
+    {areas.map((a, i) => {
+      const p = photo(a.photo);
+      return (
+        <div
+          role="tabpanel"
+          id={`stay-panel-${a.id}`}
+          aria-labelledby={`stay-tab-${a.id}`}
+          class="stay-panel mt-8 grid overflow-hidden rounded-media bg-surface shadow-card ring-1 ring-line lg:grid-cols-[1.15fr_1fr]"
+          data-stay-panel={a.id}
+          hidden={i !== 0}
+        >
+          <div class="relative min-h-72 lg:min-h-[30rem]">
+            <Media image={p.image} alt={p.alt} class="absolute inset-0" sizes="(min-width: 1024px) 55vw, 100vw" />
+            <span class="absolute inset-0 bg-[linear-gradient(200deg,rgb(5_15_36/0)_40%,rgb(5_15_36/0.7))]" />
+            <p class="absolute bottom-6 left-6 font-display text-4xl text-white sm:text-5xl">
+              {ko ? a.nameKo : a.name}
+            </p>
+          </div>
+          <div class="p-6 sm:p-10">
+            <p class="text-muted">{ko ? a.blurbKo : a.blurb}</p>
+            <ol class="mt-6 divide-y divide-line">
+              {a.hotels.map((h, k) => (
+                <li class="flex items-baseline gap-4 py-4">
+                  <span class="font-display text-sm text-gold-700 italic dark:text-gold-400">
+                    {String(k + 1).padStart(2, '0')}
+                  </span>
+                  <span class="flex-1">
+                    <span class="block text-lg font-semibold">{h.data.name}</span>
+                    <span class="block text-sm text-muted">{h.data.town}</span>
+                  </span>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </div>
+      );
+    })}
+  </div>
+</section>
+
+<style>
+  .stay-tab {
+    min-height: 2.75rem;
+    border-radius: 999px;
+    border: 1px solid var(--c-line);
+    background: var(--c-surface);
+    padding: 0 1.15rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    white-space: nowrap;
+    transition:
+      background-color 200ms,
+      color 200ms,
+      border-color 200ms;
+  }
+  .stay-tab:hover {
+    border-color: var(--c-gold-500);
+  }
+  .stay-tab[aria-selected='true'] {
+    background: var(--c-ocean-900);
+    border-color: var(--c-ocean-900);
+    color: #fff;
+    box-shadow: inset 0 -3px 0 var(--c-gold-500);
+  }
+  .stay-panel:not([hidden]) {
+    animation: panel-in 450ms var(--ease-travel);
+  }
+  @keyframes panel-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+  }
+</style>
+
+<script>
+  // ARIA tabs: click or arrow keys switch the area.
+  document.querySelectorAll<HTMLElement>('[data-stays]').forEach((root) => {
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('[data-stay-tab]')];
+    const panels = [...root.querySelectorAll<HTMLElement>('[data-stay-panel]')];
+    const select = (i: number, focus = false) => {
+      tabs.forEach((t, k) => {
+        t.setAttribute('aria-selected', String(k === i));
+        t.tabIndex = k === i ? 0 : -1;
+      });
+      panels.forEach((p, k) => (p.hidden = k !== i));
+      if (focus) tabs[i]!.focus();
+    };
+    tabs.forEach((t, i) => {
+      t.addEventListener('click', () => select(i));
+      t.addEventListener('keydown', (e) => {
+        const n = tabs.length;
+        if (e.key === 'ArrowRight') select((i + 1) % n, true);
+        else if (e.key === 'ArrowLeft') select((i - 1 + n) % n, true);
+        else if (e.key === 'Home') select(0, true);
+        else if (e.key === 'End') select(n - 1, true);
+        else return;
+        e.preventDefault();
+      });
+    });
+  });
+</script>

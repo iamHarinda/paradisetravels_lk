@@ -1,5 +1,6 @@
 ---
 title: Culture, Tea & Coast in 10 Days
+type: round-trips
 durationDays: 10
 order: 4
 tone: tea

@@ -1,0 +1,10 @@
+---
+import type { GetStaticPaths } from 'astro';
+import TourTypePage from '../../../components/tours/TourTypePage.astro';
+import { TOUR_TYPE_IDS, type TourTypeId } from '../../../data/tour-types';
+
+export const getStaticPaths = (() => TOUR_TYPE_IDS.map((type) => ({ params: { type } }))) satisfies GetStaticPaths;
+const type = Astro.params.type as TourTypeId;
+---
+
+<TourTypePage id={type} lang="ko" />

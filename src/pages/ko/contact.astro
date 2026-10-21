@@ -1,0 +1,36 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import EnquiryForm from '../../components/forms/EnquiryForm.astro';
+import KoContactBand from '../../components/ko/KoContactBand.astro';
+import Icon from '../../components/ui/Icon.astro';
+import { SITE } from '../../lib/site';
+import { travelAgencySchema } from '../../lib/schema-org';
+---
+
+<PageLayout
+  title="문의하기 · 카카오톡 상담 | 파라다이스 트래블스"
+  description={`스리랑카 여행 상담은 카카오톡·왓츠앱 ${SITE.phone} 또는 이메일 ${SITE.email}로 문의하세요. 콜롬보 누게고다의 현지 여행사 파라다이스 트래블스.`}
+  breadcrumbs={[{ name: '문의', href: '/ko/contact' }]}
+  jsonLd={[travelAgencySchema()]}
+>
+  <section class="container-site grid gap-12 pt-8 pb-16 sm:pt-12 lg:grid-cols-[1fr_1.3fr]">
+    <div>
+      <p class="eyebrow">문의</p>
+      <h1 class="mt-3 text-[clamp(2.5rem,4vw+1rem,4.5rem)] leading-[1.1]">여행 상담을 시작하세요.</h1>
+      <p class="mt-5 text-lg text-muted">
+        여행 시기, 인원, 관심 있는 투어(일주, 허니문, 골프, 실론티, 아유르베다)를 알려주시면 맞춤 일정과 견적을
+        보내드립니다.
+      </p>
+      <address class="mt-10 space-y-3 not-italic">
+        <a href={SITE.mapsUrl} class="flex gap-3" rel="noopener">
+          <Icon name="pin" class="mt-1 size-5 shrink-0 text-gold-600" />
+          <span lang="en">{SITE.addressLine}</span>
+        </a>
+      </address>
+    </div>
+    <div class="rounded-media bg-surface p-6 shadow-card ring-1 ring-line sm:p-10">
+      <EnquiryForm subject="Contact (KO)" />
+    </div>
+  </section>
+  <KoContactBand />
+</PageLayout>

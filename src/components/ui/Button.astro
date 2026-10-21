@@ -1,7 +1,7 @@
 ---
 import type { HTMLAttributes } from 'astro/types';
 
-type Variant = 'primary' | 'secondary' | 'ghost' | 'light' | 'whatsapp';
+type Variant = 'primary' | 'navy' | 'secondary' | 'ghost' | 'light' | 'whatsapp';
 type Props = {
   href?: string;
   variant?: Variant;
@@ -14,7 +14,9 @@ type Props = {
 const { href, variant = 'primary', size = 'md', class: className, type = 'button', ...rest } = Astro.props;
 
 const variants: Record<Variant, string> = {
-  primary: 'bg-cta text-cta-text shadow-[0_8px_20px_-8px_rgb(30_99_214/0.55)] hover:bg-ocean-700',
+  primary:
+    'bg-cta text-cta-text shadow-[0_10px_24px_-10px_rgb(168_119_31/0.7)] ring-1 ring-inset ring-white/30 hover:bg-cta-hover',
+  navy: 'bg-ocean-900 text-white hover:bg-ocean-700 dark:bg-white dark:text-ocean-900 dark:hover:bg-sky-100',
   secondary: 'border border-current text-primary hover:bg-primary/5',
   ghost: 'text-primary underline-offset-4 hover:underline',
   light: 'border border-white/60 text-white hover:bg-white/10',

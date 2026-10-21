@@ -52,9 +52,9 @@ const path = `/travel-guide/${entry.id}`;
   ]}
 >
   <article>
-    <header class="container-site max-w-5xl pt-8 pb-10 sm:pt-12">
+    <header class="container-site max-w-6xl pt-8 pb-10 sm:pt-12">
       <p class="eyebrow">{GUIDE_CATEGORIES[g.category]}</p>
-      <h1 class="mt-3 text-[clamp(2.25rem,4.5vw+1rem,4.5rem)] leading-[1.05] tracking-tight">{g.title}</h1>
+      <h1 class="mt-3 max-w-4xl text-[clamp(2.25rem,4.5vw+1rem,4.5rem)] leading-[1.05] tracking-tight">{g.title}</h1>
       <p class="mt-6 max-w-[60ch] text-lg text-muted">{g.description}</p>
       <p class="mt-6 flex flex-wrap gap-x-5 gap-y-1 text-sm text-muted">
         <span>By {author?.data.name ?? `the ${SITE.name} team`}</span>
@@ -63,7 +63,13 @@ const path = `/travel-guide/${entry.id}`;
         <span class="font-semibold text-text">Last checked: {dateFmt.format(g.lastChecked)}</span>
       </p>
       <div class="mt-10 aspect-[16/9] overflow-hidden rounded-media">
-        <Media image={g.heroImage} alt={g.heroAlt} tone={g.tone} priority sizes="(min-width: 1100px) 1000px, 100vw" />
+        <Media
+          image={g.heroImage}
+          alt={g.heroAlt}
+          tone={g.tone}
+          priority
+          sizes="(min-width: 1200px) 1072px, calc(100vw - 2rem)"
+        />
       </div>
     </header>
 

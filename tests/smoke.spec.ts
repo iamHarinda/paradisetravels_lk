@@ -8,8 +8,12 @@ const PAGES = [
   '/destinations',
   '/destinations/ella',
   '/experiences/beaches',
-  '/hotel-deals',
-  '/services/flight-tickets',
+  '/hotels',
+  '/tours/golf',
+  '/services/air-ticketing',
+  '/ko',
+  '/ko/tours/honeymoon',
+  '/ko/visa',
   '/travel-guide',
   '/travel-guide/sri-lanka-visa-eta',
   '/plan-your-trip',
@@ -28,7 +32,9 @@ for (const path of PAGES) {
     expect(response?.status()).toBe(200);
     await expect(page.locator('h1')).toHaveCount(1);
     await expect(page).toHaveTitle(/.{10,60}/);
-    await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', /.{120,165}/);
+    // Hangul is denser than Latin: Korean snippets are ~50–120 characters (docs/13).
+    const descLength = path.startsWith('/ko') ? /^.{50,120}$/ : /^.{120,165}$/;
+    await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', descLength);
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
       'href',
       `https://paradisetravels.lk${path === '/' ? '/' : path}`,

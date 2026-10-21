@@ -8,8 +8,7 @@ lastChecked: 2026-10-05
 reviewed: false
 sources: []
 relatedServices:
-  - tour-guides
-  - visa-assistance
+  - visa-consultation
 relatedTours:
   - sri-lanka-7-day-tour
 relatedDestinations:

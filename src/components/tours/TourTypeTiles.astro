@@ -1,0 +1,72 @@
+---
+import Media from '../ui/Media.astro';
+import Icon from '../ui/Icon.astro';
+import { TOUR_TYPES } from '../../data/tour-types';
+import { photo } from '../../lib/photos';
+import type { Lang } from '../../lib/i18n';
+
+// The five tour lines as tall photo tiles with a mood word (Jetwing-style "What's your journey?").
+// Desktop: one row of five that widens the hovered tile. Phone: a swipeable row.
+interface Props {
+  lang?: Lang;
+}
+const { lang = 'en' } = Astro.props;
+const prefix = lang === 'ko' ? '/ko' : '';
+---
+
+<section class="py-16" aria-label={lang === 'ko' ? '투어 종류' : 'Tour types'}>
+  <ul class="tiles container-site flex snap-x snap-mandatory gap-3 overflow-x-auto pb-4 lg:overflow-visible">
+    {TOUR_TYPES.map((t, i) => {
+      const c = t[lang];
+      const p = photo(t.photo);
+      return (
+        <li class="tile reveal shrink-0 snap-start" style={`transition-delay:${i * 70}ms`}>
+          <a
+            href={`${prefix}/tours/${t.id}`}
+            class="group relative isolate flex h-[30rem] flex-col justify-end overflow-hidden rounded-media p-6 text-white shadow-card"
+          >
+            <Media
+              image={p.image}
+              alt=""
+              class="absolute inset-0 -z-20 transition-transform duration-[1.2s] ease-travel group-hover:scale-110"
+              sizes="(min-width: 1024px) 30vw, 80vw"
+            />
+            <span class="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgb(5_15_36/0.05)_35%,rgb(5_15_36/0.88))]" />
+            <span class="detail text-gold-300">{c.mood}</span>
+            <span class="mt-2 font-display text-3xl leading-tight font-medium">{c.name}</span>
+            <span class="tile-text mt-2 text-sm text-white/85">{c.tagline}</span>
+            <span class="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-gold-300">
+              {lang === 'ko' ? '자세히 보기' : 'View tours'}
+              <Icon name="arrow" class="size-4 transition-transform group-hover:translate-x-1" />
+            </span>
+          </a>
+        </li>
+      );
+    })}
+  </ul>
+</section>
+
+<style>
+  .tile {
+    width: min(80vw, 20rem);
+  }
+  @media (width >= 64rem) {
+    .tiles {
+      gap: 0.75rem;
+    }
+    .tile {
+      width: auto;
+      flex: 1 1 0;
+      transition: flex-grow 600ms var(--ease-travel);
+    }
+    .tiles:hover .tile:hover,
+    .tiles:focus-within .tile:focus-within {
+      flex-grow: 1.9;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tile {
+      transition: none;
+    }
+  }
+</style>

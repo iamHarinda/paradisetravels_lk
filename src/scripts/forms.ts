@@ -1,6 +1,8 @@
 // Progressive enhancement for lead forms ([data-form]). Without JS the forms post normally and the server
 // redirects to /thank-you; with JS we submit via fetch, show inline errors and keep the page.
 
+const ko = document.documentElement.lang === 'ko';
+
 // Remember the landing page + UTM parameters for the session (docs/10 §7 reporting).
 const TRACK = ['utm_source', 'utm_medium', 'utm_campaign'] as const;
 function tracking() {
@@ -54,7 +56,7 @@ export function enhanceForm(form: HTMLFormElement) {
     if (submit) {
       submit.disabled = true;
       submit.dataset.label = submit.textContent ?? '';
-      submit.textContent = 'Sending…';
+      submit.textContent = ko ? '보내는 중…' : 'Sending…';
     }
     try {
       const res = await fetch(form.action, {
@@ -72,7 +74,9 @@ export function enhanceForm(form: HTMLFormElement) {
         location.assign(data.redirect);
         return;
       }
-      if (message) message.textContent = data.message ?? 'Something went wrong. Please try again.';
+      if (message)
+        message.textContent =
+          data.message ?? (ko ? '오류가 발생했습니다. 다시 시도해 주세요.' : 'Something went wrong. Please try again.');
       let first: HTMLElement | null = null;
       for (const [name, err] of Object.entries(data.fieldErrors ?? {})) {
         const field = form.querySelector<HTMLElement>(`[name="${name}"]`);
@@ -89,7 +93,10 @@ export function enhanceForm(form: HTMLFormElement) {
       first?.focus();
       (window as unknown as { turnstile?: { reset: () => void } }).turnstile?.reset();
     } catch {
-      if (message) message.textContent = 'Network error — please check your connection, or message us on WhatsApp.';
+      if (message)
+        message.textContent = ko
+          ? '네트워크 오류입니다. 연결을 확인하시거나 왓츠앱/카카오톡으로 연락해 주세요.'
+          : 'Network error — please check your connection, or message us on WhatsApp.';
     } finally {
       if (submit) {
         submit.disabled = false;

@@ -1,3 +1,5 @@
+import { MARKETS } from '../data/markets';
+
 // Flight-map backdrop projection + route data. Equirectangular, 10 units per degree.
 // Region: lon -15°…155°, lat 62°N…42°S (Europe → Australia, centred on Sri Lanka).
 export const FLIGHT_MAP = { lon0: -15, lat0: 62, k: 10, width: 1700, height: 1040 } as const;
@@ -7,28 +9,15 @@ export const projectWorld = ([lat, lon]: [number, number]) =>
 
 export const CMB: [number, number] = [7.18, 79.88];
 
-/** Hubs of the airlines we ticket (src/data/airlines.ts) + key source markets (docs/11 §2). */
+/** Source-market airports (src/data/markets.ts) + hubs of the airlines we ticket (src/data/airlines.ts). */
 export const DESTINATIONS: { code: string; coords: [number, number] }[] = [
-  { code: 'DXB', coords: [25.25, 55.36] },
-  { code: 'DOH', coords: [25.27, 51.61] },
-  { code: 'AUH', coords: [24.43, 54.65] },
-  { code: 'SHJ', coords: [25.33, 55.52] },
-  { code: 'IST', coords: [41.26, 28.74] },
-  { code: 'LHR', coords: [51.47, -0.45] },
-  { code: 'FRA', coords: [50.03, 8.56] },
-  { code: 'SVO', coords: [55.97, 37.41] },
-  { code: 'DEL', coords: [28.56, 77.1] },
-  { code: 'BOM', coords: [19.09, 72.87] },
-  { code: 'MAA', coords: [12.99, 80.17] },
-  { code: 'MLE', coords: [4.19, 73.53] },
+  ...MARKETS.map((m) => m.hub),
   { code: 'SIN', coords: [1.36, 103.99] },
+  { code: 'HKG', coords: [22.31, 113.92] },
+  { code: 'DXB', coords: [25.25, 55.36] },
   { code: 'KUL', coords: [2.74, 101.7] },
   { code: 'BKK', coords: [13.69, 100.75] },
-  { code: 'HKG', coords: [22.31, 113.92] },
-  { code: 'PVG', coords: [31.14, 121.81] },
-  { code: 'ICN', coords: [37.46, 126.44] },
-  { code: 'SYD', coords: [-33.94, 151.18] },
-  { code: 'MEL', coords: [-37.67, 144.84] },
+  { code: 'IST', coords: [41.26, 28.74] },
 ];
 
 /** Quadratic arc from Colombo bowing "north" of the straight line, like a great-circle on a flat map. */

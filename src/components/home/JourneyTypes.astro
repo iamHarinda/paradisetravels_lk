@@ -1,0 +1,98 @@
+---
+import Media from '../ui/Media.astro';
+import Icon from '../ui/Icon.astro';
+import { photo } from '../../lib/photos';
+import { TOUR_TYPES } from '../../data/tour-types';
+import type { Lang } from '../../lib/i18n';
+
+// "What's your journey?" — the owner's five tour lines as full-bleed stacking cards. As you scroll, each journey
+// slides up over the previous one and the earlier cards stack at the top with their edges showing.
+// Pure CSS position: sticky — no JS, identical on phone and desktop, works with reduced motion.
+interface Props {
+  lang?: Lang;
+  index?: string;
+}
+const { lang = 'en', index = '02' } = Astro.props;
+const prefix = lang === 'ko' ? '/ko' : '';
+const T =
+  lang === 'ko'
+    ? { eyebrow: '투어 종류', title: '어떤 여행을 <em class="accent">꿈꾸시나요?</em>', cta: '자세히 보기' }
+    : { eyebrow: 'Tours', title: 'What’s your <em class="accent">journey?</em>', cta: 'Explore' };
+---
+
+<section class="journey relative py-24" aria-labelledby="journey-heading">
+  <div class="container-site">
+    <p class="reveal chapter">
+      <span class="chapter-no">{index}</span>
+      <span class="chapter-rule" aria-hidden="true"></span>
+      <span>{T.eyebrow}</span>
+    </p>
+    <h2 id="journey-heading" class="reveal mt-4 max-w-[18ch] text-h2" set:html={T.title} />
+
+    <ol class="mt-12">
+      {TOUR_TYPES.map((t, i) => {
+        const c = t[lang];
+        const p = photo(t.photo);
+        return (
+          <li class="stack-card" style={`--i:${i}`}>
+            <a
+              href={`${prefix}/tours/${t.id}`}
+              class="group relative block h-full overflow-hidden rounded-media text-white shadow-[var(--shadow-lift)] ring-1 ring-black/5"
+            >
+              <Media
+                image={p.image}
+                alt={p.alt}
+                class="absolute inset-0 transition-transform duration-[1.4s] ease-travel group-hover:scale-105"
+                sizes="(min-width: 1440px) 1360px, 100vw"
+              />
+              <span class="absolute inset-0 bg-[linear-gradient(180deg,rgb(5_15_36/0.05)_30%,rgb(5_15_36/0.85))]" />
+              <span
+                class="pointer-events-none absolute top-5 right-6 font-display text-[clamp(1.1rem,1.5vw,1.5rem)] tracking-[0.3em] text-gold-300 uppercase"
+                aria-hidden="true"
+              >
+                {c.mood}
+              </span>
+              <span
+                class="pointer-events-none absolute top-10 right-6 font-display text-[clamp(4.5rem,11vw,10rem)] leading-none text-transparent italic [-webkit-text-stroke:1.5px_rgb(233_194_116/0.7)]"
+                aria-hidden="true"
+              >
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <span class="absolute inset-x-0 bottom-0 block p-6 sm:p-10 lg:p-14">
+                <span class="block text-[clamp(2.25rem,3.5vw+1rem,4.75rem)] leading-none font-display font-medium">
+                  {c.name}
+                </span>
+                <span class="mt-4 block max-w-[46ch] text-white/90 sm:text-lg">
+                  {c.tagline} {c.intro.split('. ')[0]}.
+                </span>
+                <span class="mt-6 inline-flex min-h-12 items-center gap-2 rounded-pill bg-gold-500 px-5 text-sm font-semibold text-ocean-900 transition-colors group-hover:bg-gold-400">
+                  {T.cta} <Icon name="arrow" class="size-4" />
+                </span>
+              </span>
+            </a>
+          </li>
+        );
+      })}
+    </ol>
+  </div>
+</section>
+
+<style>
+  /* Stacking cards: each card sticks a little lower than the previous one, so the stack shows its edges. */
+  .stack-card {
+    position: sticky;
+    top: calc(6rem + var(--i) * 1.25rem);
+    height: min(72svh, 46rem);
+    margin-bottom: 14svh;
+  }
+  .stack-card:last-child {
+    margin-bottom: 0;
+  }
+  @media (width < 40rem) {
+    .stack-card {
+      top: calc(5.5rem + var(--i) * 0.75rem);
+      height: min(70svh, 36rem);
+      margin-bottom: 10svh;
+    }
+  }
+</style>

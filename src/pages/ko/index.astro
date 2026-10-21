@@ -1,0 +1,90 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import Hero from '../../components/home/Hero.astro';
+import ServicesTrio from '../../components/home/ServicesTrio.astro';
+import JourneyTypes from '../../components/home/JourneyTypes.astro';
+import IslandAtlas from '../../components/home/IslandAtlas.astro';
+import StaysShowcase from '../../components/home/StaysShowcase.astro';
+import WorldConnections from '../../components/home/WorldConnections.astro';
+import KoContactBand from '../../components/ko/KoContactBand.astro';
+import Media from '../../components/ui/Media.astro';
+import Icon from '../../components/ui/Icon.astro';
+import CtaBlock from '../../components/ui/CtaBlock.astro';
+import { travelAgencySchema } from '../../lib/schema-org';
+import { SITE } from '../../lib/site';
+import { photo } from '../../lib/photos';
+import type { IconName } from '../../lib/icons';
+
+// Korean home page (/ko) — the owner's leading market. Korean copy is a first draft for native review
+// (docs/CONTENT-TODO.md); keywords from docs/13-korea-naver-plan.md (스리랑카 여행, 스리랑카 패키지, 시기리야 …).
+const years = new Date().getFullYear() - SITE.foundingYear;
+const why = photo('tea-picker');
+const reasons: { icon: IconName; title: string; text: string }[] = [
+  { icon: 'kakao', title: '카카오톡 상담', text: `카카오톡·왓츠앱 ${SITE.phone}로 여행 전, 중, 후 언제든 연락하세요.` },
+  { icon: 'car', title: '전용 차량 · 기사', text: '모든 투어는 전용 차량과 기사가 함께합니다.' },
+  {
+    icon: 'compass',
+    title: '현지 전문가의 조언',
+    text: '계절, 이동 거리, 혼잡도까지 — 현지에 사는 사람들이 직접 안내합니다.',
+  },
+  { icon: 'grid', title: '한 곳에서 모두', text: '투어, 비자, 항공권을 한 팀이 준비합니다.' },
+];
+---
+
+<PageLayout
+  title="스리랑카 여행 · 투어 전문 현지 여행사 | 파라다이스 트래블스"
+  description="스리랑카 현지 여행사 파라다이스 트래블스. 스리랑카 일주 여행, 허니문, 골프 투어, 실론티 투어, 아유르베다 힐링 여행과 비자 상담, 항공권 발권까지 콜롬보에서 직접 준비합니다."
+  jsonLd={[travelAgencySchema()]}
+  overlayHeader
+>
+  <Hero lang="ko" />
+  <ServicesTrio lang="ko" index="01" />
+  <JourneyTypes lang="ko" index="02" />
+  <IslandAtlas lang="ko" index="03" />
+  <StaysShowcase lang="ko" index="04" />
+  <WorldConnections lang="ko" index="05" />
+
+  <section class="py-24" aria-labelledby="why-heading">
+    <div class="container-site grid items-center gap-12 lg:grid-cols-[5fr_7fr] lg:gap-20">
+      <div class="reveal relative aspect-[4/5] overflow-hidden rounded-media shadow-card sm:aspect-[4/3] lg:aspect-[4/5]">
+        <Media image={why.image} alt={why.alt} sizes="(min-width: 1024px) 38vw, calc(100vw - 2rem)" />
+        <div class="absolute inset-x-4 bottom-4 flex items-center gap-4 rounded-card bg-ocean-900/90 p-4 text-white ring-1 ring-gold-500/40 backdrop-blur-md sm:inset-x-6 sm:bottom-6 sm:p-5">
+          <span class="font-display text-5xl leading-none text-gold-400">{years}</span>
+          <span class="text-sm leading-snug">
+            <strong class="block font-semibold">년의 여행 경험</strong>
+            {SITE.foundingYear}년부터 콜롬보 누게고다 사무실에서.
+          </span>
+        </div>
+      </div>
+      <div>
+        <p class="reveal chapter">
+          <span class="chapter-no">06</span>
+          <span class="chapter-rule" aria-hidden="true"></span>
+          <span>왜 파라다이스 트래블스인가</span>
+        </p>
+        <h2 id="why-heading" class="reveal mt-4 max-w-2xl text-h2">
+          콜센터가 아닌, <em class="accent">현지의 여행 파트너.</em>
+        </h2>
+        <p class="reveal mt-5 max-w-[56ch] text-lg text-muted">
+          스리랑카 현지 팀이 투어 일정, 비자, 항공권을 직접 준비하고, 귀국하실 때까지 카카오톡과 왓츠앱으로 함께합니다.
+        </p>
+        <ul class="mt-10 grid gap-x-8 gap-y-8 sm:grid-cols-2">
+          {reasons.map((r) => (
+            <li class="reveal flex gap-4">
+              <span class="grid size-11 shrink-0 place-items-center rounded-2xl bg-gold-100 text-gold-700 ring-1 ring-gold-300 dark:bg-white/5 dark:text-gold-400">
+                <Icon name={r.icon} class="size-5" />
+              </span>
+              <span>
+                <strong class="block font-semibold">{r.title}</strong>
+                <span class="mt-1 block text-sm text-muted">{r.text}</span>
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <KoContactBand />
+  <CtaBlock photoName="kandalama-pool" />
+</PageLayout>

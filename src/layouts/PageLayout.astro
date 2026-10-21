@@ -8,15 +8,19 @@ import Breadcrumbs, { type Crumb } from '../components/layout/Breadcrumbs.astro'
 import FlightBackdrop from '../components/layout/FlightBackdrop.astro';
 import type { Props as SEOProps } from '../components/layout/SEO.astro';
 import { SITE } from '../lib/site';
+import { langFromPath } from '../lib/i18n';
 
 type Props = SEOProps & {
   /** Trail after "Home". Renders breadcrumbs + BreadcrumbList schema on all non-home pages. */
   breadcrumbs?: Crumb[];
   overlayHeader?: boolean;
+  /** Replaces "Plan trip" in the mobile contact bar, e.g. "Enquire" on a tour page. */
+  primaryAction?: { href: string; label: string };
 };
 
-const { breadcrumbs, overlayHeader = false, jsonLd = [], ...seo } = Astro.props;
-const trail = breadcrumbs ? [{ name: 'Home', href: '/' }, ...breadcrumbs] : undefined;
+const { breadcrumbs, overlayHeader = false, primaryAction, jsonLd = [], ...seo } = Astro.props;
+const ko = langFromPath(Astro.url.pathname) === 'ko';
+const trail = breadcrumbs ? [{ name: ko ? '홈' : 'Home', href: ko ? '/ko' : '/' }, ...breadcrumbs] : undefined;
 const breadcrumbSchema = trail && {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -39,7 +43,7 @@ const breadcrumbSchema = trail && {
   <slot />
   <Fragment slot="footer">
     <Footer />
-    <StickyBar />
+    <StickyBar primaryAction={primaryAction} />
     <FloatingContact />
   </Fragment>
 </BaseLayout>

@@ -1,12 +1,11 @@
 ---
 import PageLayout from '../layouts/PageLayout.astro';
 import Hero from '../components/home/Hero.astro';
-import Marquee from '../components/home/Marquee.astro';
-import Bento from '../components/home/Bento.astro';
-import CinematicReveal from '../components/home/CinematicReveal.astro';
-import IslandExplorer from '../components/home/IslandExplorer.astro';
-import ScrollStory from '../components/home/ScrollStory.astro';
-import ReviewWall from '../components/home/ReviewWall.astro';
+import ServicesTrio from '../components/home/ServicesTrio.astro';
+import JourneyTypes from '../components/home/JourneyTypes.astro';
+import IslandAtlas from '../components/home/IslandAtlas.astro';
+import StaysShowcase from '../components/home/StaysShowcase.astro';
+import WorldConnections from '../components/home/WorldConnections.astro';
 import SectionHeading from '../components/ui/SectionHeading.astro';
 import Card from '../components/ui/Card.astro';
 import Button from '../components/ui/Button.astro';
@@ -14,65 +13,61 @@ import Icon from '../components/ui/Icon.astro';
 import Media from '../components/ui/Media.astro';
 import CtaBlock from '../components/ui/CtaBlock.astro';
 import TicketCard from '../components/tours/TicketCard.astro';
-import AirlineLogos from '../components/ui/AirlineLogos.astro';
 import { getEntries, byOrder } from '../lib/content';
 import { travelAgencySchema } from '../lib/schema-org';
 import { dateFmt } from '../lib/labels';
 import { SITE } from '../lib/site';
 import { photo } from '../lib/photos';
 import { accent } from '../lib/text';
+import type { IconName } from '../lib/icons';
 
 const tours = (await getEntries('tours')).sort(byOrder);
 const featured = [
   ...tours.filter((t) => t.data.featured),
-  ...tours.filter(
-    (t) => !t.data.featured && (t.data.styles.includes('honeymoon') || t.data.styles.includes('ayurveda')),
-  ),
+  ...tours.filter((t) => !t.data.featured && t.data.type !== 'round-trips'),
 ].slice(0, 4);
-const [hotels, guides, services, destinations] = await Promise.all([
-  getEntries('hotels'),
-  getEntries('guides'),
-  getEntries('services'),
-  getEntries('destinations'),
-]);
+const guides = await getEntries('guides');
 const latestGuides = guides.sort((a, b) => b.data.published.getTime() - a.data.published.getTime()).slice(0, 3);
 const leader = (await getEntries('team')).find((t) => t.data.order === 1);
-const dealsPhoto = photo('tangalle');
 
-// Only verifiable numbers (CLAUDE.md hard rule 1).
-const facts = [
-  { value: String(SITE.foundingYear), label: 'Arranging travel from Colombo since' },
-  { value: String(services.length), label: 'Services under one roof' },
-  { value: String(destinations.length), label: 'Destinations we know first-hand' },
-  { value: '1', label: 'Team for your whole journey' },
+// Only verifiable numbers (CLAUDE.md hard rule 1): years are derived from the founding year at build time.
+const yearsTrading = new Date().getFullYear() - SITE.foundingYear;
+const whyPhoto = photo('tea-picker');
+const reasons: { icon: IconName; title: string; text: string }[] = [
+  { icon: 'compass', title: 'Honest local advice', text: 'Seasons, distances and crowds — from people who live here.' },
+  {
+    icon: 'whatsapp',
+    title: 'WhatsApp & KakaoTalk',
+    text: 'Message the same team before, during and after your trip.',
+  },
+  { icon: 'car', title: 'Private car & driver', text: 'Every tour runs with your own vehicle and driver.' },
+  {
+    icon: 'grid',
+    title: 'One point of contact',
+    text: 'Tour, visa and flights — arranged by one team.',
+  },
 ];
 ---
 
 <PageLayout
-  title="Sri Lanka Tours, Hotels & Travel Agency | Paradise Travels"
-  description="Colombo travel agency since 2007: tailor-made Sri Lanka tours, partner hotel rates, flights, ETA and visa help, drivers, guides, events and Ayurveda."
+  title="Sri Lanka Tours, Visa & Air Tickets | Paradise Travels"
+  description="Colombo travel agency since 2007: tailor-made Sri Lanka round trips, honeymoon, golf, tea and Ayurveda tours, visa consultation and air tickets on 12 airlines."
   jsonLd={[travelAgencySchema()]}
+  overlayHeader
 >
   <Hero />
-  <section class="container-site pb-14" aria-labelledby="airlines-heading">
-    <div class="mb-5 flex flex-wrap items-baseline justify-between gap-2">
-      <h2 id="airlines-heading" class="detail font-sans text-muted">
-        Flight tickets on leading airlines
-      </h2>
-      <a href="/services/flight-tickets" class="text-sm font-semibold text-primary underline underline-offset-4">
-        Book flights with us
-      </a>
-    </div>
-    <AirlineLogos variant="strip" />
-  </section>
-  <Marquee />
-  <Bento />
-  <CinematicReveal line="Some places you have to see to believe." accentWord="see" />
-  <IslandExplorer />
+  <ServicesTrio index="01" />
+  <JourneyTypes index="02" />
+  <IslandAtlas index="03" />
 
   <section class="container-site py-24" aria-labelledby="tours-heading">
     <div class="flex flex-wrap items-end justify-between gap-6">
-      <SectionHeading index="03" eyebrow="Tours" title="Start with a route. *Make it yours.*" id="tours-heading" />
+      <SectionHeading
+        index="04"
+        eyebrow="Itineraries"
+        title="Start with a route. *Make it yours.*"
+        id="tours-heading"
+      />
       <Button href="/tours" variant="secondary">
         All tours <Icon name="arrow" class="size-4" />
       </Button>
@@ -84,97 +79,61 @@ const facts = [
     </div>
   </section>
 
-  <section class="bg-sky-100 py-24 text-ink-900" aria-labelledby="deals-heading">
-    <div class="container-site grid items-center gap-12 lg:grid-cols-[1fr_1fr]">
-      <div class="relative aspect-[4/3] overflow-hidden rounded-media">
-        <Media image={dealsPhoto.image} alt={dealsPhoto.alt} sizes="(min-width: 1024px) 45vw, calc(100vw - 2rem)" />
-        <span class="detail absolute top-4 left-4 rounded-pill bg-gold-500 px-3 py-1.5 text-ocean-900">
-          Paradise rate
-        </span>
+  <StaysShowcase index="05" />
+  <WorldConnections index="06" />
+
+  <section class="py-24" aria-labelledby="why-heading">
+    <div class="container-site grid items-center gap-12 lg:grid-cols-[5fr_7fr] lg:gap-20">
+      <div class="reveal relative aspect-[4/5] overflow-hidden rounded-media shadow-card sm:aspect-[4/3] lg:aspect-[4/5]">
+        <Media image={whyPhoto.image} alt={whyPhoto.alt} sizes="(min-width: 1024px) 38vw, calc(100vw - 2rem)" />
+        <div class="absolute inset-x-4 bottom-4 flex items-center gap-4 rounded-card bg-ocean-900/90 p-4 text-white shadow-card ring-1 ring-gold-500/40 backdrop-blur-md sm:inset-x-6 sm:bottom-6 sm:p-5">
+          <span class="font-display text-5xl leading-none text-gold-400">{yearsTrading}</span>
+          <span class="text-sm leading-snug">
+            <strong class="block font-semibold">Years arranging travel</strong>
+            From our office in Nugegoda, Colombo, since {SITE.foundingYear}.
+          </span>
+        </div>
       </div>
       <div>
-        <p class="reveal chapter text-ocean-700!">
-          <span class="chapter-no">04</span>
+        <p class="reveal chapter">
+          <span class="chapter-no">07</span>
           <span class="chapter-rule" aria-hidden="true"></span>
-          <span>Hotel Deals</span>
+          <span>Why Paradise Travels</span>
         </p>
         <h2
-          id="deals-heading"
-          class="reveal mt-4 text-h2"
-          set:html={accent('Partner rates you *won’t find* on booking sites.')}
+          id="why-heading"
+          class="reveal mt-4 max-w-2xl text-h2"
+          set:html={accent('A family business, *personally run.*')}
         />
-        <p class="reveal mt-5 text-lg text-[#3f4b63]">
-          We hold contracted rates with hotels around the island. Tell us where and when — we reply with options and a
-          quote. Book just the hotel, or the whole trip.
+        <p class="reveal mt-5 max-w-[56ch] text-lg text-muted">
+          One Colombo team plans your tour, sorts your visa and books your flights — and stays on WhatsApp and KakaoTalk
+          until you fly home.
+          {leader && ` Led by ${leader.data.name}, ${leader.data.role}.`}
         </p>
-        <Button href="/hotel-deals" class="mt-8">
-          See hotel deals <Icon name="arrow" class="size-4" />
-        </Button>
+        <ul class="mt-10 grid gap-x-8 gap-y-8 sm:grid-cols-2">
+          {reasons.map((r) => (
+            <li class="reveal flex gap-4">
+              <span class="grid size-11 shrink-0 place-items-center rounded-2xl bg-gold-100 text-gold-700 ring-1 ring-gold-300 dark:bg-white/5 dark:text-gold-400">
+                <Icon name={r.icon} class="size-5" />
+              </span>
+              <span>
+                <strong class="block font-semibold">{r.title}</strong>
+                <span class="mt-1 block text-sm text-muted">{r.text}</span>
+              </span>
+            </li>
+          ))}
+        </ul>
+        <div class="reveal mt-10 flex flex-wrap items-center gap-x-6 gap-y-3">
+          <Button href="/plan-your-trip">
+            Plan my trip <Icon name="arrow" class="size-4" />
+          </Button>
+          <a href="/about" class="text-sm font-semibold text-primary underline underline-offset-4">
+            Our story
+          </a>
+        </div>
       </div>
     </div>
-    {hotels.length > 0 && (
-      <div class="container-site mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {hotels.slice(0, 4).map((h) => (
-          <Card
-            href={`/hotel-deals/${h.id}`}
-            title={h.data.name}
-            eyebrow={h.data.area}
-            badge="Paradise rate"
-            badgeTone="gold"
-            image={h.data.heroImage}
-            imageAlt={h.data.heroAlt}
-            tone={h.data.tone}
-            meta="Request this rate"
-          />
-        ))}
-      </div>
-    )}
   </section>
-
-  <ScrollStory />
-
-  <section class="bg-white py-24" aria-labelledby="why-heading">
-    <div class="container-site">
-      <p class="reveal chapter">
-        <span class="chapter-no">06</span>
-        <span class="chapter-rule" aria-hidden="true"></span>
-        <span>Why Paradise Travels</span>
-      </p>
-      <h2
-        id="why-heading"
-        class="reveal mt-4 max-w-3xl text-h2"
-        set:html={accent('A local partner, *not a call centre.*')}
-      />
-      <dl class="mt-16 grid gap-px overflow-hidden rounded-media bg-line ring-1 ring-line sm:grid-cols-2 lg:grid-cols-4">
-        {facts.map((f) => (
-          <div class="reveal flex flex-col-reverse gap-3 bg-sky-50 p-8">
-            <dt class="text-sm text-muted">{f.label}</dt>
-            <dd class="font-display text-7xl leading-none text-ocean-500">{f.value}</dd>
-          </div>
-        ))}
-      </dl>
-      <ul class="mt-12 grid gap-8 text-sm text-muted sm:grid-cols-2 lg:grid-cols-4">
-        <li class="reveal">
-          <strong class="block text-base text-ink-900">Honest local advice</strong>Seasons, distances and crowds — from
-          people who live here.
-        </li>
-        <li class="reveal">
-          <strong class="block text-base text-ink-900">Real people on WhatsApp</strong>Message the same team before,
-          during and after your trip.
-        </li>
-        <li class="reveal">
-          <strong class="block text-base text-ink-900">Partner hotel rates</strong>Contracted rates and packages with
-          hotels around the island.
-        </li>
-        <li class="reveal">
-          <strong class="block text-base text-ink-900">Everything in one place</strong>Flights, visa, hotels, driver,
-          guides — one point of contact.
-        </li>
-      </ul>
-    </div>
-  </section>
-
-  <ReviewWall limit={6} index="07" />
 
   <section class="container-site pb-24" aria-labelledby="guides-heading">
     <div class="flex flex-wrap items-end justify-between gap-6">
@@ -199,38 +158,5 @@ const facts = [
     </div>
   </section>
 
-  {leader && (
-    <section class="container-site pb-24" aria-labelledby="leader-heading">
-      <div class="reveal grid gap-10 border-y border-line py-14 md:grid-cols-[auto_1fr] md:items-center">
-        <div
-          class="grid size-28 place-items-center rounded-full bg-ocean-900 font-display text-3xl text-lagoon-300"
-          aria-hidden="true"
-        >
-          {leader.data.name
-            .split(' ')
-            .map((n) => n[0])
-            .join('')}
-        </div>
-        <div>
-          <h2
-            id="leader-heading"
-            class="max-w-3xl font-display text-[clamp(1.75rem,2.5vw+1rem,3rem)] leading-tight"
-            set:html={accent('A family business, *personally run.*')}
-          />
-          <p class="mt-4 max-w-[60ch] text-muted">
-            Paradise Travels has been led from our Colombo office since {SITE.foundingYear}. When you plan with us, you
-            plan with the people who answer the phone.
-          </p>
-          <p class="detail mt-6 text-muted">
-            Led by {leader.data.name} · {leader.data.role}
-          </p>
-          <a href="/about" class="mt-3 inline-block text-sm font-semibold text-primary underline underline-offset-4">
-            Our story
-          </a>
-        </div>
-      </div>
-    </section>
-  )}
-
-  <CtaBlock />
+  <CtaBlock photoName="kandalama-pool" />
 </PageLayout>

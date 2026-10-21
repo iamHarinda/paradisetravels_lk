@@ -1,9 +1,45 @@
 ---
 // Name / email / phone with country code / country / preferred contact — shared by all lead forms (docs/04 §7).
+import { langFromPath } from '../../lib/i18n';
+
 interface Props {
   idPrefix: string;
 }
 const { idPrefix: p } = Astro.props;
+const ko = langFromPath(Astro.url.pathname) === 'ko';
+const L = ko
+  ? {
+      name: '이름',
+      email: '이메일',
+      phone: '왓츠앱 / 전화번호',
+      optional: '(선택)',
+      code: '국가 번호',
+      codeOption: '국가',
+      country: '거주 국가',
+      reply: '어떤 방법으로 답변 드릴까요?',
+      methods: [
+        ['kakao', '카카오톡'],
+        ['email', '이메일'],
+        ['whatsapp', '왓츠앱'],
+        ['phone', '전화'],
+      ],
+    }
+  : {
+      name: 'Your name',
+      email: 'Email',
+      phone: 'WhatsApp / phone',
+      optional: '(optional)',
+      code: 'Country code',
+      codeOption: 'Code',
+      country: 'Country you live in',
+      reply: 'How should we reply?',
+      methods: [
+        ['email', 'Email'],
+        ['whatsapp', 'WhatsApp'],
+        ['kakao', 'KakaoTalk'],
+        ['phone', 'Phone call'],
+      ],
+    };
 const codes = [
   ['+44', 'UK +44'],
   ['+91', 'India +91'],
@@ -32,7 +68,7 @@ const codes = [
 <div class="grid gap-5 sm:grid-cols-2">
   <div>
     <label class="field-label" for={`${p}-name`}>
-      Your name
+      {L.name}
     </label>
     <input
       class="field-input"
@@ -46,7 +82,7 @@ const codes = [
   </div>
   <div>
     <label class="field-label" for={`${p}-email`}>
-      Email
+      {L.email}
     </label>
     <input
       class="field-input"
@@ -60,16 +96,18 @@ const codes = [
   </div>
   <div>
     <label class="field-label" for={`${p}-phone`}>
-      WhatsApp / phone <span class="font-normal text-muted">(optional)</span>
+      {L.phone} <span class="font-normal text-muted">{L.optional}</span>
     </label>
     <div class="flex gap-2">
       <label class="sr-only" for={`${p}-code`}>
-        Country code
+        {L.code}
       </label>
       <select class="field-input w-32 shrink-0" id={`${p}-code`} name="phoneCode" autocomplete="tel-country-code">
-        <option value="">Code</option>
+        <option value="">{L.codeOption}</option>
         {codes.map(([v, l]) => (
-          <option value={v}>{l}</option>
+          <option value={v} selected={ko && v === '+82'}>
+            {l}
+          </option>
         ))}
       </select>
       <input class="field-input" id={`${p}-phone`} name="phone" type="tel" autocomplete="tel-national" maxlength="30" />
@@ -77,19 +115,14 @@ const codes = [
   </div>
   <div>
     <label class="field-label" for={`${p}-country`}>
-      Country you live in <span class="font-normal text-muted">(optional)</span>
+      {L.country} <span class="font-normal text-muted">{L.optional}</span>
     </label>
     <input class="field-input" id={`${p}-country`} name="country" autocomplete="country-name" maxlength="80" />
   </div>
   <fieldset class="sm:col-span-2">
-    <legend class="field-label">How should we reply?</legend>
+    <legend class="field-label">{L.reply}</legend>
     <div class="flex flex-wrap gap-2">
-      {[
-        ['email', 'Email'],
-        ['whatsapp', 'WhatsApp'],
-        ['kakao', 'KakaoTalk'],
-        ['phone', 'Phone call'],
-      ].map(([v, l], i) => (
+      {L.methods.map(([v, l], i) => (
         <label class="choice">
           <input type="radio" name="preferredContact" value={v} checked={i === 0} /> {l}
         </label>

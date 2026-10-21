@@ -1,0 +1,172 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import PhotoHero from '../ui/PhotoHero.astro';
+import Media from '../ui/Media.astro';
+import Icon from '../ui/Icon.astro';
+import Button from '../ui/Button.astro';
+import TicketCard from './TicketCard.astro';
+import EnquiryForm from '../forms/EnquiryForm.astro';
+import StaysShowcase from '../home/StaysShowcase.astro';
+import { TOUR_TYPES, tourType, type TourTypeId } from '../../data/tour-types';
+import { getEntries, byOrder } from '../../lib/content';
+import { photo } from '../../lib/photos';
+import { serviceSchema, itemListSchema } from '../../lib/schema-org';
+import { whatsappLink } from '../../lib/site';
+import type { Lang } from '../../lib/i18n';
+
+// One template for the five tour lines (/tours/<id> and /ko/tours/<id>).
+interface Props {
+  id: TourTypeId;
+  lang?: Lang;
+}
+const { id, lang = 'en' } = Astro.props;
+const ko = lang === 'ko';
+const type = tourType(id);
+const c = type[lang];
+const prefix = ko ? '/ko' : '';
+const path = `${prefix}/tours/${id}`;
+const hero = photo(type.photo);
+const gallery = type.gallery.map((g) => photo(g));
+
+// Itineraries are written in English; they are listed on the English pages only.
+const itineraries = ko
+  ? []
+  : (await getEntries('tours'))
+      .filter((t) => t.data.type === id || t.data.styles.some((s) => type.alsoStyles.includes(s)))
+      .sort((a, b) => a.data.durationDays - b.data.durationDays || byOrder(a, b));
+const others = TOUR_TYPES.filter((t) => t.id !== id);
+
+const T = ko
+  ? {
+      tours: '투어',
+      highlights: '여행의 하이라이트',
+      routes: '추천 일정',
+      ask: `${c.name} 문의`,
+      askText: '여행 시기, 인원, 원하시는 스타일을 알려주시면 맞춤 일정과 견적을 보내드립니다.',
+      wa: '왓츠앱 상담',
+      kakao: '카카오톡',
+      other: '다른 투어',
+      start: '상담 시작하기',
+    }
+  : {
+      tours: 'Tours',
+      highlights: 'What the trip includes',
+      routes: 'Sample itineraries',
+      ask: `Plan your ${c.name.toLowerCase().replace(/s$/, '')}`,
+      askText: 'Tell us your dates, group size and style — we reply with a tailor-made plan and quote.',
+      wa: 'WhatsApp us',
+      kakao: 'KakaoTalk',
+      other: 'Other tours',
+      start: 'Start planning',
+    };
+---
+
+<PageLayout
+  title={ko || c.seoTitle.length > 41 ? c.seoTitle : `${c.seoTitle} | Paradise Travels`}
+  description={c.seoDescription}
+  breadcrumbs={[
+    { name: T.tours, href: `${prefix}/tours` },
+    { name: c.name, href: path },
+  ]}
+  jsonLd={[
+    serviceSchema({ title: c.name, description: c.seoDescription, path }),
+    ...(itineraries.length
+      ? [itemListSchema(itineraries.map((t) => ({ name: t.data.title, path: `/tours/${t.id}` })))]
+      : []),
+  ]}
+  primaryAction={{ href: '#plan', label: ko ? '상담' : 'Enquire' }}
+>
+  <PhotoHero eyebrow={c.mood} title={`${c.name}`} intro={c.tagline} image={hero.image} imageAlt={hero.alt}>
+    <div class="mt-8 flex flex-wrap gap-3">
+      <Button href="#plan" size="lg">
+        {T.start} <Icon name="arrow" class="size-4" />
+      </Button>
+    </div>
+  </PhotoHero>
+
+  <section class="container-site grid gap-12 py-20 lg:grid-cols-[1.1fr_1fr] lg:gap-20">
+    <div>
+      <p class="reveal text-[clamp(1.35rem,1vw+1rem,1.85rem)] leading-snug font-display">{c.intro}</p>
+      <h2 class="reveal mt-12 detail font-sans text-gold-700 dark:text-gold-400">{T.highlights}</h2>
+      <ul class="mt-5 grid gap-4 sm:grid-cols-2">
+        {c.highlights.map((h) => (
+          <li class="reveal flex gap-3 rounded-card bg-surface p-5 shadow-card ring-1 ring-line">
+            <span class="grid size-8 shrink-0 place-items-center rounded-full bg-gold-100 text-gold-700 ring-1 ring-gold-300">
+              <Icon name="check" class="size-4" />
+            </span>
+            <span class="font-medium">{h}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+    <div class="grid grid-cols-2 gap-3 self-start">
+      {gallery.map((g, i) => (
+        <div
+          class:list={[
+            'reveal relative overflow-hidden rounded-media',
+            i === 0 ? 'col-span-2 aspect-[16/10]' : 'aspect-square',
+          ]}
+        >
+          <Media image={g.image} alt={g.alt} sizes="(min-width: 1024px) 40vw, 90vw" />
+        </div>
+      ))}
+    </div>
+  </section>
+
+  {itineraries.length > 0 && (
+    <section class="container-site pb-20" aria-labelledby="routes-heading">
+      <h2 id="routes-heading" class="reveal text-h2">
+        {T.routes}
+      </h2>
+      <div class="mt-10 grid gap-6 xl:grid-cols-2">
+        {itineraries.map((t) => (
+          <TicketCard tour={t} />
+        ))}
+      </div>
+    </section>
+  )}
+
+  <StaysShowcase lang={lang} index="" />
+
+  <section id="plan" class="scroll-mt-24 py-20" aria-labelledby="plan-heading">
+    <div class="container-site grid gap-12 lg:grid-cols-[1fr_1.2fr]">
+      <div>
+        <h2 id="plan-heading" class="text-h2">
+          {T.ask}
+        </h2>
+        <p class="mt-5 max-w-[48ch] text-lg text-muted">{T.askText}</p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <Button
+            href={whatsappLink(
+              ko
+                ? `안녕하세요, ${c.name} 상담을 받고 싶습니다.`
+                : `Hello Paradise Travels, I'm interested in your ${c.name}.`,
+              new URL(path, Astro.site),
+            )}
+            variant="whatsapp"
+            rel="noopener"
+            data-track="whatsapp"
+          >
+            <Icon name="whatsapp" /> {T.wa}
+          </Button>
+        </div>
+        <h3 class="mt-12 detail font-sans text-muted">{T.other}</h3>
+        <ul class="mt-4 flex flex-wrap gap-2">
+          {others.map((o) => (
+            <li>
+              <a
+                href={`${prefix}/tours/${o.id}`}
+                class="inline-flex min-h-11 items-center gap-2 rounded-pill border border-line px-4 text-sm font-medium hover:border-gold-500"
+              >
+                {o[lang].name}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div class="rounded-media bg-surface p-6 shadow-card ring-1 ring-line sm:p-10">
+        <EnquiryForm subject={type.en.name} />
+      </div>
+    </div>
+  </section>
+</PageLayout>

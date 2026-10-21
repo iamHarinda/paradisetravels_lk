@@ -21,7 +21,10 @@ const experiences = (await getEntries('experiences')).sort(byOrder);
     intro="Pick a theme to see where to go, when, and how we can build a trip around it."
     media={false}
   />
-  <section class="container-site grid gap-6 pb-24 sm:grid-cols-2 lg:grid-cols-3">
+  <section class="container-site grid gap-6 pb-24 sm:grid-cols-2 lg:grid-cols-3" aria-labelledby="all-experiences">
+    <h2 id="all-experiences" class="sr-only">
+      All experiences
+    </h2>
     {experiences.map((e) => (
       <PlaceCard
         href={`/experiences/${e.id}`}

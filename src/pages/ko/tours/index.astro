@@ -1,0 +1,32 @@
+---
+import PageLayout from '../../../layouts/PageLayout.astro';
+import PhotoHero from '../../../components/ui/PhotoHero.astro';
+import TourTypeTiles from '../../../components/tours/TourTypeTiles.astro';
+import StaysShowcase from '../../../components/home/StaysShowcase.astro';
+import KoContactBand from '../../../components/ko/KoContactBand.astro';
+import { TOUR_TYPES } from '../../../data/tour-types';
+import { itemListSchema } from '../../../lib/schema-org';
+import { photo } from '../../../lib/photos';
+
+const hero = photo('ella-train');
+---
+
+<PageLayout
+  title="스리랑카 투어 · 패키지 여행 | 파라다이스 트래블스"
+  description="스리랑카 일주 여행, 허니문, 골프 투어, 실론티 투어, 아유르베다 힐링 여행. 전용 차량과 기사가 함께하는 맞춤 스리랑카 패키지를 현지 여행사가 준비합니다."
+  breadcrumbs={[{ name: '투어', href: '/ko/tours' }]}
+  jsonLd={[itemListSchema(TOUR_TYPES.map((t) => ({ name: t.ko.name, path: `/ko/tours/${t.id}` })))]}
+>
+  <PhotoHero
+    eyebrow="스리랑카 투어"
+    title="나만을 위한 *스리랑카 여행*"
+    intro="다섯 가지 방법으로 만나는 스리랑카. 모든 투어는 전용 차량과 기사가 함께하며, 고객님께 맞춰 일정을 만듭니다."
+    image={hero.image}
+    imageAlt={hero.alt}
+  />
+  <TourTypeTiles lang="ko" />
+  <StaysShowcase lang="ko" index="" />
+  <div class="pt-24">
+    <KoContactBand />
+  </div>
+</PageLayout>

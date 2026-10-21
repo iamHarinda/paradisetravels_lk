@@ -1,11 +1,17 @@
 import type { APIRoute } from 'astro';
 import { SITE_ENV } from 'astro:env/server';
 
-// Staging builds block all crawlers; production allows everyone, incl. AI crawlers (docs/06 §7 — owner to confirm).
+// Staging builds block all crawlers; production allows everyone, incl. Naver (Yeti) and AI crawlers (docs/06 §7).
 export const GET: APIRoute = ({ site }) => {
   const body =
     SITE_ENV === 'production'
       ? [
+          // Naver's crawler (Yeti) is named explicitly so Korean search can never be blocked by accident.
+          'User-agent: Yeti',
+          'Allow: /',
+          'Disallow: /api/',
+          'Disallow: /keystatic',
+          '',
           'User-agent: *',
           'Allow: /',
           'Disallow: /api/',

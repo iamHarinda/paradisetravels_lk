@@ -1,15 +1,18 @@
 ---
 import SectionHeading from '../ui/SectionHeading.astro';
 import Button from '../ui/Button.astro';
+import Icon from '../ui/Icon.astro';
 import { getEntries } from '../../lib/content';
-import { SITE } from '../../lib/site';
+import { SITE, whatsappLink } from '../../lib/site';
 
 // Real reviews only, with permission, source and date (docs/05 §7). Until they exist, link to the real profiles.
 interface Props {
   limit?: number;
   index?: string;
+  /** Off on /reviews, where the page hero already says it. */
+  heading?: boolean;
 }
-const { limit = 9, index } = Astro.props;
+const { limit = 9, index, heading = true } = Astro.props;
 const reviews = (await getEntries('testimonials'))
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
   .slice(0, limit);
@@ -17,10 +20,16 @@ const sourceName = { google: 'Google', tripadvisor: 'Tripadvisor', facebook: 'Fa
 const fmt = new Intl.DateTimeFormat('en-GB', { month: 'long', year: 'numeric' });
 ---
 
-<section class="container-site py-24" aria-labelledby="reviews-heading">
-  <SectionHeading index={index} eyebrow="Reviews" title="In our travellers’ *own words.*" id="reviews-heading" />
+<section
+  class:list={['container-site', heading ? 'py-24' : 'pb-24']}
+  aria-labelledby={heading ? 'reviews-heading' : undefined}
+  aria-label={heading ? undefined : 'Reviews'}
+>
+  {heading && (
+    <SectionHeading index={index} eyebrow="Reviews" title="In our travellers’ *own words.*" id="reviews-heading" />
+  )}
   {reviews.length ? (
-    <div class="mt-12 columns-1 gap-6 sm:columns-2 lg:columns-3">
+    <div class:list={['columns-1 gap-6 sm:columns-2 lg:columns-3', heading && 'mt-12']}>
       {reviews.map((r) => (
         <figure class="reveal mb-6 break-inside-avoid rounded-card bg-surface p-6 ring-1 ring-line shadow-card">
           {r.data.rating && (
@@ -45,14 +54,40 @@ const fmt = new Intl.DateTimeFormat('en-GB', { month: 'long', year: 'numeric' })
       ))}
     </div>
   ) : (
-    <div class="reveal mt-10 max-w-2xl rounded-card border border-dashed border-line p-8">
-      <p class="text-muted">
-        We are gathering reviews from recent travellers to show here. In the meantime, read what people say about us on
-        Facebook — or ask us to put you in touch with past clients.
-      </p>
-      <Button href={SITE.facebook} variant="secondary" class="mt-6" rel="noopener">
-        Paradise Travels on Facebook
-      </Button>
+    <div
+      class:list={[
+        'reveal relative grid gap-8 overflow-hidden rounded-media bg-surface p-8 ring-1 ring-line shadow-card sm:p-12 md:grid-cols-[auto_1fr] md:items-center md:gap-12',
+        heading && 'mt-12',
+      ]}
+    >
+      <span
+        class="hidden font-display text-[10rem] leading-[0.6] text-ocean-500/20 select-none md:block dark:text-lagoon-300/25"
+        aria-hidden="true"
+      >
+        &ldquo;
+      </span>
+      <div>
+        <p class="font-display text-[clamp(1.5rem,1.5vw+1rem,2.25rem)] leading-tight">
+          Ask the people who have travelled with us.
+        </p>
+        <p class="mt-4 max-w-[60ch] text-muted">
+          We are gathering reviews from recent travellers to show here. In the meantime, read what people say about us
+          on Facebook — or ask us to put you in touch with past clients.
+        </p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <Button href={SITE.facebook} variant="secondary" rel="noopener">
+            Paradise Travels on Facebook <Icon name="external" class="size-4" />
+          </Button>
+          <Button
+            href={whatsappLink('Hello Paradise Travels, could you put me in touch with a past client for a reference?')}
+            variant="ghost"
+            rel="noopener"
+            data-track="whatsapp"
+          >
+            <Icon name="whatsapp" class="size-4" /> Ask for a reference
+          </Button>
+        </div>
+      </div>
     </div>
   )}
 </section>

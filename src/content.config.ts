@@ -2,6 +2,8 @@ import { defineCollection, reference } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 import { REGION_IDS } from './lib/seasons';
+import { STAY_IDS } from './data/stays';
+import { TOUR_TYPE_IDS } from './data/tour-types';
 
 // Content schemas (docs/08 §5). Keep in sync with keystatic.config.ts.
 
@@ -78,6 +80,7 @@ const tourStyles = z.enum([
   'budget',
   'tea',
   'adventure',
+  'golf',
 ]);
 
 const tours = defineCollection({
@@ -87,6 +90,8 @@ const tours = defineCollection({
       title: z.string(),
       summary: z.string(),
       durationDays: z.number().int().positive(),
+      /** Primary tour type (src/data/tour-types.ts) — the client's five tour lines. */
+      type: z.enum(TOUR_TYPE_IDS).default('round-trips'),
       styles: z.array(tourStyles).default([]),
       regions: z.array(z.enum(REGION_IDS)).default([]),
       destinations: z.array(reference('destinations')).default([]),
@@ -130,31 +135,17 @@ const services = defineCollection({
   }),
 });
 
+// Hotels used for tour stays, grouped by the six stay areas in src/data/stays.ts. No rates are published
+// (CLAUDE.md hard rule 2) — hotels are part of a quoted tour.
 const hotels = defineCollection({
   loader: glob({ pattern: '**/*.json', base: './src/content/hotels' }),
-  schema: ({ image }) =>
-    z.object({
-      name: z.string(),
-      area: z.string(),
-      region: z.enum(REGION_IDS),
-      destination: reference('destinations').nullish(),
-      stars: z.number().int().min(1).max(5).nullish(),
-      type: z.array(z.string()).default([]),
-      // Rate-parity display mode, set per hotel after the owner checks the contract (docs/10 §1).
-      rateDisplay: z.enum(['public', 'package', 'on-request']),
-      priceFromUSD: z.number().positive().nullish(),
-      packageOffer: z.string().nullish(),
-      rooms: z
-        .array(z.object({ name: z.string(), occupancy: z.number().int(), mealPlans: z.array(z.string()).default([]) }))
-        .default([]),
-      deal: z.object({ label: z.string(), validTo: z.coerce.date().nullish() }).nullish(),
-      highlights: z.array(z.string()).default([]),
-      heroImage: image().nullish(),
-      heroAlt: z.string().nullish(),
-      tone,
-      seo,
-      ...workflow,
-    }),
+  schema: z.object({
+    name: z.string(),
+    stay: z.enum(STAY_IDS),
+    town: z.string(),
+    order: z.number().default(100),
+    ...workflow,
+  }),
 });
 
 const guides = defineCollection({

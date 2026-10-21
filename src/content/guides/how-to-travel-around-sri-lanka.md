@@ -7,8 +7,7 @@ published: 2026-10-05
 lastChecked: 2026-10-05
 reviewed: false
 sources: []
-relatedServices:
-  - transport-chauffeur
+relatedServices: []
 relatedTours:
   - sri-lanka-7-day-tour
 relatedDestinations:
@@ -24,7 +23,7 @@ heroAlt: View along the railway tracks from a train in the hill country at dusk
 
 ## Car with driver — the most popular option
 
-Driving is on the left and roads can be busy and slow, so most visitors hire a **car with a driver** rather than self-driving. It is flexible, comfortable and lets you stop wherever you like. See [transport & chauffeur](/services/transport-chauffeur).
+Driving is on the left and roads can be busy and slow, so most visitors hire a **car with a driver** rather than self-driving. It is flexible, comfortable and lets you stop wherever you like. Every [tour we plan](/tours) includes a private car and driver.
 
 ## The train — for the views
 

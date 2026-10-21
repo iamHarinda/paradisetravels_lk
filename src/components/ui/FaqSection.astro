@@ -10,8 +10,8 @@ const { faqs, title = 'Frequently asked questions' } = Astro.props;
 
 {faqs.length > 0 && (
   <section class="container-site py-16" aria-labelledby="faq-heading">
-    <div class="grid gap-10 lg:grid-cols-[1fr_2fr]">
-      <h2 id="faq-heading" class="text-h2">
+    <div class="grid items-start gap-10 lg:grid-cols-[1fr_2fr]">
+      <h2 id="faq-heading" class="text-h2 lg:sticky lg:top-28">
         {title}
       </h2>
       <Accordion items={faqs} />

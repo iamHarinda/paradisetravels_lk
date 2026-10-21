@@ -12,7 +12,7 @@ import {
 } from 'astro:env/server';
 import { SITE, whatsappLink } from '../site';
 
-// Shared lead pipeline for /api/enquiry, /api/rate-request and /api/trip-builder (docs/08 §6):
+// Shared lead pipeline for /api/enquiry and /api/trip-builder (docs/08 §6):
 // validate (zod) → spam checks (honeypot, rate limit, Turnstile) → staff email → traveller confirmation → lead store.
 
 const text = (max = 200) => z.string().trim().max(max);
@@ -36,6 +36,8 @@ const tracking = {
   utm_source: optional(100),
   utm_medium: optional(100),
   utm_campaign: optional(100),
+  /** "ko" when the form was sent from a Korean page — the confirmation email is then in Korean. */
+  language: z.enum(['en', 'ko']).default('en'),
 };
 
 export const enquirySchema = z.object({
@@ -43,19 +45,6 @@ export const enquirySchema = z.object({
   ...tracking,
   subject: optional(150),
   message: text(5000).min(5, 'Please add a short message.'),
-});
-
-export const rateRequestSchema = z.object({
-  ...contactFields,
-  ...tracking,
-  hotel: text(150).min(1),
-  checkIn: z.iso.date('Please choose a check-in date.'),
-  checkOut: z.iso.date('Please choose a check-out date.'),
-  rooms: z.coerce.number().int().min(1).max(50),
-  adults: z.coerce.number().int().min(1).max(100),
-  children: z.coerce.number().int().min(0).max(50).default(0),
-  mealPlan: optional(30),
-  notes: optional(2000),
 });
 
 const list = z
@@ -85,10 +74,9 @@ export const tripBuilderSchema = z.object({
   notes: optional(3000),
 });
 
-export type FormKind = 'enquiry' | 'rate-request' | 'trip-builder';
+export type FormKind = 'enquiry' | 'trip-builder';
 const LABELS: Record<FormKind, string> = {
   enquiry: 'Enquiry',
-  'rate-request': 'Hotel rate request',
   'trip-builder': 'Trip plan request',
 };
 
@@ -181,7 +169,7 @@ function fieldsTable(data: Record<string, unknown>) {
 function layout(title: string, body: string) {
   return `<!doctype html><html><body style="margin:0;background:#F5F9FE;padding:24px;font:15px/1.6 Arial,sans-serif;color:#0b1730">
 <div style="max-width:600px;margin:auto;background:#fff;border-radius:12px;overflow:hidden">
-<div style="background:#071a33;color:#FFFFFF;padding:20px 24px;font:700 20px Georgia,serif">${esc(SITE.name)}</div>
+<div style="background:#0a1f44;color:#FFFFFF;padding:20px 24px;font:700 20px Georgia,serif;border-bottom:3px solid #d9a94a">${esc(SITE.name)}</div>
 <div style="padding:24px"><h1 style="font:600 22px Georgia,serif;margin:0 0 16px">${esc(title)}</h1>${body}</div>
 <div style="padding:16px 24px;background:#E8F0FB;font-size:12px;color:#51607a">${esc(SITE.legalName)} · ${esc(SITE.addressLine)} · ${esc(SITE.phone)}</div>
 </div></body></html>`;
@@ -243,6 +231,7 @@ export async function handleForm<S extends z.ZodType<Record<string, unknown>>>(
     return errorResponse(request, 422, 'Please check the highlighted fields.', fieldErrors);
   }
   const data = parsed.data as Record<string, unknown> & {
+    language?: 'en' | 'ko';
     name: string;
     email: string;
     phone?: string;
@@ -263,16 +252,29 @@ export async function handleForm<S extends z.ZodType<Record<string, unknown>>>(
         `${waDigits ? `<p><a href="https://wa.me/${waDigits}" style="color:#0e3b7d;font-weight:700">Reply on WhatsApp</a></p>` : ''}${fieldsTable(lead)}`,
       ),
     });
-    await sendMail({
-      to: data.email,
-      subject: `We’ve received your request — ${SITE.name}`,
-      text: `Hello ${data.name},\n\nThank you — we have received your ${LABELS[kind].toLowerCase()} and will reply as soon as possible.\n\nIf it is urgent, message us on WhatsApp: ${SITE.phone}\n\n${SITE.legalName}`,
-      html: layout(
-        `Thank you, ${data.name}`,
-        `<p>We have received your ${esc(LABELS[kind].toLowerCase())} and a member of our Colombo team will reply as soon as possible.</p>
-<p>If it is urgent, <a href="${esc(whatsappLink())}" style="color:#0e3b7d;font-weight:700">message us on WhatsApp</a> (${esc(SITE.phone)}).</p>`,
-      ),
-    });
+    await sendMail(
+      data.language === 'ko'
+        ? {
+            to: data.email,
+            subject: `문의가 접수되었습니다 — ${SITE.name}`,
+            text: `${data.name}님, 안녕하세요.\n\n문의해 주셔서 감사합니다. 콜롬보 팀이 확인 후 최대한 빨리 답변 드리겠습니다.\n\n급한 경우 카카오톡 또는 왓츠앱(${SITE.phone})으로 연락 주세요.\n\n${SITE.legalName}`,
+            html: layout(
+              `${data.name}님, 감사합니다`,
+              `<p>문의가 접수되었습니다. 콜롬보 팀이 확인 후 최대한 빨리 답변 드리겠습니다.</p>
+<p>급한 경우 카카오톡 또는 <a href="${esc(whatsappLink('안녕하세요, 스리랑카 여행 상담을 받고 싶습니다.'))}" style="color:#123a7a;font-weight:700">왓츠앱</a>(${esc(SITE.phone)})으로 연락 주세요.</p>`,
+            ),
+          }
+        : {
+            to: data.email,
+            subject: `We’ve received your request — ${SITE.name}`,
+            text: `Hello ${data.name},\n\nThank you — we have received your ${LABELS[kind].toLowerCase()} and will reply as soon as possible.\n\nIf it is urgent, message us on WhatsApp: ${SITE.phone}\n\n${SITE.legalName}`,
+            html: layout(
+              `Thank you, ${data.name}`,
+              `<p>We have received your ${esc(LABELS[kind].toLowerCase())} and a member of our Colombo team will reply as soon as possible.</p>
+<p>If it is urgent, <a href="${esc(whatsappLink())}" style="color:#123a7a;font-weight:700">message us on WhatsApp</a> (${esc(SITE.phone)}).</p>`,
+            ),
+          },
+    );
     if (LEAD_WEBHOOK_URL) {
       await fetch(LEAD_WEBHOOK_URL, {
         method: 'POST',
@@ -289,11 +291,11 @@ export async function handleForm<S extends z.ZodType<Record<string, unknown>>>(
     );
   }
 
-  return success(request, kind);
+  return success(request, kind, data.language);
 }
 
-function success(request: Request, kind: FormKind) {
-  const location = `/thank-you?type=${kind}`;
+function success(request: Request, kind: FormKind, language: 'en' | 'ko' = 'en') {
+  const location = `${language === 'ko' ? '/ko' : ''}/thank-you?type=${kind}`;
   if (wantsJson(request)) return Response.json({ ok: true, redirect: location });
   return new Response(null, { status: 303, headers: { Location: location } });
 }

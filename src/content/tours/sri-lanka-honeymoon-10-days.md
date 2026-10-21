@@ -1,5 +1,6 @@
 ---
 title: Sri Lanka Honeymoon
+type: honeymoon
 durationDays: 10
 order: 6
 tone: ocean

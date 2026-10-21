@@ -5,7 +5,6 @@ import { getEntries, byOrder } from '../../lib/content';
 import PageLayout from '../../layouts/PageLayout.astro';
 import TicketCard from '../../components/tours/TicketCard.astro';
 import PageHero from '../../components/ui/PageHero.astro';
-import Card from '../../components/ui/Card.astro';
 import Chip from '../../components/ui/Chip.astro';
 import Icon from '../../components/ui/Icon.astro';
 import MonthBar from '../../components/ui/MonthBar.astro';
@@ -36,9 +35,11 @@ const others = (await getEntries('tours'))
   .slice(0, 4);
 const path = `/tours/${entry.id}`;
 const page = new URL(path, Astro.site);
+const enquireHref = `/plan-your-trip?tour=${encodeURIComponent(t.title)}&days=${t.durationDays}`;
 ---
 
 <PageLayout
+  primaryAction={{ href: enquireHref, label: 'Enquire' }}
   title={t.seo.title}
   description={t.seo.description}
   breadcrumbs={[
@@ -85,7 +86,7 @@ const page = new URL(path, Astro.site);
           <ItineraryTimeline days={t.days} />
           {destinations.length > 0 && (
             <RouteMap
-              class="order-first rounded-media bg-white p-4 shadow-card ring-1 ring-line md:order-last md:self-start"
+              class="order-first mx-auto w-full max-w-[15rem] rounded-media bg-white p-4 shadow-card ring-1 ring-line md:order-last md:max-w-none md:self-start"
               stops={destinations.map((d) => ({ title: d.data.title, coords: d.data.coords }))}
             />
           )}
@@ -131,7 +132,7 @@ const page = new URL(path, Astro.site);
         <p class="mt-1 text-2xl font-semibold">{tourPrice(t)}</p>
         {t.priceNote && <p class="mt-2 text-sm text-muted">{t.priceNote}</p>}
         <a
-          href={`/plan-your-trip?tour=${encodeURIComponent(t.title)}&days=${t.durationDays}`}
+          href={enquireHref}
           class="mt-6 flex min-h-12 items-center justify-center rounded-pill bg-cta font-semibold text-cta-text"
         >
           Enquire / customise
@@ -153,18 +154,17 @@ const page = new URL(path, Astro.site);
       <h2 id="hotels-heading" class="text-h2">
         Hotels on this route
       </h2>
-      <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <ul class="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {hotels.map((h) => (
-          <Card
-            href={`/hotel-deals/${h.id}`}
-            title={h.data.name}
-            eyebrow={h.data.area}
-            tone={h.data.tone}
-            image={h.data.heroImage}
-            imageAlt={h.data.heroAlt}
-          />
+          <li class="flex items-start gap-3 rounded-card bg-surface p-4 shadow-card ring-1 ring-line">
+            <Icon name="bed" class="mt-0.5 size-5 shrink-0 text-gold-600 dark:text-gold-400" />
+            <span>
+              <span class="block font-semibold">{h.data.name}</span>
+              <span class="block text-sm text-muted">{h.data.town}</span>
+            </span>
+          </li>
         ))}
-      </div>
+      </ul>
     </section>
   )}
 
@@ -182,17 +182,4 @@ const page = new URL(path, Astro.site);
   </section>
 
   <CtaBlock tone={t.tone === 'sand' ? 'ocean' : t.tone} />
-
-  <!-- Sticky enquire bar (mobile, above the contact bar) -->
-  <div class="fixed inset-x-3 bottom-[5.25rem] z-30 md:hidden">
-    <a
-      href={`/plan-your-trip?tour=${encodeURIComponent(t.title)}&days=${t.durationDays}`}
-      class="flex min-h-12 items-center justify-between rounded-pill bg-ocean-900 px-5 text-sm font-semibold text-white shadow-xl"
-    >
-      <span>
-        {t.durationDays} days · {tourPrice(t)}
-      </span>
-      <span class="text-lagoon-300">Enquire →</span>
-    </a>
-  </div>
 </PageLayout>

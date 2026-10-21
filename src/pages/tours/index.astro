@@ -1,7 +1,7 @@
 ---
 import PageLayout from '../../layouts/PageLayout.astro';
-import PageHero from '../../components/ui/PageHero.astro';
-import Card from '../../components/ui/Card.astro';
+import PhotoHero from '../../components/ui/PhotoHero.astro';
+import TourTypeTiles from '../../components/tours/TourTypeTiles.astro';
 import TicketCard from '../../components/tours/TicketCard.astro';
 import CtaBlock from '../../components/ui/CtaBlock.astro';
 import { getEntries, byOrder } from '../../lib/content';
@@ -9,7 +9,7 @@ import { itemListSchema } from '../../lib/schema-org';
 import { STYLE_LABELS } from '../../lib/labels';
 import { photo } from '../../lib/photos';
 
-const dayTours = photo('minneriya');
+const hero = photo('ella-train');
 
 const tours = (await getEntries('tours')).sort((a, b) => a.data.durationDays - b.data.durationDays || byOrder(a, b));
 const styles = [...new Set(tours.flatMap((t) => t.data.styles))];
@@ -23,16 +23,28 @@ const durationOf = (n: number) => durations.find((d) => d.test(n))!.id;
 
 <PageLayout
   title="Sri Lanka Tour Packages & Itineraries | Paradise"
-  description="Private Sri Lanka tour packages from 3 to 14 days: culture, tea country, wildlife, beaches, honeymoons and Ayurveda. Every itinerary can be tailored to you."
+  description="Private Sri Lanka tours: round trips from 3 to 14 days, honeymoon tours, golf packages, tea tours and Ayurveda tours. Every itinerary is tailored to you."
   breadcrumbs={[{ name: 'Tours', href: '/tours' }]}
   jsonLd={[itemListSchema(tours.map((t) => ({ name: t.data.title, path: `/tours/${t.id}` })))]}
 >
-  <PageHero
+  <PhotoHero
     eyebrow="Tours"
-    title="Sri Lanka tours, *built around you*"
-    intro="Every itinerary is private and a starting point — change the days, the hotels or the pace. Filter by length and style."
-    media={false}
+    title="Sri Lanka tours, *built around you.*"
+    intro="Five ways to see the island — every one private, with your own car and driver, and shaped around you."
+    image={hero.image}
+    imageAlt={hero.alt}
   />
+
+  <TourTypeTiles />
+
+  <section class="container-site pb-6">
+    <h2 class="reveal text-h2">
+      Sample <em class="accent">itineraries</em>
+    </h2>
+    <p class="reveal mt-4 max-w-[60ch] text-lg text-muted">
+      Starting points, not fixed packages — change the days, the hotels or the pace. Filter by length and style.
+    </p>
+  </section>
 
   <section class="container-site pb-24" data-filters>
     <form
@@ -72,18 +84,6 @@ const durationOf = (n: number) => durations.find((d) => d.test(n))!.id;
           <TicketCard tour={t} class="h-full" />
         </li>
       ))}
-      <li data-duration="short" data-styles="">
-        <Card
-          href="/tours/day-tours"
-          title="Day tours & outings"
-          text="One-day escapes from Colombo — wildlife, rafting, beaches or culture."
-          badge="1 day"
-          tone="wild"
-          image={dayTours.image}
-          imageAlt={dayTours.alt}
-          class="h-full"
-        />
-      </li>
     </ul>
   </section>
 

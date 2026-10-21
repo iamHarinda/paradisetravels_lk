@@ -2,12 +2,14 @@
 import { TURNSTILE_SITE_KEY } from 'astro:env/client';
 import Button from '../ui/Button.astro';
 import { SITE } from '../../lib/site';
+import { langFromPath } from '../../lib/i18n';
 
 // Honeypot + Turnstile + tracking fields + submit + live error region, shared by every lead form.
 interface Props {
   submitLabel?: string;
 }
 const { submitLabel = 'Send request' } = Astro.props;
+const ko = langFromPath(Astro.url.pathname) === 'ko';
 ---
 
 <div class="absolute -left-[9999px]" aria-hidden="true">
@@ -25,15 +27,29 @@ const { submitLabel = 'Send request' } = Astro.props;
   <Button type="submit" size="lg" data-submit>
     {submitLabel}
   </Button>
-  <p class="text-sm text-muted">
-    We use your details only to reply to you — see our{' '}
-    <a href="/privacy" class="underline">
-      privacy policy
-    </a>
-    . Prefer chat?{' '}
-    <a href={SITE.whatsapp} class="underline" rel="noopener">
-      WhatsApp us
-    </a>
-    .
-  </p>
+  {ko ? (
+    <p class="text-sm text-muted">
+      보내주신 정보는 답변 목적으로만 사용합니다 —{' '}
+      <a href="/privacy" class="underline" lang="en">
+        Privacy policy
+      </a>
+      . 채팅이 편하시면{' '}
+      <a href={SITE.whatsapp} class="underline" rel="noopener">
+        왓츠앱
+      </a>{' '}
+      또는 카카오톡({SITE.phone})으로 연락 주세요.
+    </p>
+  ) : (
+    <p class="text-sm text-muted">
+      We use your details only to reply to you — see our{' '}
+      <a href="/privacy" class="underline">
+        privacy policy
+      </a>
+      . Prefer chat?{' '}
+      <a href={SITE.whatsapp} class="underline" rel="noopener">
+        WhatsApp us
+      </a>
+      .
+    </p>
+  )}
 </div>

@@ -34,7 +34,10 @@ const path = `/travel-guide/category/${Astro.params.category}`;
   ]}
 >
   <PageHero eyebrow="Travel Guide" title={label} media={false} />
-  <section class="container-site pb-24">
+  <section class="container-site pb-24" aria-labelledby="category-guides">
+    <h2 id="category-guides" class="sr-only">
+      {label} guides
+    </h2>
     <GuideGrid guides={guides} />
   </section>
 </PageLayout>

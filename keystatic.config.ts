@@ -1,4 +1,6 @@
 import { config, collection, fields } from '@keystatic/core';
+import { TOUR_TYPES } from './src/data/tour-types';
+import { STAYS, STAY_IDS } from './src/data/stays';
 
 // Keystatic CMS (docs/08 §1). Local storage while developing; GitHub mode in production builds, so edits
 // commit to the repo and trigger an auto-deploy. GitHub mode needs the KEYSTATIC_* env vars (see README).
@@ -143,6 +145,11 @@ export default config({
         title: fields.slug({ name: { label: 'Title' } }),
         summary: fields.text({ label: 'Summary', multiline: true }),
         durationDays: fields.integer({ label: 'Duration (days)', validation: { min: 1 } }),
+        type: fields.select({
+          label: 'Tour type',
+          options: TOUR_TYPES.map((t) => ({ label: t.en.name, value: t.id })),
+          defaultValue: 'round-trips',
+        }),
         styles: fields.multiselect({
           label: 'Styles',
           options: [
@@ -156,6 +163,7 @@ export default config({
             'budget',
             'tea',
             'adventure',
+            'golf',
           ].map((v) => ({ label: v, value: v })),
         }),
         regions: fields.multiselect({ label: 'Regions', options: REGIONS }),
@@ -216,52 +224,19 @@ export default config({
       },
     }),
     hotels: collection({
-      label: 'Hotels',
+      label: 'Hotels (tour stays)',
       path: 'src/content/hotels/*',
       slugField: 'name',
       format: { data: 'json' },
       schema: {
         name: fields.slug({ name: { label: 'Hotel name' } }),
-        area: fields.text({ label: 'Area' }),
-        region: fields.select({ label: 'Region', options: REGIONS, defaultValue: 'south' }),
-        destination: fields.relationship({ label: 'Nearest destination page', collection: 'destinations' }),
-        stars: fields.integer({ label: 'Stars', validation: { min: 1, max: 5 } }),
-        type: fields.array(fields.text({ label: 'Type' }), {
-          label: 'Type (beach, boutique, …)',
-          itemLabel: (p) => p.value,
+        stay: fields.select({
+          label: 'Area',
+          options: STAY_IDS.map((id) => ({ label: STAYS[id].name, value: id })),
+          defaultValue: 'negombo',
         }),
-        rateDisplay: fields.select({
-          label: 'Rate display — check the hotel contract first (rate parity)',
-          options: [
-            { label: 'On request (no price shown)', value: 'on-request' },
-            { label: 'Package price only', value: 'package' },
-            { label: 'Public "from" price', value: 'public' },
-          ],
-          defaultValue: 'on-request',
-        }),
-        priceFromUSD: fields.integer({ label: 'Public price from (USD / night) — only if contract allows' }),
-        packageOffer: fields.text({ label: 'Package offer text (package mode)' }),
-        rooms: fields.array(
-          fields.object({
-            name: fields.text({ label: 'Room' }),
-            occupancy: fields.integer({ label: 'Max guests', defaultValue: 2 }),
-            mealPlans: fields.multiselect({
-              label: 'Meal plans',
-              options: ['RO', 'BB', 'HB', 'FB', 'AI'].map((v) => ({ label: v, value: v })),
-            }),
-          }),
-          { label: 'Rooms', itemLabel: (p) => p.fields.name.value },
-        ),
-        deal: fields.object(
-          { label: fields.text({ label: 'Deal (real offers only)' }), validTo: fields.date({ label: 'Valid until' }) },
-          { label: 'Deal' },
-        ),
-        highlights: fields.array(fields.text({ label: 'Highlight' }), {
-          label: 'Highlights',
-          itemLabel: (p) => p.value,
-        }),
-        ...hero(),
-        seo,
+        town: fields.text({ label: 'Town' }),
+        order: fields.integer({ label: 'Order within the area', defaultValue: 100 }),
         ...workflow,
       },
     }),

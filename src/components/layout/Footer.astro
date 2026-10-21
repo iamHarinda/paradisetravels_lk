@@ -2,39 +2,57 @@
 import Logo from './Logo.astro';
 import Icon from '../ui/Icon.astro';
 import { SITE, whatsappLink } from '../../lib/site';
+import { TOUR_TYPES } from '../../data/tour-types';
+import { MARKETS, flagSrc } from '../../data/markets';
+import { langFromPath } from '../../lib/i18n';
 
-const columns = [
-  {
-    title: 'Explore',
-    links: [
-      ['Destinations', '/destinations'],
-      ['Experiences', '/experiences'],
-      ['Tours', '/tours'],
-      ['Hotel Deals', '/hotel-deals'],
-      ['Travel Guide', '/travel-guide'],
-    ],
-  },
-  {
-    title: 'Services',
-    links: [
-      ['Flight tickets', '/services/flight-tickets'],
-      ['Visa & ETA help', '/services/visa-assistance'],
-      ['Transport & chauffeur', '/services/transport-chauffeur'],
-      ['Conferences & events', '/services/conferences-mice'],
-      ['All services', '/services'],
-    ],
-  },
-  {
-    title: 'Company',
-    links: [
-      ['About us', '/about'],
-      ['Reviews', '/reviews'],
-      ['FAQ', '/faq'],
-      ['Contact', '/contact'],
-      ['Plan your trip', '/plan-your-trip'],
-    ],
-  },
-];
+const ko = langFromPath(Astro.url.pathname) === 'ko';
+const columns = ko
+  ? [
+      { title: '투어', links: TOUR_TYPES.map((t) => [t.ko.name, `/ko/tours/${t.id}`]) },
+      {
+        title: '서비스',
+        links: [
+          ['비자 상담', '/ko/visa'],
+          ['항공권', '/ko/air-tickets'],
+          ['숙소', '/ko/hotels'],
+          ['문의', '/ko/contact'],
+        ],
+      },
+      {
+        title: 'English',
+        links: [
+          ['Destinations', '/destinations'],
+          ['Travel guide', '/travel-guide'],
+          ['About us', '/about'],
+          ['English home', '/'],
+        ],
+      },
+    ]
+  : [
+      { title: 'Tours', links: [...TOUR_TYPES.map((t) => [t.en.name, `/tours/${t.id}`]), ['All tours', '/tours']] },
+      {
+        title: 'Services',
+        links: [
+          ['Visa consultation', '/services/visa-consultation'],
+          ['Air ticketing', '/services/air-ticketing'],
+          ['Hotels we use', '/hotels'],
+          ['Plan your trip', '/plan-your-trip'],
+        ],
+      },
+      {
+        title: 'Explore',
+        links: [
+          ['Destinations', '/destinations'],
+          ['Experiences', '/experiences'],
+          ['Travel guide', '/travel-guide'],
+          ['About us', '/about'],
+          ['FAQ', '/faq'],
+          ['Contact', '/contact'],
+          ['한국어', '/ko'],
+        ],
+      },
+    ];
 const legal = [
   ['Terms', '/terms'],
   ['Privacy', '/privacy'],
@@ -43,13 +61,15 @@ const legal = [
 ];
 ---
 
-<footer class="on-dark overflow-hidden bg-ocean-900 text-white/80">
+<footer class="on-dark overflow-hidden bg-ocean-950 text-white/80">
+  <div class="gold-rule" aria-hidden="true"></div>
   <div class="container-site grid gap-12 py-16 lg:grid-cols-[1.4fr_repeat(3,1fr)]">
     <div>
-      <Logo class="text-white [&>span:first-child]:bg-white/10" />
+      <Logo href={ko ? '/ko' : '/'} />
       <p class="mt-4 max-w-sm text-sm">
-        {SITE.legalName}. A Colombo travel agency since {SITE.foundingYear} — tours, partner hotel rates, flights,
-        visas, transport, guides, events and Ayurveda.
+        {ko
+          ? `${SITE.legalName}. ${SITE.foundingYear}년부터 콜롬보에서 스리랑카 투어, 비자 상담, 항공권을 준비해 온 현지 여행사입니다.`
+          : `${SITE.legalName}. A Colombo travel agency since ${SITE.foundingYear} — Sri Lanka tours, visa consultation and air tickets.`}
       </p>
       <address class="mt-6 space-y-2 text-sm not-italic">
         <a href={SITE.mapsUrl} class="flex gap-2 hover:text-white" rel="noopener">
@@ -62,7 +82,7 @@ const legal = [
         </a>
         <a href={whatsappLink()} class="flex gap-2 hover:text-white" rel="noopener" data-track="whatsapp">
           <Icon name="whatsapp" class="mt-0.5 size-4 shrink-0" />
-          WhatsApp & KakaoTalk: {SITE.phone}
+          {ko ? '왓츠앱 · 카카오톡' : 'WhatsApp & KakaoTalk'}: {SITE.phone}
         </a>
         <a href={`mailto:${SITE.email}`} class="flex gap-2 hover:text-white" data-track="email">
           <Icon name="mail" class="mt-0.5 size-4 shrink-0" />
@@ -72,7 +92,7 @@ const legal = [
     </div>
     {columns.map((col) => (
       <nav aria-label={col.title}>
-        <p class="font-semibold text-white">{col.title}</p>
+        <p class="detail font-sans text-gold-300">{col.title}</p>
         <ul class="mt-4 space-y-1 text-sm">
           {col.links.map(([label, href]) => (
             <li>
@@ -85,8 +105,26 @@ const legal = [
       </nav>
     ))}
   </div>
+  <div class="container-site flex flex-wrap items-center gap-x-4 gap-y-3 pb-10">
+    <p class="detail text-gold-300">{ko ? '주요 고객 국가' : 'Welcoming travellers from'}</p>
+    <ul class="flex flex-wrap gap-2">
+      {MARKETS.map((m) => (
+        <li>
+          <img
+            src={flagSrc(m.code)}
+            alt={ko ? m.nameKo : m.name}
+            title={ko ? m.nameKo : m.name}
+            width="24"
+            height="18"
+            loading="lazy"
+            class="h-[18px] w-6 rounded-[2px] object-cover"
+          />
+        </li>
+      ))}
+    </ul>
+  </div>
   <p
-    class="pointer-events-none -mb-[0.18em] text-center font-display text-[9.5vw] leading-none font-semibold tracking-[-0.02em] whitespace-nowrap text-transparent select-none [-webkit-text-stroke:1px_rgb(147_197_253/0.3)]"
+    class="pointer-events-none -mb-[0.18em] text-center font-display text-[9.5vw] leading-none font-semibold tracking-[-0.02em] whitespace-nowrap text-transparent select-none [-webkit-text-stroke:1px_rgb(217_169_74/0.35)]"
     aria-hidden="true"
   >
     Paradise Travels
@@ -104,6 +142,11 @@ const legal = [
             </a>
           </li>
         ))}
+        <li>
+          <a href="/privacy" class="hover:text-white" data-consent-reopen>
+            {ko ? '쿠키 설정' : 'Cookie settings'}
+          </a>
+        </li>
         <li>
           <a href={SITE.facebook} class="hover:text-white" rel="noopener">
             Facebook

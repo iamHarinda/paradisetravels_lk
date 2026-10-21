@@ -1,5 +1,6 @@
 ---
 title: Classic Sri Lanka in 7 Days
+type: round-trips
 durationDays: 7
 order: 3
 tone: heritage

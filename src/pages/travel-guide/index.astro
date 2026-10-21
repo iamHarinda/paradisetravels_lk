@@ -20,22 +20,28 @@ const categories = Object.keys(GUIDE_CATEGORIES).filter((c) => guides.some((g) =
 >
   <PageHero
     eyebrow="Travel Guide"
-    title="Know *before* you go"
+    title="Know *before* | you go"
     intro="Honest, practical guides from people who live here — with the date we last checked the facts and where they came from."
     media={false}
   >
-    <nav class="mt-8 flex flex-wrap gap-2" aria-label="Guide categories">
+    <nav
+      class="-mx-4 mt-8 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0 [&::-webkit-scrollbar]:hidden"
+      aria-label="Guide categories"
+    >
       {categories.map((c) => (
         <a
           href={`/travel-guide/category/${c}`}
-          class="inline-flex min-h-10 items-center rounded-pill border border-line px-4 text-sm hover:border-primary"
+          class="inline-flex min-h-11 shrink-0 items-center rounded-pill border border-line px-4 text-sm whitespace-nowrap hover:border-primary"
         >
           {GUIDE_CATEGORIES[c]}
         </a>
       ))}
     </nav>
   </PageHero>
-  <section class="container-site pb-24">
+  <section class="container-site pb-24" aria-labelledby="all-guides">
+    <h2 id="all-guides" class="sr-only">
+      All guides
+    </h2>
     <GuideGrid guides={guides} />
   </section>
 </PageLayout>

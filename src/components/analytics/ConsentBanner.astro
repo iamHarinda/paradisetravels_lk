@@ -1,0 +1,99 @@
+---
+import { SITE_ENV } from 'astro:env/server';
+import { langFromPath } from '../../lib/i18n';
+
+// Small, non-blocking consent card (bottom-left; above the phone contact bar). Shown only while the choice is unset
+// (html[data-consent="unset"], set by Analytics.astro before first paint) — so no layout shift and no flash.
+const enabled = SITE_ENV === 'production';
+const ko = langFromPath(Astro.url.pathname) === 'ko';
+const T = ko
+  ? {
+      label: '쿠키 설정',
+      text: '사이트 개선을 위해 Google Analytics와 Microsoft Clarity 쿠키를 사용해도 될까요? 동의하지 않아도 사이트는 그대로 이용할 수 있습니다.',
+      more: '개인정보 처리방침',
+      yes: '동의',
+      no: '거부',
+    }
+  : {
+      label: 'Cookie choice',
+      text: 'May we use Google Analytics and Microsoft Clarity cookies to understand how the site is used and improve it? The site works the same either way.',
+      more: 'Privacy policy',
+      yes: 'Accept',
+      no: 'Decline',
+    };
+---
+
+{enabled && (
+  <section class="consent" aria-label={T.label} data-consent-banner>
+    <p class="text-sm">
+      {T.text}{' '}
+      <a href="/privacy" class="font-semibold underline" lang={ko ? 'en' : undefined}>
+        {T.more}
+      </a>
+    </p>
+    <div class="mt-4 flex gap-2">
+      <button type="button" class="consent-btn consent-yes" data-consent-choice="granted">
+        {T.yes}
+      </button>
+      <button type="button" class="consent-btn" data-consent-choice="denied">
+        {T.no}
+      </button>
+    </div>
+  </section>
+)}
+
+<style>
+  .consent {
+    display: none;
+    position: fixed;
+    z-index: 45;
+    left: 0.75rem;
+    right: 0.75rem;
+    bottom: 5.5rem;
+    max-width: 26rem;
+    border-radius: var(--radius-media);
+    background: var(--c-ocean-900);
+    color: #fff;
+    padding: 1.25rem;
+    box-shadow: 0 24px 48px -16px rgb(0 0 0 / 0.5);
+    border: 1px solid rgb(217 169 74 / 0.45);
+  }
+  @media (width >= 48rem) {
+    .consent {
+      left: 1.5rem;
+      right: auto;
+      bottom: 1.5rem;
+    }
+  }
+  :global(html[data-consent='unset']) .consent {
+    display: block;
+  }
+  .consent-btn {
+    min-height: 2.75rem;
+    border-radius: 999px;
+    padding: 0 1.25rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border: 1px solid rgb(255 255 255 / 0.4);
+  }
+  .consent-yes {
+    background: var(--c-gold-500);
+    border-color: var(--c-gold-500);
+    color: var(--c-ocean-900);
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-consent-choice]').forEach((b) =>
+    b.addEventListener('click', () => {
+      (window as unknown as { ptConsent?: (v: string) => void }).ptConsent?.(b.dataset.consentChoice!);
+    }),
+  );
+  // "Cookie settings" links (footer) reopen the card.
+  document.querySelectorAll('[data-consent-reopen]').forEach((a) =>
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      document.documentElement.dataset.consent = 'unset';
+    }),
+  );
+</script>

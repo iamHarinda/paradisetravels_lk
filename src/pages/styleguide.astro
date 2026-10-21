@@ -9,7 +9,6 @@ import MonthBar from '../components/ui/MonthBar.astro';
 import Icon from '../components/ui/Icon.astro';
 import { ICONS, type IconName } from '../lib/icons';
 import Breadcrumbs from '../components/layout/Breadcrumbs.astro';
-import RateDisplay from '../components/hotels/RateDisplay.astro';
 import ItineraryTimeline from '../components/tours/ItineraryTimeline.astro';
 
 // Internal component reference (docs/12 Phase 1). noindex, excluded from the sitemap.
@@ -125,12 +124,6 @@ const colours = [
       <div>
         <h2 class="text-h2">Month bar</h2>
         <MonthBar class="mt-6" bestMonths={[12, 1, 2, 3, 4]} />
-        <h2 class="mt-12 text-h2">Rate display</h2>
-        <div class="mt-6 space-y-4">
-          <RateDisplay mode="public" priceFromUSD={85} />
-          <RateDisplay mode="package" packageOffer="3 nights + transfers — example only" />
-          <RateDisplay mode="on-request" />
-        </div>
       </div>
     </section>
 

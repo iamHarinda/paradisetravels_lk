@@ -1,5 +1,6 @@
 ---
 title: Wildlife Safari
+type: round-trips
 durationDays: 6
 order: 8
 tone: wild

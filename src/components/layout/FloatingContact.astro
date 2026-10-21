@@ -1,22 +1,24 @@
 ---
 import Icon from '../ui/Icon.astro';
 import { SITE, whatsappLink } from '../../lib/site';
+import { langFromPath } from '../../lib/i18n';
 
 // Desktop floating contact (docs/04 §5.10): one button expanding to WhatsApp / KakaoTalk / Email / Call.
 // Pure <details> — no third-party script. KakaoTalk links to the phone number until the Channel URL exists.
 const page = new URL(Astro.url.pathname, Astro.site);
+const ko = langFromPath(Astro.url.pathname) === 'ko';
 ---
 
 <details class="fab group fixed right-6 bottom-6 z-40 hidden md:block">
-  <summary class="ml-auto grid size-14 list-none place-items-center rounded-pill bg-ocean-500 text-white shadow-2xl transition-transform hover:scale-105 [&::-webkit-details-marker]:hidden">
+  <summary class="ml-auto grid size-14 list-none place-items-center rounded-pill bg-ocean-900 text-gold-300 shadow-2xl ring-2 ring-gold-500 transition-transform hover:scale-105 [&::-webkit-details-marker]:hidden">
     <Icon name="chat" class="size-6 group-open:hidden" />
     <Icon name="close" class="hidden size-6 group-open:block" />
-    <span class="sr-only">Contact us</span>
+    <span class="sr-only">{ko ? '문의하기' : 'Contact us'}</span>
   </summary>
   <ul class="absolute right-0 bottom-16 w-64 space-y-1 rounded-media bg-surface p-3 text-sm shadow-2xl ring-1 ring-line">
     <li>
       <a
-        href={whatsappLink(undefined, page)}
+        href={whatsappLink(ko ? '안녕하세요, 스리랑카 여행 상담을 받고 싶습니다.' : undefined, page)}
         rel="noopener"
         class="flex items-center gap-3 rounded-lg px-3 py-3 hover:bg-sky-100 dark:hover:bg-white/5"
         data-track="whatsapp"
@@ -30,7 +32,7 @@ const page = new URL(Astro.url.pathname, Astro.site);
         class="flex items-center gap-3 rounded-lg px-3 py-3 hover:bg-sky-100 dark:hover:bg-white/5"
         data-track="kakao"
       >
-        <Icon name="chat" class="size-5 text-primary" /> KakaoTalk: {SITE.phone}
+        <Icon name="kakao" class="size-5 text-primary" /> {ko ? '카카오톡' : 'KakaoTalk'}: {SITE.phone}
       </a>
     </li>
     <li>
@@ -39,7 +41,7 @@ const page = new URL(Astro.url.pathname, Astro.site);
         class="flex items-center gap-3 rounded-lg px-3 py-3 hover:bg-sky-100 dark:hover:bg-white/5"
         data-track="email"
       >
-        <Icon name="mail" class="size-5 text-primary" /> Email us
+        <Icon name="mail" class="size-5 text-primary" /> {ko ? '이메일' : 'Email us'}
       </a>
     </li>
     <li>
@@ -48,7 +50,7 @@ const page = new URL(Astro.url.pathname, Astro.site);
         class="flex items-center gap-3 rounded-lg px-3 py-3 hover:bg-sky-100 dark:hover:bg-white/5"
         data-track="phone"
       >
-        <Icon name="phone" class="size-5 text-primary" /> Call {SITE.phone}
+        <Icon name="phone" class="size-5 text-primary" /> {ko ? '전화' : 'Call'} {SITE.phone}
       </a>
     </li>
   </ul>

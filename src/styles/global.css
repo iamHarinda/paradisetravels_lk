@@ -1,15 +1,50 @@
 @import 'tailwindcss';
 @import './tokens.css';
 
+/* Metric-matched stand-in for Fraunces while it loads (astro.config.mjs). Sized against real headlines: Astro's
+   automatic 127% made the fallback 8–14% wider than Fraunces and re-wrapped H1s; ascent/descent are rescaled so
+   line boxes keep the same height. */
+@font-face {
+  font-family: 'Fraunces Fallback';
+  src: local('Times New Roman'), local('TimesNewRomanPSMT'), local('Georgia');
+  size-adjust: 114%;
+  ascent-override: 85.8%;
+  descent-override: 22.4%;
+  line-gap-override: 0%;
+}
+
+/* Platform Korean Gothic, Hangul + CJK punctuation only (see :lang(ko) rules). */
+@font-face {
+  font-family: 'KR Gothic';
+  src:
+    local('AppleSDGothicNeo-Regular'), local('Apple SD Gothic Neo'), local('Malgun Gothic'),
+    local('NotoSansKR-Regular'), local('Noto Sans KR');
+  font-weight: 100 500;
+  unicode-range: U+1100-11FF, U+3000-303F, U+3130-318F, U+A960-A97F, U+AC00-D7AF, U+D7B0-D7FF, U+FF00-FFEF;
+}
+@font-face {
+  font-family: 'KR Gothic';
+  src:
+    local('AppleSDGothicNeo-Bold'), local('Malgun Gothic Bold'), local('MalgunGothicBold'), local('NotoSansKR-Bold'),
+    local('Noto Sans KR Bold');
+  font-weight: 501 900;
+  unicode-range: U+1100-11FF, U+3000-303F, U+3130-318F, U+A960-A97F, U+AC00-D7AF, U+D7B0-D7FF, U+FF00-FFEF;
+}
+
 /* Expose design tokens as Tailwind utilities (bg-bg, text-muted, bg-cta, font-display …). */
 @theme inline {
+  --color-ocean-950: var(--c-ocean-950);
   --color-ocean-900: var(--c-ocean-900);
   --color-ocean-700: var(--c-ocean-700);
   --color-ocean-500: var(--c-ocean-500);
   --color-lagoon-300: var(--c-lagoon-300);
   --color-tea-600: var(--c-tea-600);
+  --color-gold-700: var(--c-gold-700);
+  --color-gold-600: var(--c-gold-600);
   --color-gold-500: var(--c-gold-500);
+  --color-gold-400: var(--c-gold-400);
   --color-gold-300: var(--c-gold-300);
+  --color-gold-100: var(--c-gold-100);
   --color-laterite-500: var(--c-laterite-500);
   --color-sky-50: var(--c-sky-50);
   --color-sky-100: var(--c-sky-100);
@@ -20,11 +55,13 @@
   --color-ink-900: var(--c-ink-900);
 
   --color-bg: var(--c-bg);
+  --color-band: var(--c-band);
   --color-surface: var(--c-surface);
   --color-text: var(--c-text);
   --color-muted: var(--c-text-muted);
   --color-primary: var(--c-primary);
   --color-cta: var(--c-cta);
+  --color-cta-hover: var(--c-cta-hover);
   --color-cta-text: var(--c-cta-text);
   --color-focus: var(--c-focus);
   --color-line: var(--c-line);
@@ -98,6 +135,30 @@
   h3 {
     font-family: var(--font-display);
     text-wrap: balance;
+  }
+  /* Korean pages: Fraunces/Inter have no Hangul and their stacks end in generic families (serif → Myungjo).
+     'KR Gothic' (top of this file) covers only Hangul/CJK ranges, so it goes first: Hangul renders in the platform Gothic,
+     Latin falls through to Fraunces/Inter. No web font is downloaded. */
+  :lang(ko) body,
+  body:lang(ko) {
+    font-family: 'KR Gothic', var(--font-inter);
+    word-break: keep-all;
+  }
+  :lang(ko) h1,
+  :lang(ko) h2,
+  :lang(ko) h3,
+  :lang(ko) .font-display {
+    font-family: 'KR Gothic', var(--font-fraunces);
+    letter-spacing: -0.03em;
+  }
+  :lang(ko) h1,
+  :lang(ko) h2 {
+    font-weight: 700;
+  }
+  /* No synthetic italics in Hangul — accent words are coloured only. */
+  :lang(ko) .accent,
+  :lang(ko) em {
+    font-style: normal;
   }
   /* Display headlines read more refined at a medium weight than the browser's default bold. */
   h1,
@@ -374,12 +435,32 @@
   /* Dark navy sections get two soft blue light sources for depth. */
   .on-dark {
     background-image:
-      radial-gradient(60rem 32rem at 85% -10%, rgb(30 99 214 / 0.38), transparent 70%),
-      radial-gradient(44rem 26rem at -5% 110%, rgb(147 197 253 / 0.14), transparent 70%);
+      radial-gradient(60rem 32rem at 85% -10%, rgb(26 98 201 / 0.42), transparent 70%),
+      radial-gradient(44rem 26rem at -5% 110%, rgb(217 169 74 / 0.12), transparent 70%);
   }
   .on-dark .accent,
-  .bg-ocean-900 .accent {
-    color: var(--c-lagoon-300);
+  .bg-ocean-900 .accent,
+  .bg-ocean-950 .accent {
+    color: var(--c-gold-400);
+  }
+  .on-dark .chapter,
+  .bg-ocean-900 .chapter,
+  .bg-ocean-950 .chapter {
+    color: var(--c-gold-400);
+  }
+
+  /* Gold hairline used under eyebrows and around premium panels. */
+  .gold-rule {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--c-gold-500), transparent);
+  }
+  /* Metallic gold text for one or two hero words — always large, always on dark photography/navy. */
+  .gold-text {
+    background: linear-gradient(100deg, #f6dfa2 0%, #d9a94a 35%, #fff1c9 55%, #c9952f 80%);
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
 
   /* Chapter label: 01 ── EVERYTHING IN ONE PLACE */

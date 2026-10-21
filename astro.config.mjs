@@ -53,6 +53,27 @@ export default defineConfig({
 
   prefetch: { defaultStrategy: 'hover' },
 
+  // October 2026 restructure (owner feedback): three services, five tour types, hotels list instead of rate deals.
+  redirects: {
+    '/hotel-deals': '/hotels',
+    '/tours/day-tours': '/tours',
+    '/services/flight-tickets': '/services/air-ticketing',
+    '/services/visa-assistance': '/services/visa-consultation',
+    '/services/ayurveda-packages': '/tours/ayurveda',
+    '/services/hotel-reservations': '/hotels',
+    '/services/transport-chauffeur': '/tours',
+    '/services/tour-guides': '/tours',
+    '/services/day-outings': '/tours',
+    '/services/conferences-mice': '/services',
+    '/services/event-management': '/services',
+    '/services/workshops': '/services',
+    '/services/interpreters': '/services',
+    '/services/project-coordination': '/services',
+    '/experiences/honeymoon': '/tours/honeymoon',
+    '/experiences/ayurveda-wellness': '/tours/ayurveda',
+    '/experiences/tea-country': '/tours/tea',
+  },
+
   env: {
     schema: {
       // Only an explicit `production` build is indexable; everything else (staging, local) is noindex.
@@ -62,6 +83,10 @@ export default defineConfig({
         values: ['production', 'staging'],
         default: 'staging',
       }),
+      // Search-engine ownership tags (content values from Naver Search Advisor / Google Search Console). Naver is
+      // essential for the Korean market (docs/13-korea-naver-plan.md).
+      NAVER_SITE_VERIFICATION: envField.string({ context: 'server', access: 'public', optional: true }),
+      GOOGLE_SITE_VERIFICATION: envField.string({ context: 'server', access: 'public', optional: true }),
       // Forms (Phase 3). Everything is optional so local/staging builds work without secrets;
       // see .env.example and README for what production needs.
       TURNSTILE_SITE_KEY: envField.string({ context: 'client', access: 'public', optional: true }),
@@ -88,7 +113,10 @@ export default defineConfig({
       provider: fontProviders.local(),
       // Latin only: this is the one preloaded file (docs/04 §3); rare accented glyphs fall back to Georgia.
       options: variableFont('@fontsource-variable/fraunces', 'fraunces', { latinExt: false, italic: true }),
-      fallbacks: ['Georgia', 'serif'],
+      // Hand-tuned metric fallback (global.css): Astro's generated one runs ~11% wide at heading weights, which
+      // re-wraps headlines when Fraunces swaps in and shifts the page (CLS).
+      fallbacks: ['Fraunces Fallback', 'Georgia', 'serif'],
+      optimizedFallbacks: false,
       display: 'swap',
     },
     {

@@ -24,18 +24,39 @@ const items = (cat: string) =>
   jsonLd={[faqSchema(faqs.map((f) => ({ q: f.data.question, a: f.data.answer })))].filter((x) => !!x)}
 >
   <PageHero eyebrow="FAQ" title="Questions, *answered*" media={false} />
-  <section class="container-site max-w-4xl space-y-14 pb-24">
-    {categories.map(([id, label]) =>
-      items(id).length ? (
-        <section aria-labelledby={`faq-${id}`}>
-          <h2 id={`faq-${id}`} class="mb-4 text-3xl font-semibold">
-            {label}
-          </h2>
-          <Accordion items={items(id)} />
-        </section>
-      ) : null,
-    )}
-  </section>
+  <div class="container-site grid gap-10 pb-24 lg:grid-cols-[14rem_1fr] lg:gap-16">
+    <nav class="hidden lg:block" aria-label="FAQ topics">
+      <div class="sticky top-28">
+        <p class="detail text-muted">Topics</p>
+        <ul class="mt-4 space-y-1 border-l border-line">
+          {categories.map(([id, label]) =>
+            items(id).length ? (
+              <li>
+                <a
+                  href={`#faq-${id}`}
+                  class="-ml-px flex min-h-10 items-center border-l-2 border-transparent pl-4 text-sm text-muted transition-colors hover:border-ocean-500 hover:text-text"
+                >
+                  {label}
+                </a>
+              </li>
+            ) : null,
+          )}
+        </ul>
+      </div>
+    </nav>
+    <div class="max-w-4xl space-y-14">
+      {categories.map(([id, label]) =>
+        items(id).length ? (
+          <section aria-labelledby={`faq-${id}`}>
+            <h2 id={`faq-${id}`} class="mb-4 text-3xl font-semibold">
+              {label}
+            </h2>
+            <Accordion items={items(id)} />
+          </section>
+        ) : null,
+      )}
+    </div>
+  </div>
   <CtaBlock
     title="Still have a question?"
     text="Ask us on WhatsApp or send your trip details — we are happy to help."

@@ -1,5 +1,6 @@
 ---
 title: Sri Lanka in 5 Days
+type: round-trips
 durationDays: 5
 order: 2
 tone: tea

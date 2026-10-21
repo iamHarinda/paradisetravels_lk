@@ -1,5 +1,6 @@
 ---
 title: Ayurveda & Culture
+type: ayurveda
 durationDays: 14
 order: 7
 tone: tea

@@ -50,7 +50,7 @@ paradisetravels-web/
 ├─ keystatic.config.ts
 ├─ package.json
 ├─ public/
-│  ├─ robots.txt  llms.txt  favicon.svg  og-default.jpg
+│  ├─ robots.txt  llms.txt  favicon-48.png  logo.png  og-default.jpg
 │  └─ fonts/
 ├─ src/
 │  ├─ assets/images/           # source images (optimised at build)

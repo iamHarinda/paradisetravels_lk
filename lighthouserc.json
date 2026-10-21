@@ -7,7 +7,9 @@
         "http://localhost:4321/",
         "http://localhost:4321/tours/sri-lanka-7-day-tour",
         "http://localhost:4321/destinations/ella",
-        "http://localhost:4321/hotel-deals",
+        "http://localhost:4321/hotels",
+        "http://localhost:4321/tours/golf",
+        "http://localhost:4321/ko",
         "http://localhost:4321/travel-guide/sri-lanka-visa-eta",
         "http://localhost:4321/plan-your-trip"
       ],

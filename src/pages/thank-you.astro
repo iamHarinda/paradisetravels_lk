@@ -42,10 +42,11 @@ import { whatsappLink } from '../lib/site';
 </PageLayout>
 
 <script>
+  import { track } from '../lib/analytics';
+
   // Conversion event (docs/06 §8) + clear the saved trip-builder draft.
   const type = new URLSearchParams(location.search).get('type') ?? 'enquiry';
-  const w = window as unknown as { dataLayer?: unknown[] };
-  (w.dataLayer ??= []).push({ event: 'generate_lead', form: type });
+  track('generate_lead', { form: type });
   try {
     sessionStorage.removeItem('pt-trip-builder');
   } catch {

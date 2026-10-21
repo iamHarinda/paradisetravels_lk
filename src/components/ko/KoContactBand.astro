@@ -1,0 +1,81 @@
+---
+import Icon from '../ui/Icon.astro';
+import { SITE, whatsappLink } from '../../lib/site';
+
+// Korean contact band: KakaoTalk first (the channel Korean travellers expect), then WhatsApp, email and phone.
+// KakaoTalk is reached by adding the phone number as a friend until a Kakao Channel / Open Chat link exists
+// (docs/CONTENT-TODO.md).
+const ways = [
+  {
+    icon: 'kakao',
+    label: '카카오톡',
+    value: SITE.phone,
+    note: '전화번호로 친구 추가',
+    href: undefined,
+    track: 'kakao',
+  },
+  {
+    icon: 'whatsapp',
+    label: '왓츠앱',
+    value: SITE.phone,
+    note: '바로 채팅하기',
+    href: whatsappLink('안녕하세요, 스리랑카 여행 상담을 받고 싶습니다.'),
+    track: 'whatsapp',
+  },
+  {
+    icon: 'mail',
+    label: '이메일',
+    value: SITE.email,
+    note: '메일 보내기',
+    href: `mailto:${SITE.email}`,
+    track: 'email',
+  },
+  {
+    icon: 'phone',
+    label: '전화',
+    value: SITE.phone,
+    note: '스리랑카 시간 (KST −3:30)',
+    href: `tel:${SITE.phoneE164}`,
+    track: 'phone',
+  },
+] as const;
+---
+
+<section class="container-site pb-24" aria-labelledby="ko-contact-heading">
+  <div class="on-dark overflow-hidden rounded-media bg-ocean-900 p-8 text-white sm:p-12">
+    <h2 id="ko-contact-heading" class="text-h2">
+      카카오톡으로 <em class="accent">편하게 상담하세요.</em>
+    </h2>
+    <p class="mt-4 max-w-[56ch] text-lg text-white/80">
+      여행 시기와 인원, 원하시는 스타일만 알려주세요. 맞춤 일정과 견적을 보내드립니다.
+    </p>
+    <ul class="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      {ways.map((w) => {
+        const inner = (
+          <>
+            <Icon name={w.icon} class="size-6 text-gold-300" />
+            <span class="mt-4 block text-sm text-white/70">{w.label}</span>
+            <span class="block font-semibold break-all">{w.value}</span>
+            <span class="mt-1 block text-xs text-white/60">{w.note}</span>
+          </>
+        );
+        return (
+          <li>
+            {w.href ? (
+              <a
+                href={w.href}
+                rel="noopener"
+                data-track={w.track}
+                class="block h-full rounded-card bg-white/5 p-5 ring-1 ring-white/10 transition-colors hover:bg-white/10"
+              >
+                {inner}
+              </a>
+            ) : (
+              <div class="h-full rounded-card bg-gold-500/15 p-5 ring-1 ring-gold-400/50">{inner}</div>
+            )}
+          </li>
+        );
+      })}
+    </ul>
+  </div>
+</section>

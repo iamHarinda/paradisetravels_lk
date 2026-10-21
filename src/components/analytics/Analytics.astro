@@ -1,0 +1,78 @@
+---
+import { SITE_ENV } from 'astro:env/server';
+import { ANALYTICS } from '../../lib/analytics';
+
+// Consent-managed analytics (CLAUDE.md hard rule 8; docs/08 §9). This inline snippet only sets up the gtag queue and
+// the consent defaults — the third-party scripts are injected 1.5 s after the `load` event, so they never touch LCP.
+const enabled = SITE_ENV === 'production';
+---
+
+{enabled && <script is:inline define:vars={{ cfg: ANALYTICS }}>
+  const KEY = 'pt-consent';
+  let saved = null;
+  try {
+    saved = localStorage.getItem(KEY);
+  } catch {
+    /* storage blocked — the banner simply shows again */
+  }
+  const root = document.documentElement;
+  root.dataset.consent = saved || 'unset';
+
+  window.dataLayer = window.dataLayer || [];
+  // gtag.js only reads real Arguments objects, so `arguments` is required here.
+  window.gtag = function () {
+    // eslint-disable-next-line prefer-rest-params
+    window.dataLayer.push(arguments);
+  };
+  gtag('consent', 'default', {
+    ad_storage: 'denied',
+    ad_user_data: 'denied',
+    ad_personalization: 'denied',
+    analytics_storage: saved === 'granted' ? 'granted' : 'denied',
+  });
+  gtag('js', new Date());
+  gtag('config', cfg.ga4);
+
+  const add = function (src, attrs) {
+    const s = document.createElement('script');
+    s.async = true;
+    s.src = src;
+    for (const k in attrs || {}) s.setAttribute(k, attrs[k]);
+    document.head.appendChild(s);
+  };
+  const clarity = function () {
+    if (window.clarity) return;
+    window.clarity = function () {
+      // eslint-disable-next-line prefer-rest-params
+      (window.clarity.q = window.clarity.q || []).push(arguments);
+    };
+    add('https://www.clarity.ms/tag/' + cfg.clarity);
+    window.clarity('consent');
+  };
+  let started = false;
+  const start = function () {
+    if (started) return;
+    started = true;
+    add('https://www.googletagmanager.com/gtag/js?id=' + cfg.ga4);
+    add('https://analytics.ahrefs.com/analytics.js', { 'data-key': cfg.ahrefs });
+    if (root.dataset.consent === 'granted') clarity();
+  };
+
+  // Called by the consent banner (ConsentBanner.astro).
+  window.ptConsent = function (value) {
+    try {
+      localStorage.setItem(KEY, value);
+    } catch {
+      /* storage blocked — the banner simply shows again */
+    }
+    root.dataset.consent = value;
+    gtag('consent', 'update', { analytics_storage: value });
+    if (value === 'granted' && started) clarity();
+  };
+
+  const later = function () {
+    setTimeout(start, 1500);
+  };
+  if (document.readyState === 'complete') later();
+  else window.addEventListener('load', later, { once: true });
+</script>}

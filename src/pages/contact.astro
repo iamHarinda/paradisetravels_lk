@@ -37,7 +37,16 @@ const ways = [
                 <Icon name={w.icon} class="mt-0.5 size-6 text-primary" />
                 <span>
                   <span class="block text-sm text-muted">{w.label}</span>
-                  <span class="block font-semibold break-all">{w.value}</span>
+                  <span class="block font-semibold">
+                    {w.value.includes('@') ? (
+                      <>
+                        {w.value.split('@')[0]}@<wbr />
+                        {w.value.split('@')[1]}
+                      </>
+                    ) : (
+                      w.value
+                    )}
+                  </span>
                 </span>
               </a>
             ) : (

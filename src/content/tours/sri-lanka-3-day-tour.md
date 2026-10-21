@@ -1,5 +1,6 @@
 ---
 title: Sri Lanka in 3 Days
+type: round-trips
 durationDays: 3
 order: 1
 tone: heritage

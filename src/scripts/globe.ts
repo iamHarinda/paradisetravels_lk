@@ -57,7 +57,10 @@ function arcPath(a: [number, number], b: [number, number], steps = 48): Vec[] {
 
 const BUCKETS = 6;
 
-export function mountGlobe(canvas: HTMLCanvasElement) {
+export function mountGlobe(canvas: HTMLCanvasElement, { dark = false }: { dark?: boolean } = {}) {
+  // Light: blue dots on a pale sphere. Dark (navy sections): pale-blue dots, gold flight arcs.
+  const dot = dark ? '191,214,250' : '30,99,214';
+  const arcRgb = dark ? '233,190,98' : '30,99,214';
   const ctx = canvas.getContext('2d');
   if (!ctx) return;
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -76,7 +79,7 @@ export function mountGlobe(canvas: HTMLCanvasElement) {
   }
   const bucketStyles = Array.from(
     { length: BUCKETS },
-    (_, b) => `rgba(30,99,214,${(0.12 + ((b + 0.5) / BUCKETS) * 0.55).toFixed(2)})`,
+    (_, b) => `rgba(${dot},${(0.12 + ((b + 0.5) / BUCKETS) * 0.55).toFixed(2)})`,
   );
   const arcs = DESTINATIONS.map((d, i) => ({
     path: arcPath(CMB, d.coords),
@@ -128,20 +131,20 @@ export function mountGlobe(canvas: HTMLCanvasElement) {
     const b = backdrop.getContext('2d')!;
     b.scale(dpr, dpr);
     const glow = b.createRadialGradient(cx, cy, R * 0.9, cx, cy, R * 1.3);
-    glow.addColorStop(0, 'rgba(30,99,214,0.16)');
-    glow.addColorStop(1, 'rgba(30,99,214,0)');
+    glow.addColorStop(0, dark ? 'rgba(96,150,240,0.22)' : 'rgba(30,99,214,0.16)');
+    glow.addColorStop(1, dark ? 'rgba(96,150,240,0)' : 'rgba(30,99,214,0)');
     b.fillStyle = glow;
     b.beginPath();
     b.arc(cx, cy, R * 1.3, 0, Math.PI * 2);
     b.fill();
     const body = b.createRadialGradient(cx - R * 0.35, cy - R * 0.4, R * 0.1, cx, cy, R);
-    body.addColorStop(0, '#ffffff');
-    body.addColorStop(1, '#d6e6fb');
+    body.addColorStop(0, dark ? '#173a73' : '#ffffff');
+    body.addColorStop(1, dark ? '#081d40' : '#d6e6fb');
     b.fillStyle = body;
     b.beginPath();
     b.arc(cx, cy, R, 0, Math.PI * 2);
     b.fill();
-    b.strokeStyle = 'rgba(30,99,214,0.22)';
+    b.strokeStyle = dark ? 'rgba(191,214,250,0.25)' : 'rgba(30,99,214,0.22)';
     b.lineWidth = 1;
     b.stroke();
   };
@@ -196,7 +199,7 @@ export function mountGlobe(canvas: HTMLCanvasElement) {
     ctx!.lineCap = 'round';
     for (const a of arcs) {
       const pts = a.path.map(project);
-      ctx!.strokeStyle = 'rgba(30,99,214,0.18)';
+      ctx!.strokeStyle = `rgba(${arcRgb},${dark ? 0.28 : 0.18})`;
       ctx!.lineWidth = 1;
       ctx!.beginPath();
       let pen = false;
@@ -220,8 +223,8 @@ export function mountGlobe(canvas: HTMLCanvasElement) {
         const pTail = pts[i0]!;
         const pHead = pts[i1]!;
         const grad = ctx!.createLinearGradient(pTail[0], pTail[1], pHead[0], pHead[1]);
-        grad.addColorStop(0, 'rgba(30,99,214,0)');
-        grad.addColorStop(1, 'rgba(30,99,214,0.95)');
+        grad.addColorStop(0, `rgba(${arcRgb},0)`);
+        grad.addColorStop(1, `rgba(${arcRgb},0.95)`);
         ctx!.strokeStyle = grad;
         ctx!.lineWidth = 2;
         ctx!.beginPath();
@@ -238,7 +241,7 @@ export function mountGlobe(canvas: HTMLCanvasElement) {
         }
         ctx!.stroke();
         if (t < 1 && visible(pHead)) {
-          ctx!.fillStyle = '#1e63d6';
+          ctx!.fillStyle = `rgb(${arcRgb})`;
           ctx!.beginPath();
           ctx!.arc(pHead[0], pHead[1], 2.2, 0, Math.PI * 2);
           ctx!.fill();
@@ -249,7 +252,7 @@ export function mountGlobe(canvas: HTMLCanvasElement) {
         const end = pts[pts.length - 1]!;
         if (visible(end)) {
           const k = (t - 1) / 0.35;
-          ctx!.strokeStyle = `rgba(30,99,214,${(1 - k).toFixed(2)})`;
+          ctx!.strokeStyle = `rgba(${arcRgb},${(1 - k).toFixed(2)})`;
           ctx!.lineWidth = 1.2;
           ctx!.beginPath();
           ctx!.arc(end[0], end[1], 2 + k * 10, 0, Math.PI * 2);
@@ -263,13 +266,13 @@ export function mountGlobe(canvas: HTMLCanvasElement) {
     if (sc[2] > 0.05) {
       const pulse = reduced ? 0.4 : (now % 3000) / 3000;
       const halo = ctx!.createRadialGradient(sc[0], sc[1], 0, sc[0], sc[1], R * 0.16);
-      halo.addColorStop(0, 'rgba(30,99,214,0.28)');
-      halo.addColorStop(1, 'rgba(30,99,214,0)');
+      halo.addColorStop(0, `rgba(${arcRgb},0.28)`);
+      halo.addColorStop(1, `rgba(${arcRgb},0)`);
       ctx!.fillStyle = halo;
       ctx!.beginPath();
       ctx!.arc(sc[0], sc[1], R * 0.16, 0, Math.PI * 2);
       ctx!.fill();
-      ctx!.strokeStyle = `rgba(30,99,214,${(0.7 * (1 - pulse)).toFixed(2)})`;
+      ctx!.strokeStyle = `rgba(${arcRgb},${(0.7 * (1 - pulse)).toFixed(2)})`;
       ctx!.lineWidth = 1.5;
       ctx!.beginPath();
       ctx!.arc(sc[0], sc[1], R * 0.05 + pulse * R * 0.12, 0, Math.PI * 2);
@@ -287,7 +290,7 @@ export function mountGlobe(canvas: HTMLCanvasElement) {
         });
         shape.closePath();
       }
-      ctx!.fillStyle = '#1e63d6';
+      ctx!.fillStyle = dark ? '#e9be62' : '#1e63d6';
       ctx!.fill(shape);
       ctx!.strokeStyle = '#ffffff';
       ctx!.lineWidth = 1;
@@ -295,7 +298,7 @@ export function mountGlobe(canvas: HTMLCanvasElement) {
 
       // Colombo on the west coast.
       const [hx, hy] = grow(project(hub));
-      ctx!.fillStyle = '#ffffff';
+      ctx!.fillStyle = dark ? '#081d40' : '#ffffff';
       ctx!.beginPath();
       ctx!.arc(hx, hy, 2.6, 0, Math.PI * 2);
       ctx!.fill();
@@ -303,16 +306,16 @@ export function mountGlobe(canvas: HTMLCanvasElement) {
       // Label with a leader line, placed to the right of the island.
       const lx = sc[0] + R * 0.24;
       const ly = sc[1] - R * 0.14;
-      ctx!.strokeStyle = 'rgba(11,23,48,0.45)';
+      ctx!.strokeStyle = dark ? 'rgba(255,255,255,0.5)' : 'rgba(11,23,48,0.45)';
       ctx!.lineWidth = 1;
       ctx!.beginPath();
       ctx!.moveTo(sc[0] + R * 0.07, sc[1] - R * 0.05);
       ctx!.lineTo(lx - 4, ly + 4);
       ctx!.stroke();
-      ctx!.fillStyle = '#0b1730';
+      ctx!.fillStyle = dark ? '#ffffff' : '#0b1730';
       ctx!.font = `500 ${Math.max(15, R * 0.06).toFixed(0)}px Fraunces, Georgia, serif`;
       ctx!.fillText('Sri Lanka', lx, ly);
-      ctx!.fillStyle = '#1e63d6';
+      ctx!.fillStyle = dark ? '#e9be62' : '#1e63d6';
       ctx!.font = '600 10px Inter, system-ui, sans-serif';
       ctx!.fillText('COLOMBO · CMB', lx, ly + 15);
     }

@@ -1,31 +1,43 @@
 ---
 import Icon from '../ui/Icon.astro';
 import { SITE, whatsappLink } from '../../lib/site';
+import { langFromPath } from '../../lib/i18n';
 
-// Mobile thumb bar: WhatsApp · Call · Plan My Trip (docs/04 §5.8). Hidden from md up.
+// Mobile thumb bar: WhatsApp · Call · Plan My Trip (docs/04 §5.8). Hidden from md up. Pages can swap the main
+// action (a tour page makes it "Enquire" for that tour) instead of stacking a second fixed bar on top.
+interface Props {
+  primaryAction?: { href: string; label: string };
+}
+const ko = langFromPath(Astro.url.pathname) === 'ko';
+const {
+  primaryAction = ko ? { href: '/ko/contact', label: '상담' } : { href: '/plan-your-trip', label: 'Plan trip' },
+} = Astro.props;
 const page = Astro.url;
 ---
 
 <nav
   class="sticky-contact fixed inset-x-3 bottom-3 z-40 grid grid-cols-3 gap-1 rounded-pill bg-surface/95 p-1.5 text-sm font-semibold shadow-2xl ring-1 ring-line backdrop-blur md:hidden"
-  aria-label="Quick contact"
+  aria-label={ko ? '빠른 연락' : 'Quick contact'}
 >
   <a
-    href={whatsappLink(undefined, new URL(page.pathname, Astro.site))}
+    href={whatsappLink(
+      ko ? '안녕하세요, 스리랑카 여행 상담을 받고 싶습니다.' : undefined,
+      new URL(page.pathname, Astro.site),
+    )}
     class="flex min-h-12 items-center justify-center gap-1.5 rounded-pill text-tea-600 dark:text-lagoon-300"
     rel="noopener"
     data-track="whatsapp"
   >
-    <Icon name="whatsapp" class="size-5" /> WhatsApp
+    <Icon name="whatsapp" class="size-5" /> {ko ? '왓츠앱' : 'WhatsApp'}
   </a>
   <a
     href={`tel:${SITE.phoneE164}`}
     class="flex min-h-12 items-center justify-center gap-1.5 rounded-pill text-primary"
     data-track="phone"
   >
-    <Icon name="phone" class="size-5" /> Call
+    <Icon name="phone" class="size-5" /> {ko ? '전화' : 'Call'}
   </a>
-  <a href="/plan-your-trip" class="flex min-h-12 items-center justify-center rounded-pill bg-cta text-cta-text">
-    Plan trip
+  <a href={primaryAction.href} class="flex min-h-12 items-center justify-center rounded-pill bg-cta text-cta-text">
+    {primaryAction.label}
   </a>
 </nav>

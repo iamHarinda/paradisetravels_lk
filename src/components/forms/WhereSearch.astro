@@ -2,6 +2,7 @@
 import Button from '../ui/Button.astro';
 import { getEntries, byOrder } from '../../lib/content';
 import { REGIONS } from '../../lib/seasons';
+import { TOUR_TYPES } from '../../data/tour-types';
 
 // "Where do you want to go?" with type-ahead suggestions (ARIA 1.2 combobox + listbox).
 // Suggestions link straight to destination / experience / tour pages; free text still submits to the trip planner.
@@ -21,6 +22,13 @@ const [destinations, experiences, tours] = await Promise.all([
   getEntries('tours'),
 ]);
 const items = [
+  ...TOUR_TYPES.map((t) => ({
+    t: t.en.name,
+    k: 'Tour type',
+    m: t.en.mood,
+    h: `/tours/${t.id}`,
+    s: `${t.en.tagline} ${t.en.intro} ${t.en.highlights.join(' ')}`,
+  })),
   ...destinations.sort(byOrder).map((d) => ({
     t: d.data.title,
     k: 'Destination',

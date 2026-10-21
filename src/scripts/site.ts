@@ -1,4 +1,5 @@
 // Site-wide progressive enhancement, kept tiny (docs/09 §4 — JS budget ≤ 60 KB).
+import { track } from '../lib/analytics';
 document.documentElement.classList.add('js');
 
 // Reveal on scroll (docs/04 §6): fade + rise, stagger 60ms within a batch.
@@ -17,10 +18,9 @@ const reveal = new IntersectionObserver(
 );
 document.querySelectorAll('.reveal').forEach((el) => reveal.observe(el));
 
-// Conversion click events (docs/06 §8). Sent to whichever consent-managed analytics is configured later.
+// Conversion click events (docs/06 §8) → GA4 via the consent-managed gtag queue (src/lib/analytics.ts).
 document.addEventListener('click', (e) => {
   const el = (e.target as Element).closest<HTMLElement>('[data-track]');
   if (!el) return;
-  const w = window as unknown as { dataLayer?: unknown[] };
-  (w.dataLayer ??= []).push({ event: 'contact_click', method: el.dataset.track, page: location.pathname });
+  track('contact_click', { method: el.dataset.track, page_path: location.pathname });
 });

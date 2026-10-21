@@ -1,17 +1,27 @@
 ---
-// Temporary wordmark until the owner supplies the logo SVG (docs/CONTENT-TODO.md).
+import { Image } from 'astro:assets';
+import logo from '../../assets/brand/logo.png';
+
+// Official Paradise Travels logo (src/assets/brand/logo-original.jpg, supplied by the owner).
+// It sits on a white chip so the colours hold up on photos, the dark footer and dark mode.
 interface Props {
   class?: string;
+  href?: string;
 }
-const { class: className } = Astro.props;
+const { class: className, href = '/' } = Astro.props;
 ---
 
-<a href="/" class:list={['flex items-center gap-3 font-display text-xl font-semibold', className]}>
-  <span
-    class="grid size-10 place-items-center rounded-xl bg-[linear-gradient(135deg,var(--c-ocean-500),var(--c-ocean-900))] text-white shadow-[0_6px_16px_-6px_rgb(30_99_214/0.6)]"
-    aria-hidden="true"
-  >
-    PT
-  </span>
-  <span>Paradise Travels</span>
+<a
+  href={href}
+  class:list={['inline-flex shrink-0 items-center rounded-xl bg-white px-2 py-1', className]}
+  aria-label="Paradise Travels — home"
+>
+  <Image
+    src={logo}
+    alt="Paradise Travels (Pvt) Ltd — We travel the world."
+    widths={[130, 260, 390]}
+    sizes="(min-width: 1024px) 139px, 122px"
+    class="h-14 w-auto lg:h-16"
+    loading="eager"
+  />
 </a>

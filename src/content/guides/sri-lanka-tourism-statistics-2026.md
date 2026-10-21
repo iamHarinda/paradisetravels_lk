@@ -19,8 +19,7 @@ relatedTours:
   - sri-lanka-7-day-tour
 relatedDestinations:
   - colombo
-relatedServices:
-  - hotel-reservations
+relatedServices: []
 seo:
   title: Sri Lanka Tourism Statistics 2026 (Updated)
   description: 'Sri Lanka tourist arrivals 2026: 1,678,745 visitors from 1 January to 27 September, record January and February, and top markets India, UK and China.'

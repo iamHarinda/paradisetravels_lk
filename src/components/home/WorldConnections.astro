@@ -1,0 +1,113 @@
+---
+import AirlineLogos from '../ui/AirlineLogos.astro';
+import Icon from '../ui/Icon.astro';
+import { MARKETS, flagSrc } from '../../data/markets';
+import { AIRLINES } from '../../data/airlines';
+import type { Lang } from '../../lib/i18n';
+
+// "Connected to the world": a navy section with the dotted globe (gold flight arcs from our source markets to
+// Colombo), the countries most of our travellers come from, and the 12 airlines we ticket.
+interface Props {
+  lang?: Lang;
+  index?: string;
+}
+const { lang = 'en', index = '06' } = Astro.props;
+const ko = lang === 'ko';
+const T = ko
+  ? {
+      eyebrow: '전 세계와 연결',
+      title: '서울에서 콜롬보까지, <em class="accent">항공권부터 함께.</em>',
+      intro:
+        '한국을 비롯해 영국, 호주, 유럽, 아시아 각국의 여행자들이 저희와 스리랑카를 여행합니다. 항공권 발권도 맡겨 주세요.',
+      markets: '주요 고객 국가',
+      airlines: `발권 항공사 ${AIRLINES.length}곳`,
+      cta: '항공권 문의',
+      href: '/ko/air-tickets',
+      lead: '최대 시장',
+    }
+  : {
+      eyebrow: 'Connected to the world',
+      title: 'From Seoul, London or Sydney — <em class="accent">we’ll fly you in.</em>',
+      intro:
+        'Travellers from Korea, the UK, Australia, Europe and across Asia plan their Sri Lanka trips with us — and we can issue the tickets too.',
+      markets: 'Where our travellers come from',
+      airlines: `${AIRLINES.length} airlines we ticket`,
+      cta: 'Book your flights',
+      href: '/services/air-ticketing',
+      lead: 'Our leading market',
+    };
+---
+
+<section class="on-dark relative overflow-hidden bg-ocean-950 py-24 text-white" aria-labelledby="world-heading">
+  <div class="container-site grid items-center gap-12 lg:grid-cols-[1fr_1.05fr]">
+    <div>
+      <p class="reveal chapter">
+        <span class="chapter-no">{index}</span>
+        <span class="chapter-rule" aria-hidden="true"></span>
+        <span>{T.eyebrow}</span>
+      </p>
+      <h2 id="world-heading" class="reveal mt-4 text-h2" set:html={T.title} />
+      <p class="reveal mt-5 max-w-[52ch] text-lg text-white/75">{T.intro}</p>
+
+      <h3 class="reveal detail mt-10 font-sans text-gold-300">{T.markets}</h3>
+      <ul class="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
+        {MARKETS.map((m, i) => (
+          <li
+            class:list={[
+              'reveal flex items-center gap-3 rounded-card px-3 py-2.5 ring-1',
+              i === 0 ? 'bg-gold-500/15 ring-gold-400/60 sm:col-span-3 sm:py-3' : 'bg-white/5 ring-white/10',
+            ]}
+            style={`transition-delay:${i * 50}ms`}
+          >
+            <img
+              src={flagSrc(m.code)}
+              alt=""
+              width="32"
+              height="24"
+              loading="lazy"
+              class="h-6 w-8 shrink-0 rounded-[3px] object-cover shadow-[0_0_0_1px_rgb(255_255_255/0.25)]"
+            />
+            <span class="text-sm font-semibold">{ko ? m.nameKo : m.name}</span>
+            {i === 0 && (
+              <span class="ml-auto hidden items-center gap-1 text-xs font-semibold text-gold-300 sm:inline-flex">
+                <Icon name="star" class="size-3.5" /> {T.lead}
+              </span>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
+    <div class="globe-wrap relative mx-auto aspect-square w-full max-w-[38rem]">
+      <canvas class="absolute inset-0 h-full w-full" data-globe-dark aria-hidden="true"></canvas>
+    </div>
+  </div>
+
+  <div class="container-site mt-16">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <h3 class="reveal font-display text-3xl">{T.airlines}</h3>
+      <a
+        href={T.href}
+        class="reveal inline-flex min-h-12 items-center gap-2 rounded-pill bg-gold-500 px-6 text-sm font-semibold text-ocean-900 hover:bg-gold-400"
+      >
+        <Icon name="plane" class="size-4" />
+        {T.cta}
+      </a>
+    </div>
+    <AirlineLogos class="mt-6" tone="dark" />
+    <p class="mt-4 text-xs text-white/50">
+      {ko ? '로고는 각 항공사의 상표입니다.' : 'Logos are trademarks of their respective airlines.'}
+    </p>
+  </div>
+</section>
+
+<style>
+  .globe-wrap canvas {
+    mask-image: radial-gradient(closest-side, #000 88%, transparent 100%);
+  }
+</style>
+
+<script>
+  import { mountGlobe } from '../../scripts/globe';
+  const canvas = document.querySelector<HTMLCanvasElement>('[data-globe-dark]');
+  if (canvas) mountGlobe(canvas, { dark: true });
+</script>

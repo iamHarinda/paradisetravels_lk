@@ -11,6 +11,7 @@ export const STYLE_LABELS: Record<string, string> = {
   budget: 'Budget',
   tea: 'Tea country',
   adventure: 'Adventure',
+  golf: 'Golf',
 };
 
 export const GUIDE_CATEGORIES: Record<string, string> = {

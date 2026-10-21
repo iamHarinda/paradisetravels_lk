@@ -1,135 +1,293 @@
 ---
+import { Picture } from 'astro:assets';
 import WhereSearch from '../forms/WhereSearch.astro';
-import { SITE } from '../../lib/site';
-import { REGIONS, MONTHS_LONG, type RegionId } from '../../lib/seasons';
-import { AIRLINES } from '../../data/airlines';
-import { getEntries } from '../../lib/content';
+import Icon from '../ui/Icon.astro';
+import { SITE, whatsappLink } from '../../lib/site';
+import { photo, type PhotoName } from '../../lib/photos';
+import { MARKETS, flagSrc } from '../../data/markets';
+import type { Lang } from '../../lib/i18n';
 
-// Signature hero: light sky with a live dotted globe (canvas) showing flight arcs from Colombo, and a
-// kinetic headline. The headline text is the LCP (fast); the globe script is ~6 KB and never blocks rendering.
-const seasons = Object.fromEntries(Object.entries(REGIONS).map(([id, r]) => [id, r.bestMonths]));
-const inSeason = (month: number) =>
-  (Object.keys(REGIONS) as RegionId[]).filter((r) => (REGIONS[r].bestMonths as readonly number[]).includes(month));
-const buildMonth = new Date().getMonth() + 1;
-const buildRegions = inSeason(buildMonth);
-const destinations = await getEntries('destinations');
+// Signature hero: full-bleed cinematic photography (the owner's #1 request — "beautiful images, like Jetwing").
+// Slide 1 is the LCP image (eager, high priority); slides 2–5 sit in a <template> and are only added after the
+// page has loaded and the browser is idle, so they never compete with first paint (docs/09). Slow cross-fade +
+// Ken Burns drift; with reduced motion the first photo simply stays put.
+interface Props {
+  lang?: Lang;
+}
+const { lang = 'en' } = Astro.props;
+const ko = lang === 'ko';
 
-// Only verifiable numbers (CLAUDE.md hard rule 1).
-const facts = [
-  { value: String(SITE.foundingYear), label: 'Since' },
-  { value: String(AIRLINES.length), label: 'Airlines ticketed' },
-  { value: String(destinations.length), label: 'Destinations' },
+const SLIDES: { name: PhotoName; en: string; ko: string }[] = [
+  { name: 'coconut-hill', en: 'Coconut Tree Hill, Mirissa', ko: '미리사, 코코넛 트리 힐' },
+  { name: 'sigiriya-view', en: 'Sigiriya, the Lion Rock', ko: '시기리야, 사자 바위' },
+  { name: 'ella-train', en: 'Nine Arches Bridge, Ella', ko: '엘라, 나인 아치 브리지' },
+  { name: 'tea-pluckers', en: 'Tea country, Central Highlands', ko: '중부 고원의 차밭' },
+  { name: 'stilt-fishermen', en: 'Stilt fishermen, south coast', ko: '남부 해안의 장대 낚시' },
 ];
+const slides = SLIDES.map((s) => ({ ...s, ...photo(s.name) }));
+const [lead, ...rest] = slides;
+const sizes = '100vw';
+const widths = [640, 800, 960, 1280, 1600, 2000];
+
+const T = ko
+  ? {
+      eyebrow: `스리랑카 현지 여행사 · ${SITE.foundingYear}년 설립`,
+      line1: '스리랑카,',
+      line2: '가장 아름답게',
+      line3: '여행하는 방법.',
+      intro: '맞춤 투어, 비자 상담, 항공권 발권까지 — 콜롬보의 한 팀이 처음부터 끝까지 함께합니다.',
+      links: [
+        { href: '/ko/tours', label: '투어', icon: 'compass' },
+        { href: '/ko/visa', label: '비자 상담', icon: 'doc' },
+        { href: '/ko/air-tickets', label: '항공권', icon: 'plane' },
+      ],
+      markets: '이 나라의 여행자들이 함께했습니다',
+      slide: '사진',
+      cta: '카카오톡 · 왓츠앱 상담',
+    }
+  : {
+      eyebrow: `Colombo travel agency · Since ${SITE.foundingYear}`,
+      line1: 'Sri Lanka,',
+      line2: 'beautifully',
+      line3: 'planned.',
+      intro:
+        'Tailor-made tours, visa consultation and air tickets on 12 airlines — arranged end-to-end by one Colombo team.',
+      links: [
+        { href: '/tours', label: 'Tours', icon: 'compass' },
+        { href: '/services/visa-consultation', label: 'Visa consultation', icon: 'doc' },
+        { href: '/services/air-ticketing', label: 'Air ticketing', icon: 'plane' },
+      ],
+      markets: 'Trusted by travellers from',
+      slide: 'Photo',
+      cta: '',
+    };
 ---
 
-<section class="hero relative isolate z-10 -mt-20 overflow-x-clip pt-20">
-  <div class="hero-sky pointer-events-none absolute inset-0 -z-10" aria-hidden="true"></div>
-  <div class="container-site grid min-h-[calc(100svh-5rem)] items-center gap-6 py-12 lg:grid-cols-[1fr_1.05fr] lg:py-16">
-    <div class="relative z-10">
-      <p class="detail flex flex-wrap gap-x-4 gap-y-1 text-ocean-500">
-        <span>7.87°N 80.77°E</span>
-        <span aria-hidden="true">/</span>
-        <span>Colombo · since {SITE.foundingYear}</span>
+<section class="hero relative isolate -mt-20 flex min-h-[100svh] flex-col overflow-hidden bg-ocean-950 text-white">
+  <div class="hero-slides absolute inset-0 -z-10" data-hero-slides>
+    {lead && (
+      <figure class="slide is-active" data-caption={lead[lang]}>
+        <Picture
+          src={lead.image}
+          alt={lead.alt}
+          formats={['avif', 'webp']}
+          quality={42}
+          widths={widths.filter((w) => w <= lead.image.width)}
+          sizes={sizes}
+          loading="eager"
+          decoding="sync"
+          fetchpriority="high"
+          class="h-full w-full object-cover"
+        />
+      </figure>
+    )}
+    <template data-hero-rest>
+      {rest.map((s) => (
+        <figure class="slide" data-caption={s[lang]}>
+          <Picture
+            src={s.image}
+            alt={s.alt}
+            formats={['avif', 'webp']}
+            quality={42}
+            widths={widths.filter((w) => w <= s.image.width)}
+            sizes={sizes}
+            class="h-full w-full object-cover"
+          />
+        </figure>
+      ))}
+    </template>
+    <div class="hero-shade absolute inset-0" aria-hidden="true"></div>
+  </div>
+
+  <div class="container-site relative flex flex-1 flex-col justify-end pt-36 pb-28 sm:pb-14">
+    <div class="max-w-4xl">
+      <p class="fade-up detail flex items-center gap-3 text-gold-300" style="--i:0">
+        <span class="h-px w-10 bg-gold-400" aria-hidden="true"></span>
+        {T.eyebrow}
       </p>
-      <h1 class="kinetic mt-6 text-[clamp(3.25rem,7vw+1rem,7.75rem)] leading-[0.95] tracking-[-0.035em]">
+      <h1
+        class:list={[
+          'kinetic mt-6 leading-[0.95] tracking-[-0.03em] drop-shadow-[0_2px_24px_rgb(0_0_0/0.35)]',
+          ko ? 'text-[clamp(2.75rem,6vw+1rem,6rem)] font-bold' : 'text-[clamp(3.25rem,7.5vw+1rem,8.5rem)]',
+        ]}
+      >
         <span class="line">
-          <span style="--i:0">Sri Lanka,</span>
+          <span style="--i:1">{T.line1}</span>
         </span>
         <span class="line">
-          <em class="accent gradient-text" style="--i:1">
-            planned
+          <em class:list={['gold-text shimmer', ko && 'not-italic']} style="--i:2">
+            {T.line2}
           </em>
         </span>
         <span class="line">
-          <span style="--i:2">end-to-end.</span>
+          <span style="--i:3">{T.line3}</span>
         </span>
       </h1>
-      <p class="fade-up mt-8 max-w-[50ch] text-lg text-muted" style="--i:3">
-        Flights on {AIRLINES.length} airlines, visas, handpicked hotels at partner rates, private drivers, expert guides
-        and Ayurveda retreats — arranged by one Colombo team.
+      <p class="fade-up mt-6 max-w-[54ch] text-lg text-white/90 sm:text-xl" style="--i:4">
+        {T.intro}
       </p>
-      <WhereSearch id="hero-where" class="fade-up mt-8" style="--i:4" />
-      <p
-        class="fade-up mt-6 flex items-start gap-3 text-sm text-muted"
-        style="--i:5"
-        data-in-season
-        data-seasons={JSON.stringify(seasons)}
-      >
-        <span class="relative mt-1.5 flex size-2.5 shrink-0" aria-hidden="true">
-          <span class="absolute inset-0 animate-ping rounded-full bg-tea-600 opacity-50 motion-reduce:hidden"></span>
-          <span class="relative size-2.5 rounded-full bg-tea-600"></span>
-        </span>
-        <span data-in-season-text>
-          {buildRegions.length ? (
-            <>
-              <strong class="text-ink-900">In season in {MONTHS_LONG[buildMonth - 1]}:</strong>{' '}
-              {buildRegions.map((r) => REGIONS[r].name).join(', ')}
-            </>
-          ) : (
-            <>
-              <strong class="text-ink-900">{MONTHS_LONG[buildMonth - 1]} is shoulder season</strong> — ask us where the
-              weather is best.
-            </>
-          )}
-        </span>
-      </p>
-      <dl class="fade-up mt-10 grid max-w-md grid-cols-3 gap-6 border-t border-line pt-6" style="--i:6">
-        {facts.map((f) => (
-          <div class="flex flex-col-reverse">
-            <dt class="detail mt-1 text-muted">{f.label}</dt>
-            <dd class="font-display text-4xl leading-none text-ocean-700">{f.value}</dd>
-          </div>
+
+      {ko ? (
+        <div class="fade-up mt-8 flex flex-wrap gap-3" style="--i:5">
+          <a
+            href={whatsappLink('안녕하세요, 스리랑카 여행 상담을 받고 싶습니다.')}
+            class="inline-flex min-h-14 items-center gap-2 rounded-pill bg-gold-500 px-7 font-semibold text-ocean-900 hover:bg-gold-400"
+            rel="noopener"
+            data-track="whatsapp"
+          >
+            <Icon name="chat" /> {T.cta}
+          </a>
+          <a
+            href="/ko/contact"
+            class="inline-flex min-h-14 items-center gap-2 rounded-pill border border-white/50 px-7 font-semibold hover:bg-white/10"
+          >
+            문의하기 <Icon name="arrow" class="size-4" />
+          </a>
+        </div>
+      ) : (
+        <WhereSearch id="hero-where" class="fade-up mt-8" style="--i:5" />
+      )}
+
+      <ul class="fade-up mt-6 flex flex-wrap gap-2" style="--i:6">
+        {T.links.map((l) => (
+          <li>
+            <a
+              href={l.href}
+              class="inline-flex min-h-11 items-center gap-2 rounded-pill bg-white/12 px-4 text-sm font-semibold ring-1 ring-white/25 backdrop-blur-md transition-colors hover:bg-white/20"
+            >
+              <Icon name={l.icon as 'compass'} class="size-4 text-gold-300" />
+              {l.label}
+            </a>
+          </li>
         ))}
-      </dl>
+      </ul>
     </div>
 
-    <div class="globe-wrap relative mx-auto aspect-square w-full max-w-[44rem] lg:-mr-10">
-      <canvas class="absolute inset-0 h-full w-full" data-globe aria-hidden="true"></canvas>
+    <div
+      class="fade-up mt-12 flex flex-col gap-6 border-t border-white/20 pt-6 lg:flex-row lg:items-end lg:justify-between"
+      style="--i:7"
+    >
+      <div>
+        <p class="detail text-white/70">{T.markets}</p>
+        <ul class="mt-3 flex flex-wrap items-center gap-2.5">
+          {MARKETS.map((m) => (
+            <li>
+              <img
+                src={flagSrc(m.code)}
+                alt={ko ? m.nameKo : m.name}
+                title={ko ? m.nameKo : m.name}
+                width="28"
+                height="21"
+                class="h-[21px] w-7 rounded-[3px] object-cover shadow-[0_0_0_1px_rgb(255_255_255/0.35)]"
+              />
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div class="flex items-center gap-4" data-hero-controls hidden>
+        <p class="text-sm text-white/80" aria-live="polite" data-hero-caption>
+          {lead?.[lang]}
+        </p>
+        <div class="flex gap-1.5" role="group" aria-label={T.slide}>
+          {slides.map((s, i) => (
+            <button
+              type="button"
+              class="dot"
+              data-hero-dot={i}
+              aria-label={`${T.slide} ${i + 1}: ${s[lang]}`}
+              aria-pressed={i === 0 ? 'true' : 'false'}
+            >
+              <span></span>
+            </button>
+          ))}
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
 <style>
-  /* Kinetic headline: each line rises out of its own mask. */
+  .slide {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    opacity: 0;
+    transition: opacity 1.6s var(--ease-travel);
+  }
+  .slide.is-active {
+    opacity: 1;
+  }
+  .slide :global(img) {
+    transform: scale(1.06);
+  }
+  .slide.is-active :global(img) {
+    animation: kenburns 9s linear both;
+  }
+  /* Legibility: navy wash from the bottom-left, a lighter veil at the top for the header. */
+  .hero-shade {
+    background:
+      linear-gradient(180deg, rgb(5 15 36 / 0.55) 0%, rgb(5 15 36 / 0) 22%),
+      linear-gradient(20deg, rgb(5 15 36 / 0.88) 8%, rgb(5 15 36 / 0.35) 55%, rgb(5 15 36 / 0.1) 100%);
+  }
+
   .kinetic .line {
     display: block;
     overflow: hidden;
-    padding-bottom: 0.1em;
-    margin-bottom: -0.1em;
+    padding-bottom: 0.12em;
+    margin-bottom: -0.12em;
   }
   .kinetic .line > * {
     display: block;
     animation: rise 1s cubic-bezier(0.2, 0.75, 0.15, 1) both;
     animation-delay: calc(var(--i) * 110ms + 80ms);
   }
+  .kinetic .shimmer {
+    font-weight: 400;
+    padding-right: 0.08em;
+    animation:
+      rise 1s cubic-bezier(0.2, 0.75, 0.15, 1) both,
+      shimmer 7s ease-in-out 1.4s infinite;
+    animation-delay: calc(var(--i) * 110ms + 80ms), 1.4s;
+  }
   .fade-up {
     animation: fade-up 900ms cubic-bezier(0.2, 0.75, 0.15, 1) both;
     animation-delay: calc(var(--i) * 110ms + 80ms);
   }
-  .gradient-text {
-    background: linear-gradient(100deg, #1e63d6 10%, #60a5fa 50%, #1e63d6 90%);
-    background-size: 200% 100%;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    animation:
-      rise 1s cubic-bezier(0.2, 0.75, 0.15, 1) both,
-      shimmer 6s ease-in-out 1.2s infinite;
-    animation-delay: calc(var(--i) * 110ms + 80ms), 1.2s;
+
+  .dot {
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.75rem;
   }
-  /* Light sky: soft blue light sources over the page background. */
-  .hero-sky {
-    background:
-      radial-gradient(52rem 36rem at 78% 45%, rgb(30 99 214 / 0.14), transparent 70%),
-      radial-gradient(40rem 28rem at 8% 0%, rgb(147 197 253 / 0.35), transparent 70%),
-      linear-gradient(180deg, #eaf3fe 0%, var(--c-bg) 100%);
+  .dot span {
+    display: block;
+    width: 100%;
+    height: 3px;
+    border-radius: 3px;
+    background: rgb(255 255 255 / 0.35);
+    overflow: hidden;
+    position: relative;
   }
-  /* Feather the canvas edges so the globe blends into the page — no visible square. */
-  .globe-wrap canvas {
-    mask-image: radial-gradient(closest-side, #000 88%, transparent 100%);
+  .dot[aria-pressed='true'] span::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--c-gold-400);
+    transform-origin: left;
+    animation: progress 7s linear both;
   }
-  .globe-wrap {
-    animation: globe-in 1.6s cubic-bezier(0.2, 0.75, 0.15, 1) 0.2s both;
+  .hero.is-paused .dot[aria-pressed='true'] span::after {
+    animation: none;
+  }
+
+  @keyframes kenburns {
+    from {
+      transform: scale(1.06) translate3d(0, 0, 0);
+    }
+    to {
+      transform: scale(1.14) translate3d(-1.5%, -1%, 0);
+    }
   }
   @keyframes rise {
     from {
@@ -147,44 +305,81 @@ const facts = [
       background-position: 100% 0;
     }
   }
-  @keyframes globe-in {
+  @keyframes progress {
     from {
-      opacity: 0;
-      transform: scale(0.92);
+      transform: scaleX(0);
     }
   }
   @media (prefers-reduced-motion: reduce) {
     .kinetic .line > *,
+    .kinetic .shimmer,
     .fade-up,
-    .gradient-text,
-    .globe-wrap {
+    .slide.is-active :global(img) {
       animation: none;
     }
   }
 </style>
 
 <script>
-  import { MONTHS_LONG, REGIONS, type RegionId } from '../../lib/seasons';
-  import { mountGlobe } from '../../scripts/globe';
+  const root = document.querySelector<HTMLElement>('[data-hero-slides]');
+  const tpl = root?.querySelector<HTMLTemplateElement>('template[data-hero-rest]');
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  const canvas = document.querySelector<HTMLCanvasElement>('[data-globe]');
-  if (canvas) mountGlobe(canvas);
+  if (root && tpl && !reduced) {
+    const hero = root.closest<HTMLElement>('.hero')!;
+    const controls = hero.querySelector<HTMLElement>('[data-hero-controls]')!;
+    const caption = hero.querySelector<HTMLElement>('[data-hero-caption]')!;
+    const dots = [...hero.querySelectorAll<HTMLButtonElement>('[data-hero-dot]')];
 
-  // "In season" line follows the visitor's current month (the HTML has the build month as a fallback).
-  const el = document.querySelector<HTMLElement>('[data-in-season]');
-  const text = el?.querySelector('[data-in-season-text]');
-  if (el && text) {
-    const seasons = JSON.parse(el.dataset.seasons!) as Record<RegionId, number[]>;
-    const m = new Date().getMonth() + 1;
-    const regions = (Object.keys(seasons) as RegionId[]).filter((r) => seasons[r].includes(m));
-    const strong = document.createElement('strong');
-    strong.className = 'text-ink-900';
-    if (regions.length) {
-      strong.textContent = `In season in ${MONTHS_LONG[m - 1]}:`;
-      text.replaceChildren(strong, ` ${regions.map((r) => REGIONS[r].name).join(', ')}`);
-    } else {
-      strong.textContent = `${MONTHS_LONG[m - 1]} is shoulder season`;
-      text.replaceChildren(strong, ' — ask us where the weather is best.');
-    }
+    const boot = () => {
+      tpl.parentElement!.insertBefore(tpl.content.cloneNode(true), tpl);
+      const slides = [...root.querySelectorAll<HTMLElement>('.slide')];
+      let i = 0;
+      let timer = 0;
+      const go = (n: number) => {
+        i = (n + slides.length) % slides.length;
+        slides.forEach((s, k) => s.classList.toggle('is-active', k === i));
+        dots.forEach((d, k) => d.setAttribute('aria-pressed', String(k === i)));
+        caption.textContent = slides[i]!.dataset.caption ?? '';
+      };
+      const play = () => {
+        clearInterval(timer);
+        timer = window.setInterval(() => !document.hidden && go(i + 1), 7000);
+      };
+      dots.forEach((d, k) =>
+        d.addEventListener('click', () => {
+          go(k);
+          play();
+        }),
+      );
+      // Pause while the visitor is typing in the search box or the hero is off-screen.
+      hero.addEventListener('focusin', (e) => {
+        if ((e.target as Element).matches('input')) {
+          clearInterval(timer);
+          hero.classList.add('is-paused');
+        }
+      });
+      hero.addEventListener('focusout', () => {
+        hero.classList.remove('is-paused');
+        play();
+      });
+      new IntersectionObserver(([e]) => (e?.isIntersecting ? play() : clearInterval(timer))).observe(hero);
+      controls.hidden = false;
+      play();
+    };
+    // The other slides only start downloading well after the first photo has painted (it is the LCP), and the
+    // first change happens 7 s later anyway — or straight away if the visitor taps a slide dot.
+    let booted = false;
+    const once = () => {
+      if (booted) return;
+      booted = true;
+      boot();
+    };
+    const idle = () => {
+      const later = () => ('requestIdleCallback' in window ? requestIdleCallback(once, { timeout: 2000 }) : once());
+      setTimeout(later, 3500);
+    };
+    if (document.readyState === 'complete') idle();
+    else window.addEventListener('load', idle, { once: true });
   }
 </script>

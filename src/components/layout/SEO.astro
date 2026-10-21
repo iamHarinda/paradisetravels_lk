@@ -1,5 +1,6 @@
 ---
-import { SITE_ENV } from 'astro:env/server';
+import { SITE_ENV, NAVER_SITE_VERIFICATION, GOOGLE_SITE_VERIFICATION } from 'astro:env/server';
+import { alternates, cleanPath, langFromPath } from '../../lib/i18n';
 import { SITE } from '../../lib/site';
 import { siteSchema } from '../../lib/schema-org';
 
@@ -28,12 +29,19 @@ const {
 } = Astro.props;
 
 // Clean URLs (docs/03): `build.format: 'file'` reports `/index.html` / `/about.html` while prerendering.
-const cleanPath =
-  Astro.url.pathname
-    .replace(/\.html$/, '')
-    .replace(/\/index$/, '')
-    .replace(/\/$/, '') || '/';
-const canonical = new URL(cleanPath, Astro.site);
+const path = cleanPath(Astro.url.pathname);
+const canonical = new URL(path, Astro.site);
+// hreflang (docs/06 §6): English ↔ Korean twins, x-default = English. Naver and Google both read these.
+const lang = langFromPath(path);
+const alt = alternates(path);
+const hreflang =
+  alt.en && alt.ko
+    ? [
+        { lang: 'en', href: new URL(alt.en, Astro.site) },
+        { lang: 'ko', href: new URL(alt.ko, Astro.site) },
+        { lang: 'x-default', href: new URL(alt.en, Astro.site) },
+      ]
+    : [];
 const imageUrl = new URL(image, Astro.site);
 const robots = noindex || SITE_ENV !== 'production' ? 'noindex, nofollow' : 'index, follow, max-image-preview:large';
 const schema = [...siteSchema(), ...jsonLd];
@@ -42,11 +50,17 @@ const schema = [...siteSchema(), ...jsonLd];
 <title>{title}</title>
 <meta name="description" content={description} />
 <link rel="canonical" href={canonical} />
+{hreflang.map((h) => (
+  <link rel="alternate" hreflang={h.lang} href={h.href} />
+))}
+{NAVER_SITE_VERIFICATION && <meta name="naver-site-verification" content={NAVER_SITE_VERIFICATION} />}
+{GOOGLE_SITE_VERIFICATION && <meta name="google-site-verification" content={GOOGLE_SITE_VERIFICATION} />}
 <meta name="robots" content={robots} />
 
 <meta property="og:type" content={type} />
 <meta property="og:site_name" content={SITE.name} />
-<meta property="og:locale" content="en_GB" />
+<meta property="og:locale" content={lang === 'ko' ? 'ko_KR' : 'en_GB'} />
+{alt.en && alt.ko && <meta property="og:locale:alternate" content={lang === 'ko' ? 'en_GB' : 'ko_KR'} />}
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
 <meta property="og:url" content={canonical} />
