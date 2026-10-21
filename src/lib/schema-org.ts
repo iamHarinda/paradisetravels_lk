@@ -46,6 +46,7 @@ export function travelAgencySchema(): JsonLd {
     telephone: SITE.phoneE164,
     foundingDate: String(SITE.foundingYear),
     address: { '@type': 'PostalAddress', ...SITE.address },
+    hasMap: SITE.mapsUrl,
     areaServed: { '@type': 'Country', name: 'Sri Lanka' },
     parentOrganization: { '@id': ORG_ID },
   };

@@ -3,6 +3,8 @@ import PageLayout from '../../layouts/PageLayout.astro';
 import EnquiryForm from '../../components/forms/EnquiryForm.astro';
 import KoContactBand from '../../components/ko/KoContactBand.astro';
 import Icon from '../../components/ui/Icon.astro';
+import BrandBadge from '../../components/ui/BrandBadge.astro';
+import MapEmbed from '../../components/ui/MapEmbed.astro';
 import { SITE } from '../../lib/site';
 import { travelAgencySchema } from '../../lib/schema-org';
 ---
@@ -27,6 +29,14 @@ import { travelAgencySchema } from '../../lib/schema-org';
           <span lang="en">{SITE.addressLine}</span>
         </a>
       </address>
+      <a
+        href={SITE.mapsUrl}
+        rel="noopener"
+        class="mt-4 inline-flex min-h-11 items-center gap-2 rounded-pill border border-line px-5 text-sm font-semibold"
+      >
+        <BrandBadge name="googlemaps" class="size-6 ring-1 ring-line" /> 구글 지도에서 보기
+      </a>
+      <MapEmbed lang="ko" class="mt-6" />
     </div>
     <div class="rounded-media bg-surface p-6 shadow-card ring-1 ring-line sm:p-10">
       <EnquiryForm subject="Contact (KO)" />

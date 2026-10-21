@@ -1,6 +1,7 @@
 ---
 import Logo from './Logo.astro';
 import Icon from '../ui/Icon.astro';
+import BrandBadge from '../ui/BrandBadge.astro';
 import { SITE, whatsappLink } from '../../lib/site';
 import { TOUR_TYPES } from '../../data/tour-types';
 import { KO_GUIDES } from '../../data/ko-guides';
@@ -84,7 +85,7 @@ const legal = [
       </p>
       <address class="mt-6 space-y-2 text-sm not-italic">
         <a href={SITE.mapsUrl} class="flex gap-2 hover:text-white" rel="noopener">
-          <Icon name="pin" class="mt-0.5 size-4 shrink-0" />
+          <Icon name="googlemaps" class="mt-0.5 size-4 shrink-0" />
           {SITE.addressLine}
         </a>
         <a href={`tel:${SITE.phoneE164}`} class="flex gap-2 hover:text-white" data-track="phone">
@@ -92,7 +93,10 @@ const legal = [
           {SITE.phone}
         </a>
         <a href={whatsappLink()} class="flex gap-2 hover:text-white" rel="noopener" data-track="whatsapp">
-          <Icon name="whatsapp" class="mt-0.5 size-4 shrink-0" />
+          <span class="mt-0.5 flex shrink-0 gap-1">
+            <BrandBadge name="whatsapp" class="size-5" />
+            <BrandBadge name="kakao" class="size-5" />
+          </span>
           {ko ? '왓츠앱 · 카카오톡' : 'WhatsApp & KakaoTalk'}: {SITE.phone}
         </a>
         <a href={`mailto:${SITE.email}`} class="flex gap-2 hover:text-white" data-track="email">
@@ -160,7 +164,9 @@ const legal = [
         </li>
         <li>
           <a href={SITE.facebook} class="hover:text-white" rel="noopener">
-            Facebook
+            <span class="inline-flex items-center gap-1.5">
+              <Icon name="facebook" class="size-4" /> Facebook
+            </span>
           </a>
         </li>
       </ul>

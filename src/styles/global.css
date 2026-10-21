@@ -432,6 +432,11 @@
     font-weight: 380;
     color: var(--c-accent);
   }
+  /* Hangul has no italic — a synthetic slant looks broken, so Korean accent words are coloured only. */
+  :lang(ko) .accent {
+    font-style: normal;
+    font-weight: 600;
+  }
   /* Dark navy sections get two soft blue light sources for depth. */
   .on-dark {
     background-image:

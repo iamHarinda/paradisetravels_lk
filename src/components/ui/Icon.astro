@@ -1,6 +1,8 @@
 ---
-// Inline stroke icons (no icon font, no runtime). Decorative unless `label` is given.
-import { ICONS, type IconName } from '../../lib/icons';
+// Inline icons (no icon font, no runtime). Decorative unless `label` is given.
+// Outline icons come from ICONS (stroke); brand marks (WhatsApp, KakaoTalk, Google Maps, Facebook) from BRAND_ICONS
+// (filled, in currentColor — use BrandBadge for the full-colour logo).
+import { ICONS, BRAND_ICONS, type IconName } from '../../lib/icons';
 
 interface Props {
   name: IconName;
@@ -8,19 +10,33 @@ interface Props {
   label?: string;
 }
 const { name, class: className = 'size-5', label } = Astro.props;
+const brand = name in BRAND_ICONS ? BRAND_ICONS[name as keyof typeof BRAND_ICONS] : null;
 ---
 
-<svg
-  class={className}
-  viewBox="0 0 24 24"
-  fill="none"
-  stroke="currentColor"
-  stroke-width="1.7"
-  stroke-linecap="round"
-  stroke-linejoin="round"
-  aria-hidden={label ? undefined : 'true'}
-  role={label ? 'img' : undefined}
-  aria-label={label}
->
-  <path d={ICONS[name]}></path>
-</svg>
+{brand ? (
+  <svg
+    class={className}
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    aria-hidden={label ? undefined : 'true'}
+    role={label ? 'img' : undefined}
+    aria-label={label}
+  >
+    <path d={brand} />
+  </svg>
+) : (
+  <svg
+    class={className}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.7"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden={label ? undefined : 'true'}
+    role={label ? 'img' : undefined}
+    aria-label={label}
+  >
+    <path d={ICONS[name as keyof typeof ICONS]} />
+  </svg>
+)}

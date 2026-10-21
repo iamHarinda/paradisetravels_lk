@@ -15,7 +15,11 @@ export const SITE = {
     addressCountry: 'LK',
   },
   addressLine: 'No. 08, Old Kottawa Road, Mirihana, Nugegoda 10250, Sri Lanka',
-  mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Paradise+Travels+(Pvt)+Ltd+Mirihana+Nugegoda',
+  /** Google Business Profile share link supplied by the owner (opens the listing in Google Maps / Search). */
+  mapsUrl: 'https://share.google/Ixe87Dml0qTwFDNRL',
+  /** Keyless Google Maps embed for the contact pages (loaded only when the visitor asks for it). */
+  mapsEmbed:
+    'https://www.google.com/maps?output=embed&hl=en&q=Paradise+Travels+(Pvt)+Ltd,+No.+08+Old+Kottawa+Road,+Mirihana,+Nugegoda',
   facebook: 'https://www.facebook.com/paradisetravelslk',
   sameAs: ['https://www.facebook.com/paradisetravelslk'],
   defaultOgImage: '/og-default.png',

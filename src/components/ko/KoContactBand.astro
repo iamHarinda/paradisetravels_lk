@@ -1,5 +1,6 @@
 ---
 import Icon from '../ui/Icon.astro';
+import BrandBadge from '../ui/BrandBadge.astro';
 import { SITE, whatsappLink } from '../../lib/site';
 
 // Korean contact band: KakaoTalk first (the channel Korean travellers expect), then WhatsApp, email and phone.
@@ -54,7 +55,11 @@ const ways = [
       {ways.map((w) => {
         const inner = (
           <>
-            <Icon name={w.icon} class="size-6 text-gold-300" />
+            {w.icon === 'kakao' || w.icon === 'whatsapp' ? (
+              <BrandBadge name={w.icon} class="size-8" />
+            ) : (
+              <Icon name={w.icon} class="size-6 text-gold-300" />
+            )}
             <span class="mt-4 block text-sm text-white/70">{w.label}</span>
             <span class="block font-semibold break-all">{w.value}</span>
             <span class="mt-1 block text-xs text-white/60">{w.note}</span>

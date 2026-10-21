@@ -1,5 +1,6 @@
 ---
 import Icon from '../ui/Icon.astro';
+import BrandBadge from '../ui/BrandBadge.astro';
 import { SITE, whatsappLink } from '../../lib/site';
 import { langFromPath } from '../../lib/i18n';
 
@@ -23,7 +24,7 @@ const ko = langFromPath(Astro.url.pathname) === 'ko';
         class="flex items-center gap-3 rounded-lg px-3 py-3 hover:bg-sky-100 dark:hover:bg-white/5"
         data-track="whatsapp"
       >
-        <Icon name="whatsapp" class="size-5 text-tea-600 dark:text-lagoon-300" /> WhatsApp
+        <BrandBadge name="whatsapp" class="size-7" /> WhatsApp
       </a>
     </li>
     <li>
@@ -32,7 +33,7 @@ const ko = langFromPath(Astro.url.pathname) === 'ko';
         class="flex items-center gap-3 rounded-lg px-3 py-3 hover:bg-sky-100 dark:hover:bg-white/5"
         data-track="kakao"
       >
-        <Icon name="kakao" class="size-5 text-primary" /> {ko ? '카카오톡' : 'KakaoTalk'}: {SITE.phone}
+        <BrandBadge name="kakao" class="size-7" /> {ko ? '카카오톡' : 'KakaoTalk'}: {SITE.phone}
       </a>
     </li>
     <li>

@@ -1,0 +1,30 @@
+---
+import { BRAND_ICONS, BRAND_COLORS, type BrandName } from '../../lib/icons';
+
+// Full-colour brand logo (WhatsApp green bubble, KakaoTalk yellow "TALK" tile …) for contact lists. Decorative:
+// the visible text next to it names the channel.
+interface Props {
+  name: BrandName;
+  class?: string;
+}
+const { name, class: className = 'size-6' } = Astro.props;
+const c = BRAND_COLORS[name];
+---
+
+{name === 'kakao' ? (
+  // The KakaoTalk mark is a tile with the bubble cut out: brown tile behind a yellow mark = the official logo.
+  <svg class={className} viewBox="0 0 24 24" aria-hidden="true">
+    <rect x="1" y="1" width="22" height="22" rx="4" fill={c.bg} />
+    <path d={BRAND_ICONS.kakao} fill={c.fg} />
+  </svg>
+) : (
+  <span
+    class:list={['inline-grid shrink-0 place-items-center rounded-full', className]}
+    style={`background:${c.bg};color:${c.fg}`}
+    aria-hidden="true"
+  >
+    <svg class="size-[62%]" viewBox="0 0 24 24" fill="currentColor">
+      <path d={BRAND_ICONS[name]} />
+    </svg>
+  </span>
+)}
