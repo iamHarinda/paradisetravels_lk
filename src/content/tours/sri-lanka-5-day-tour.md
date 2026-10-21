@@ -56,7 +56,6 @@ inclusions:
 exclusions:
   - International flights
   - Sri Lanka ETA (apply on the official portal)
-  - '{{TODO: confirm with owner whether entrance fees, safaris and meals are included}}'
 priceNote: Price depends on hotel class, season and group size — ask for a quote.
 reviewed: false
 heroImage: ../../assets/images/photos/nuwara-eliya.jpg

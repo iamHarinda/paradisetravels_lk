@@ -5,11 +5,13 @@ category: visa
 pillar: true
 tone: ocean
 published: 2026-10-05
-lastChecked: 2026-10-05
+lastChecked: 2026-10-22
 reviewed: false
 sources:
   - title: Department of Immigration & Emigration — ETA notice
     url: https://www.immigration.gov.lk/pages_e.php?id=60
+  - title: Newswire — free tourist ETA for 40 countries (country list, 25 May 2026)
+    url: https://www.newswire.lk/2026/05/25/sri-lanka-to-offer-free-tourist-eta-for-40-countries-from-may-25/
   - title: Official ETA portal
     url: https://eta.gov.lk
   - title: iVisa news (25 May 2026)
@@ -48,7 +50,9 @@ An Electronic Travel Authorisation (ETA) is permission to travel to Sri Lanka th
 | Passports covered | Diplomatic, official, service and ordinary |
 | Still required?   | Yes — apply before you travel              |
 
-Countries covered include the UK, USA, India, China, Canada, Australia and most of the European Union. {{TODO: publish the full official list of 40 countries from the Department of Immigration & Emigration notice.}}
+**The 40 countries:** Australia, Austria, Bahrain, Belarus, Belgium, Canada, China, Czech Republic, Denmark, Finland, France, Germany, India, Indonesia, Iran, Israel, Italy, Japan, Kazakhstan, Kuwait, Malaysia, Nepal, Netherlands, New Zealand, Norway, Oman, Pakistan, Poland, Qatar, Russia, Saudi Arabia, South Korea, Spain, Sweden, Switzerland, Thailand, Turkey, the United Arab Emirates, the United Kingdom and the United States.
+
+Nationals of the Maldives, Seychelles and Singapore were already processed free of charge and are not part of the 40. Always confirm your nationality on the official portal, [eta.gov.lk](https://eta.gov.lk), before you apply.
 
 Fees paid **before** 25 May 2026 are not refundable.
 

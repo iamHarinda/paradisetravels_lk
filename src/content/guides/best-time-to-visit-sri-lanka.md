@@ -5,7 +5,7 @@ category: seasons
 pillar: true
 tone: tea
 published: 2026-10-05
-lastChecked: 2026-10-05
+lastChecked: 2026-10-22
 reviewed: false
 sources: []
 relatedDestinations:
@@ -48,6 +48,32 @@ December to March is peak season, with record visitor numbers in January and Feb
 
 ## Our advice
 
-Pick your month first, then let the season choose your coast. Use the season picker on our [home page](/) or [tell us your dates](/plan-your-trip) and we will suggest a route.
+Pick your month first, then let the season choose your coast. Explore the island map on our [home page](/) or [tell us your dates](/plan-your-trip) and we will suggest a route.
 
-{{TODO: expand into the 2,500-word pillar with a month-by-month section and owner/team review.}}
+## Month by month
+
+All seasons below are approximate and vary from year to year — weather is never guaranteed, so we always check before we plan your route.
+
+**January.** Peak season on the west and south coasts and in the hill country, which are usually dry. Whale-watching season off Mirissa. The east coast and Cultural Triangle can still see north-east monsoon rain. Book hotels and train seats early.
+
+**February.** Still peak season in the south, west and hills, and the Cultural Triangle and the north move into their good season. A strong month for a classic round trip that combines culture, tea country and beaches.
+
+**March.** Much like February, with the south, west and hills still in season. The Cultural Triangle gets hotter from March to May, so climb Sigiriya early in the morning.
+
+**April.** Usually the last good month for the south and west coasts and the hills before the south-west monsoon; the east coast season begins around April or May. Whale watching off Mirissa continues.
+
+**May.** The south-west monsoon usually arrives on the west and south coasts and in the hills. Head instead for the east coast (Trincomalee, Pasikudah, Arugam Bay), the Cultural Triangle and the north. Surf season begins at Arugam Bay, and whale watching moves to Trincomalee.
+
+**June.** East coast season — calm bays around Trincomalee and surf at Arugam Bay — plus the Cultural Triangle and the north. The west and south are greener, with showers.
+
+**July.** As June. In July or August, Kandy holds the Esala Perahera — exact dates follow the lunar calendar, so book early once they are announced.
+
+**August.** Still the east coast's best season, with the Cultural Triangle and the north. A good month for Kandy if the Perahera falls in August.
+
+**September.** The last month of the east coast's season. The dry season is at its height in the south-east: parts of Yala can close for around a month (in 2026, Blocks 1 and 2 from 14 September to 15 October), so ask us which parks are open.
+
+**October.** An inter-monsoon month with rain in many parts of the island, and the north-east monsoon approaching the east and north. A quieter, greener time to travel — tell us your dates and we will suggest where the weather looks best.
+
+**November.** Another shoulder month. The north-east monsoon brings rain to the east and north, while the west and south coasts improve towards December. Whale watching off Mirissa begins.
+
+**December.** The start of the main season on the west and south coasts and in the hill country — and of the busy holiday period, so plan early. Whale watching off Mirissa.

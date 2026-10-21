@@ -4,9 +4,11 @@ description: 'Practical things to know before visiting Sri Lanka: currency and c
 category: planning
 tone: heritage
 published: 2026-10-05
-lastChecked: 2026-10-05
+lastChecked: 2026-10-22
 reviewed: false
-sources: []
+sources:
+  - title: Sri Lanka Tourism Development Authority — Dial 1912
+    url: https://sltda.gov.lk/en/dial-1912
 relatedServices:
   - visa-consultation
 relatedTours:
@@ -44,7 +46,7 @@ Driving is on the left. Most visitors hire a car with a driver — see [how to t
 
 - Police: **119**
 - Ambulance (Suwa Seriya): **1990**
-- Tourist Police: {{TODO: confirm current number before publishing}}
+- Tourist hotline: **1912** — Sri Lanka Tourism's information line from any phone in Sri Lanka; it can also connect you to the Tourism Police for complaints such as harassment.
 
 ## Before you fly
 

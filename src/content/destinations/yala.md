@@ -24,7 +24,7 @@ thingsToDo:
     tip: Combine with a morning drive if you have two days.
 tips:
   - Choose a responsible operator who keeps a respectful distance from animals.
-  - '{{TODO: confirm annual park closure dates before publishing.}}'
+  - 'Parts of the park can close for about a month in the dry season — in 2026, Blocks 1 and 2 closed from 14 September to 15 October while other blocks stayed open (last checked 22 October 2026). We check the current status before booking your safari.'
 faqs:
   - q: Will I see a leopard in Yala?
     a: Yala is one of the best places in the world to see leopards, but sightings are never guaranteed. Two safaris improve your chances.

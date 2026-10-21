@@ -33,14 +33,15 @@ A local expert / the owner must check every entry before launch (docs/05 §7), e
 - [ ] **Travel times and distances** on destination pages (marked "approx.").
 - [ ] **Best months** per destination/tour (Yala, Udawalawe and wildlife tour months are general knowledge, not from docs/11).
 - [ ] **Tour itineraries** (8 tours) — routes, pacing, overnight stops.
-- [ ] **Tour inclusions / exclusions** — confirm whether entrance fees, safaris and meals are included.
+- [ ] **Tour inclusions / exclusions** — confirm whether entrance fees, safaris and meals are included (the public placeholder was removed; lists show only confirmed items).
 - [ ] Service pages (Visa consultation, Air ticketing) — claims about how each service works (e.g. group/worker ticketing).
 - [ ] Tour-type pages (`src/data/tour-types.ts`) and Island Atlas highlights (`src/data/island-highlights.ts`).
 - [ ] Pillar guides need expanding to ~2,500 words (ETA, Best time to visit) + team review.
 - [ ] Add authoritative sources (e.g. Department of Meteorology) to the seasons, getting-around and travel-tips guides — they currently list none.
-- [ ] Publish the **official list of 40 ETA-free countries** in the ETA guide.
-- [ ] Confirm current **Tourist Police** number (travel tips guide).
-- [ ] Confirm annual **Yala park closure** dates.
+- [x] Official list of 40 ETA-free countries published in the ETA guide (+ South Korea noted on `/ko/visa`), last checked 2026-10-22.
+- [x] Tourist hotline 1912 (SLTDA; connects to the Tourism Police) in the travel-tips guide.
+- [x] Yala: 2026 partial closure (Blocks 1 & 2, 14 Sep–15 Oct) noted; re-check every year.
+- [x] "Best time to visit" guide: month-by-month section added (from the season data used across the site).
 → When an entry is checked, tick "Reviewed" in Keystatic.
 
 ## 2. Brand — [launch]
@@ -69,7 +70,7 @@ flydubai (FZ), Thai (TG), Turkish (TK), British Airways (BA). List: `src/data/ai
 - [ ] Keep the list current — remove any airline the agency stops ticketing.
 
 ## 4. Business details
-- [ ] **[launch]** Office opening hours and WhatsApp reply hours → contact page, `TravelAgency` schema, and the "we reply within X" promise on the thank-you page.
+- [ ] **[launch]** Office opening hours and WhatsApp reply hours → contact page, `TravelAgency` schema, and a "we reply within X" promise on the thank-you page (currently "as soon as we can").
 - [ ] Office map coordinates (for `geo` in schema) — from the Google Business Profile.
 - [ ] Price range for schema (`priceRange`).
 - [x] Chairman/MD photo supplied (2026-10-21) — `src/assets/team/upul.jpg` (original in `assets-src/team/`).
@@ -89,10 +90,10 @@ flydubai (FZ), Thai (TG), Turkish (TK), British Airways (BA). List: `src/data/ai
 - [ ] **[launch]** Real Google/Facebook/Tripadvisor reviews with permission (add in Keystatic → Reviews). The review wall shows a "gathering reviews" message until then.
 
 ## 7. Legal — [launch]
-- [ ] Terms & conditions (`/terms` — draft, noindex).
-- [ ] Cancellation policy (`/cancellation-policy` — draft, noindex).
-- [ ] Privacy policy legal review + data retention period (`/privacy` — draft, noindex).
-- [ ] Accepted payment methods and deposit policy (FAQ "How do I pay?").
+- [ ] Terms & conditions (`/terms` — interim text says the quote sets the terms; draft, noindex).
+- [ ] Cancellation policy (`/cancellation-policy` — interim text; draft, noindex).
+- [ ] Privacy policy legal review + a specific retention period (`/privacy` — interim "only as long as needed"; draft, noindex).
+- [ ] Accepted payment methods and deposit policy (FAQ "How do I pay?" — interim: payment link, amounts in the quote).
 
 ## 8. Decisions (docs/12 "Owner decisions needed")
 - [ ] Payment gateway & deposit policy.
