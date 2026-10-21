@@ -14,7 +14,7 @@ Node.js 22 LTS (≥ 22.12) — see `.nvmrc`.
 | --------------------------------- | -------------------------------------------------------------------------------- |
 | `npm run dev`                     | Dev server at http://localhost:4321 — CMS at http://localhost:4321/keystatic     |
 | `npm run build`                   | Production build into `dist/`                                                    |
-| `npm start`                       | Serve the build (`node ./dist/server/entry.mjs`) — what Hostinger runs           |
+| `npm run build:production`        | Production build + `paradisetravels-site.zip` for Hostinger upload               |
 | `npm run check`                   | `astro check` (types + Astro diagnostics)                                        |
 | `npm run lint` / `npm run format` | ESLint / Prettier                                                                |
 | `npm run test:e2e`                | Playwright tests against the build (run `npm run build` first)                   |
@@ -50,10 +50,24 @@ Internal pages: `/styleguide` (all components, noindex).
 
 Copy `.env.example` → `.env`. Builds are **noindex** unless `SITE_ENV=production`, so staging is never indexed.
 
-Forms work without any secrets locally (emails are logged to the console). Production needs: Turnstile keys, an email provider (Resend **or** SMTP) and optionally `LEAD_WEBHOOK_URL` for the lead store.
+Forms are PHP (`public/api/*.php`, shared code in `_lead.php`) because the hosting has no Node.js. They send mail
+with PHP `mail()` from `hello@paradisetravels.lk`. Server-side settings (Turnstile secret, mail addresses, optional
+lead webhook) live in `~/paradise-config.php` on the server — copy `paradise-config.sample.php`, **one level above
+`public_html`**, never inside it. Build-time settings (`SITE_ENV`, `TURNSTILE_SITE_KEY`, `NAVER_SITE_VERIFICATION`,
+`GOOGLE_SITE_VERIFICATION`) go in `.env` before building.
 
-## Deploy (Hostinger Node.js app, docs/08 §2)
+## Deploy (Hostinger Premium Web Hosting — static + PHP, no Node.js)
 
-- Build command: `npm run build` · Start command: `npm start` · Node 22
-- Env vars: `SITE_ENV=production` (production only) + the form/Keystatic secrets above.
-- Cloudflare in front: SSL Full (strict), cache `/_astro/*` 1 year, bypass `/api/*`, Brotli on, don't enable Rocket Loader. Add security headers (CSP etc.) via Transform Rules (docs/08 §9).
+1. Put the production values in `.env` (`SITE_ENV=production`, Naver/Google verification codes, Turnstile site key).
+2. `npm run build:production` → builds `dist/` and zips it to `paradisetravels-site.zip`.
+3. Upload: hPanel → File Manager → `public_html` → upload the zip → **Extract** (overwrite). Or upload the *contents*
+   of `dist/` by FTP (FileZilla). Make sure the hidden `.htaccess` files are uploaded too.
+4. First time only: upload `paradise-config.php` (from the sample) to the home folder **above** `public_html`, and
+   create the `hello@paradisetravels.lk` mailbox in hPanel → Emails so PHP mail can send from it.
+5. Cloudflare: purge cache after each upload. SSL Full (strict), cache `/_astro/*` 1 year, bypass `/api/*`,
+   don't enable Rocket Loader. Check Security → Bots: Bot Fight Mode / WAF must not block Naver's **Yeti** crawler
+   (add a skip rule for user agents containing `Yeti` if needed). Add SPF/DKIM records for Hostinger mail.
+
+`dist/.htaccess` (generated from `deploy/apache.mjs`) gives clean URLs without trailing slashes, the 301 redirects for
+retired pages, `/sitemap.xml`, caching and security headers. Keystatic only runs locally (`npm run dev` →
+`/keystatic`); edits are committed to Git, then rebuilt and uploaded.

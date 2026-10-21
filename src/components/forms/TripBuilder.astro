@@ -21,7 +21,7 @@ const occasions = ['Holiday', 'Honeymoon', 'Family', 'Solo', 'Friends', 'Group',
 const steps = ['When?', 'Who?', 'What?', 'How?', 'You'];
 ---
 
-<form action="/api/trip-builder" method="post" data-form data-trip-builder class="relative" id="trip-builder">
+<form action="/api/trip-builder.php" method="post" data-form data-trip-builder class="relative" id="trip-builder">
   <div class="mb-8 hidden" data-progress-wrap>
     <ol class="flex gap-2" aria-label="Progress">
       {steps.map((s, i) => (
@@ -110,7 +110,7 @@ const steps = ['When?', 'Who?', 'What?', 'How?', 'You'];
     <div class="mt-6 flex flex-wrap gap-2">
       {interests.map((i) => (
         <label class="choice">
-          <input type="checkbox" name="interests" value={i} /> {i}
+          <input type="checkbox" name="interests[]" value={i} /> {i}
         </label>
       ))}
     </div>
@@ -250,7 +250,7 @@ const steps = ['When?', 'Who?', 'What?', 'How?', 'You'];
     if (note) form.querySelector('[data-prefill-note]')!.textContent = note;
     const interest = params.get('interest');
     if (interest) {
-      form.querySelectorAll<HTMLInputElement>('input[name="interests"]').forEach((cb) => {
+      form.querySelectorAll<HTMLInputElement>('input[name="interests[]"]').forEach((cb) => {
         if (interest.toLowerCase().includes(cb.value.split(' ')[0]!.toLowerCase())) cb.checked = true;
       });
     }
@@ -306,7 +306,7 @@ const steps = ['When?', 'Who?', 'What?', 'How?', 'You'];
       children: 'Children',
       childAges: 'Children’s ages',
       occasion: 'Occasion',
-      interests: 'Interests',
+      'interests[]': 'Interests',
       style: 'Style',
       hotelClass: 'Hotels',
       transport: 'Getting around',

@@ -11,7 +11,7 @@ const { subject } = Astro.props;
 const ko = langFromPath(Astro.url.pathname) === 'ko';
 ---
 
-<form action="/api/enquiry" method="post" data-form class="relative" id="enquiry-form">
+<form action="/api/enquiry.php" method="post" data-form class="relative" id="enquiry-form">
   {subject && <input type="hidden" name="subject" value={subject} />}
   {ko && <input type="hidden" name="language" value="ko" />}
   <ContactFields idPrefix="enq" />

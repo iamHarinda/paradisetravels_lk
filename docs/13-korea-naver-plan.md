@@ -29,12 +29,15 @@ Naver Search Advisor is Naver's equivalent of Google Search Console.
 2. Enter **`https://paradisetravels.lk`** — Naver registers domains or subdomains only, not sub-folders, so register
    the main domain; the Korean pages under `/ko/` are covered by it.
 3. Choose the **HTML tag** method. Naver shows a tag like `<meta name="naver-site-verification" content="abc123…" />`.
-4. Copy only the `content` value into the hosting environment as `NAVER_SITE_VERIFICATION=abc123…`
-   (Hostinger → Node.js app → Environment variables), then redeploy. Every page then carries the tag in `<head>`.
+4. Copy only the `content` value into `.env` as `NAVER_SITE_VERIFICATION=abc123…`, run
+   `npm run build:production` and upload (README → Deploy). Every page then carries the tag in `<head>`.
 5. Click verify in Naver Search Advisor.
-6. 요청 → 사이트맵 제출 (Request → Submit sitemap): submit `https://paradisetravels.lk/sitemap-index.xml`
-   (if Naver asks for a single file, submit `https://paradisetravels.lk/sitemap-0.xml`).
+6. 요청 → 사이트맵 제출 (Request → Submit sitemap): submit `https://paradisetravels.lk/sitemap.xml`
+   (it lists every English and `/ko` page; `robots.txt` points to it too).
 7. Also under 요청: 웹 페이지 수집 (request crawling) for `https://paradisetravels.lk/ko`.
+
+**Cloudflare:** Bot Fight Mode or a WAF rule can block Naver's crawler (Yeti) and make verification fail. In
+Cloudflare → Security → Bots, check it; if needed add a WAF *skip* rule for requests whose User-Agent contains `Yeti`.
 
 Indexing is not guaranteed and can take time under Naver's policies — check the report weekly.
 

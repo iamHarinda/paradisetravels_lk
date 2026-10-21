@@ -27,3 +27,7 @@ pnpm-debug.log*
 playwright-report/
 test-results/
 .lighthouseci/
+
+# Hostinger upload package (npm run build:production)
+paradisetravels-site.zip
+paradise-config.php

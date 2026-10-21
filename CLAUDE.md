@@ -3,15 +3,15 @@
 You are building the new website for **Paradise Travels (Pvt) Ltd**, a Sri Lankan travel agency (est. 2007, Nugegoda). Full specs live in `/docs`. Read `/docs/00-README.md` first, then the doc relevant to your current task.
 
 ## Stack (do not change without asking)
-- **Astro** (latest stable) — static output by default; on-demand rendering only for API routes and pages that truly need it. Use `@astrojs/node` adapter (standalone mode).
+- **Astro** (latest stable) — fully static output (`dist/`). The `@astrojs/node` adapter is used only in `astro dev` for Keystatic. (Hosting changed October 2026: Hostinger Premium Web Hosting has no Node.js.)
 - **Node.js 22 LTS** (Astro requires ≥ 22.12).
 - **Tailwind CSS v4** with design tokens from `docs/04-ui-ux-design-system.md`.
 - **TypeScript** strict mode.
 - **GSAP** (incl. ScrollTrigger) for scroll/hover motion — loaded only on pages that use it, never in the critical path.
 - **Keystatic** (GitHub mode) for content editing; content stored as Markdown/MDX/JSON in `src/content`.
 - **Astro `<Image>` / `<Picture>`** for every raster image (AVIF + WebP, responsive `srcset`).
-- Forms: Astro API routes + Cloudflare Turnstile + transactional email (SMTP or Resend) to `hello@paradisetravels.lk`.
-- Hosting: Hostinger Node.js web app, auto-deploy from GitHub `main`. Cloudflare DNS/CDN in front.
+- Forms: PHP endpoints in `public/api/` (`_lead.php`) + Cloudflare Turnstile + PHP `mail()` to `hello@paradisetravels.lk`. Server secrets in `~/paradise-config.php` outside `public_html`.
+- Hosting: Hostinger Premium Web Hosting (Apache/LiteSpeed + PHP, no Node). Deploy = `npm run build:production` → upload `paradisetravels-site.zip` (File Manager) or `dist/` (FTP). `.htaccess` generated from `deploy/apache.mjs`. Cloudflare DNS/CDN in front.
 
 ## Hard rules
 1. **Never invent facts.** No fake reviews, ratings, awards, licence numbers, staff names, prices or statistics. If content is missing, use a clearly marked placeholder `{{TODO: ...}}` and list it in `docs/CONTENT-TODO.md`.

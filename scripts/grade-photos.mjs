@@ -37,7 +37,10 @@ for (const f of files) {
     const after = await (await grade(input)).resize({ width: W }).toBuffer();
     const h = before.info.height;
     await sharp({ create: { width: W * 2 + 8, height: h, channels: 3, background: '#ffffff' } })
-      .composite([{ input: before.data, left: 0, top: 0 }, { input: after, left: W + 8, top: 0 }])
+      .composite([
+        { input: before.data, left: 0, top: 0 },
+        { input: after, left: W + 8, top: 0 },
+      ])
       .jpeg({ quality: 78 })
       .toFile(path.join(previewDir, f));
   } else {

@@ -8,6 +8,27 @@ import react from '@astrojs/react';
 import keystatic from '@keystatic/astro';
 
 import tailwindcss from '@tailwindcss/vite';
+import { REDIRECTS, htaccess, astroAssetsHtaccess } from './deploy/apache.mjs';
+
+// Hosting (October 2026): Hostinger shared hosting — no Node.js, uploaded by FTP / File Manager. So the build is fully
+// static (`dist/`), forms are handled by PHP in public/api/, and Apache rules come from deploy/apache.mjs.
+// Keystatic (and the Node adapter it needs) only run in `astro dev`, for editing content locally.
+const DEV = process.argv.includes('dev');
+
+/**
+ * Writes dist/.htaccess (clean URLs, 301 redirects, caching, security headers) + dist/_astro/.htaccess.
+ * @returns {import('astro').AstroIntegration}
+ */
+const apacheConfig = () => ({
+  name: 'paradise-apache-config',
+  hooks: {
+    'astro:build:done': async ({ dir }) => {
+      const { writeFile } = await import('node:fs/promises');
+      await writeFile(new URL('.htaccess', dir), htaccess());
+      await writeFile(new URL('_astro/.htaccess', dir), astroAssetsHtaccess);
+    },
+  },
+});
 
 // Fontsource unicode ranges — we self-host Latin + Latin-ext only (docs/09 §5).
 const LATIN =
@@ -45,34 +66,20 @@ export default defineConfig({
   trailingSlash: 'never',
   build: { format: 'directory' },
 
-  adapter: node({
-    mode: 'standalone',
-  }),
+  ...(DEV ? { adapter: node({ mode: 'standalone' }) } : {}),
 
-  integrations: [sitemap({ filter: (page) => !/\/(thank-you|styleguide)$/.test(page) }), mdx(), react(), keystatic()],
+  integrations: [
+    sitemap({ filter: (page) => !/\/(thank-you|styleguide)\/?$/.test(page) }),
+    mdx(),
+    react(),
+    ...(DEV ? [keystatic()] : []),
+    apacheConfig(),
+  ],
 
   prefetch: { defaultStrategy: 'hover' },
 
-  // October 2026 restructure (owner feedback): three services, five tour types, hotels list instead of rate deals.
-  redirects: {
-    '/hotel-deals': '/hotels',
-    '/tours/day-tours': '/tours',
-    '/services/flight-tickets': '/services/air-ticketing',
-    '/services/visa-assistance': '/services/visa-consultation',
-    '/services/ayurveda-packages': '/tours/ayurveda',
-    '/services/hotel-reservations': '/hotels',
-    '/services/transport-chauffeur': '/tours',
-    '/services/tour-guides': '/tours',
-    '/services/day-outings': '/tours',
-    '/services/conferences-mice': '/services',
-    '/services/event-management': '/services',
-    '/services/workshops': '/services',
-    '/services/interpreters': '/services',
-    '/services/project-coordination': '/services',
-    '/experiences/honeymoon': '/tours/honeymoon',
-    '/experiences/ayurveda-wellness': '/tours/ayurveda',
-    '/experiences/tea-country': '/tours/tea',
-  },
+  // October 2026 restructure (owner feedback). Also emitted as real 301s in dist/.htaccess.
+  redirects: REDIRECTS,
 
   env: {
     schema: {
@@ -87,22 +94,9 @@ export default defineConfig({
       // essential for the Korean market (docs/13-korea-naver-plan.md).
       NAVER_SITE_VERIFICATION: envField.string({ context: 'server', access: 'public', optional: true }),
       GOOGLE_SITE_VERIFICATION: envField.string({ context: 'server', access: 'public', optional: true }),
-      // Forms (Phase 3). Everything is optional so local/staging builds work without secrets;
-      // see .env.example and README for what production needs.
+      // Forms: only the Turnstile *site* key is needed at build time. Mail settings and the Turnstile secret live in
+      // ~/paradise-config.php on the server (paradise-config.sample.php).
       TURNSTILE_SITE_KEY: envField.string({ context: 'client', access: 'public', optional: true }),
-      TURNSTILE_SECRET: envField.string({ context: 'server', access: 'secret', optional: true }),
-      RESEND_API_KEY: envField.string({ context: 'server', access: 'secret', optional: true }),
-      SMTP_HOST: envField.string({ context: 'server', access: 'secret', optional: true }),
-      SMTP_PORT: envField.number({ context: 'server', access: 'secret', default: 465 }),
-      SMTP_USER: envField.string({ context: 'server', access: 'secret', optional: true }),
-      SMTP_PASS: envField.string({ context: 'server', access: 'secret', optional: true }),
-      MAIL_FROM: envField.string({
-        context: 'server',
-        access: 'secret',
-        default: 'Paradise Travels <hello@paradisetravels.lk>',
-      }),
-      MAIL_TO: envField.string({ context: 'server', access: 'secret', default: 'hello@paradisetravels.lk' }),
-      LEAD_WEBHOOK_URL: envField.string({ context: 'server', access: 'secret', optional: true }),
     },
   },
 
